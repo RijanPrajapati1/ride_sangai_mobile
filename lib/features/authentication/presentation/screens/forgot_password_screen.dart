@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_app_bar.dart';
@@ -83,7 +84,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         Container(
           width: 84,
           height: 84,
-          decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+          decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
           child: const Icon(Icons.mark_email_read_outlined, size: 40, color: AppColors.primary),
         ),
         const SizedBox(height: AppDimensions.spaceLg),

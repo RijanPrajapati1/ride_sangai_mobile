@@ -17,6 +17,11 @@ class RideRequestLocalDataSource {
       ..sort((a, b) => b.requestedAt.compareTo(a.requestedAt));
   }
 
+  Future<List<RideRequestDto>> getAllRequests() async {
+    await Future.delayed(AppConstants.dataSourceDelay);
+    return List.of(_requests)..sort((a, b) => b.requestedAt.compareTo(a.requestedAt));
+  }
+
   Future<void> approve(String requestId) async {
     await Future.delayed(AppConstants.shortDataSourceDelay);
     _update(requestId, RideRequestStatus.approved);

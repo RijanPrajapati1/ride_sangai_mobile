@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -66,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Container(
                   width: 64,
                   height: 64,
-                  decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
                   child: const Icon(Icons.pedal_bike, color: AppColors.primary, size: 32),
                 ),
                 const SizedBox(height: AppDimensions.spaceLg),

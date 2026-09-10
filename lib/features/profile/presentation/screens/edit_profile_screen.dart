@@ -7,7 +7,6 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_app_bar.dart';
-import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_dropdown.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
@@ -16,6 +15,7 @@ import '../../../../shared/widgets/chip_input_field.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../../domain/entities/user_profile.dart';
 import '../providers/profile_providers.dart';
+import '../widgets/avatar_picker.dart';
 
 class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
@@ -52,6 +52,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
   late final TextEditingController _nameController;
   late final TextEditingController _bioController;
   late final TextEditingController _locationController;
+  late String _avatarUrl;
   late ExperienceLevel _experienceLevel;
   late RideType _preferredRideType;
   late List<String> _interests;
@@ -63,6 +64,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
     _nameController = TextEditingController(text: widget.profile.name);
     _bioController = TextEditingController(text: widget.profile.bio);
     _locationController = TextEditingController(text: widget.profile.location);
+    _avatarUrl = widget.profile.avatarUrl;
     _experienceLevel = widget.profile.experienceLevel;
     _preferredRideType = widget.profile.preferredRideType;
     _interests = List.of(widget.profile.cyclingInterests);
@@ -81,6 +83,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
     setState(() => _isSaving = true);
     final updated = widget.profile.copyWith(
       name: _nameController.text.trim(),
+      avatarUrl: _avatarUrl,
       bio: _bioController.text.trim(),
       location: _locationController.text.trim(),
       experienceLevel: _experienceLevel,
@@ -102,7 +105,11 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
         padding: const EdgeInsets.all(AppDimensions.spaceMd),
         children: [
           Center(
-            child: AppAvatar(imageUrl: widget.profile.avatarUrl, name: widget.profile.name, size: AppDimensions.avatarXl),
+            child: AvatarPicker(
+              name: widget.profile.name,
+              avatarUrl: _avatarUrl,
+              onChanged: (url) => setState(() => _avatarUrl = url),
+            ),
           ),
           const SizedBox(height: AppDimensions.spaceLg),
           AppTextField(

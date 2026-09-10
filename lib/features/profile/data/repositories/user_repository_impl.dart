@@ -69,4 +69,13 @@ class UserRepositoryImpl implements UserRepository {
     final saved = await _dataSource.updatePreferences(updatedDto);
     return saved.toEntity();
   }
+
+  @override
+  Future<List<UserProfile>> getAllUsers() async {
+    final dtos = await _dataSource.getAllUsers();
+    return dtos.map((d) => d.toEntity()).toList();
+  }
+
+  @override
+  Future<void> removeUser(String userId) => _dataSource.removeUser(userId);
 }

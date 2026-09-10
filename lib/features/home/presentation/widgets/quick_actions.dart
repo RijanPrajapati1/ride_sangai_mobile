@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 
 class QuickAction {
@@ -39,6 +40,7 @@ class _QuickActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.appColors;
     return InkWell(
       borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
       onTap: action.onTap,
@@ -47,14 +49,14 @@ class _QuickActionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: tokens.border),
         ),
         child: Column(
           children: [
             Container(
               width: 40,
               height: 40,
-              decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: tokens.primaryLight, shape: BoxShape.circle),
               child: Icon(action.icon, color: AppColors.primary, size: 20),
             ),
             const SizedBox(height: 8),

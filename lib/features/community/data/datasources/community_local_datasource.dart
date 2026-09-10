@@ -60,6 +60,12 @@ class CommunityLocalDataSource {
     _setLiked(postId, false);
   }
 
+  Future<void> deletePost(String postId) async {
+    await Future.delayed(AppConstants.shortDataSourceDelay);
+    _posts.removeWhere((p) => p.id == postId);
+    _comments.remove(postId);
+  }
+
   void _setLiked(String postId, bool liked) {
     final index = _posts.indexWhere((p) => p.id == postId);
     if (index == -1) return;

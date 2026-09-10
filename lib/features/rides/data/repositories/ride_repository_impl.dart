@@ -89,4 +89,13 @@ class RideRepositoryImpl implements RideRepository {
     final created = await _dataSource.createRide(dto);
     return created.toEntity();
   }
+
+  @override
+  Future<List<Ride>> getAllRides() async {
+    final dtos = await _dataSource.getAllRides();
+    return dtos.map((d) => d.toEntity()).toList();
+  }
+
+  @override
+  Future<void> deleteRide(String rideId) => _dataSource.deleteRide(rideId);
 }

@@ -8,4 +8,7 @@ abstract class CommunityRepository {
   Future<Comment> addComment({required String postId, required String text});
   Future<void> likePost(String postId);
   Future<void> unlikePost(String postId);
+
+  /// Admin-only: removes a post from the feed.
+  Future<void> deletePost(String postId);
 }

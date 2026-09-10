@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_dimensions.dart';
 import '../../app/theme/app_text_styles.dart';
 
@@ -22,9 +23,10 @@ class AppChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.appColors;
     final activeColor = color ?? AppColors.primary;
-    final background = selected ? activeColor.withValues(alpha: 0.12) : AppColors.surfaceAlt;
-    final foreground = selected ? activeColor : AppColors.textSecondary;
+    final background = selected ? activeColor.withValues(alpha: 0.12) : tokens.surfaceAlt;
+    final foreground = selected ? activeColor : tokens.textSecondary;
 
     return InkWell(
       onTap: onTap,

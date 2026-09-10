@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -31,7 +32,7 @@ class RideJoinActionBar extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: const Border(top: BorderSide(color: AppColors.border)),
+        border: Border(top: BorderSide(color: context.appColors.border)),
       ),
       child: SafeArea(
         child: Padding(

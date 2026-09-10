@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_dimensions.dart';
 import '../../core/enums/notification_type.dart';
 import '../../core/extensions/date_time_extensions.dart';
@@ -19,7 +19,7 @@ class NotificationTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        color: notification.isRead ? Colors.transparent : AppColors.primaryLight.withValues(alpha: 0.35),
+        color: notification.isRead ? Colors.transparent : context.appColors.primaryLight.withValues(alpha: 0.35),
         padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd, vertical: AppDimensions.spaceSm),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

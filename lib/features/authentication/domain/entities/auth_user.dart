@@ -5,11 +5,13 @@ class AuthUser {
   final String name;
   final String email;
   final String avatarUrl;
+  final bool isAdmin;
 
   const AuthUser({
     required this.id,
     required this.name,
     required this.email,
     required this.avatarUrl,
+    this.isAdmin = false,
   });
 }

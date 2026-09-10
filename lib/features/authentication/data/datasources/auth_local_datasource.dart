@@ -12,6 +12,9 @@ class AuthLocalDataSource {
   static const demoEmail = 'demo@bikersync.app';
   static const demoPassword = 'biker123';
 
+  static const adminEmail = 'admin@gmail.com';
+  static const adminPassword = 'Test@1234';
+
   Future<AuthUserDto?> getCurrentSession() async {
     await Future.delayed(AppConstants.shortDataSourceDelay);
     final prefs = await SharedPreferences.getInstance();
@@ -23,6 +26,14 @@ class AuthLocalDataSource {
   Future<AuthUserDto> login({required String email, required String password}) async {
     await Future.delayed(AppConstants.dataSourceDelay);
     final normalized = email.trim().toLowerCase();
+
+    if (normalized == adminEmail) {
+      if (password != adminPassword) throw const AuthException();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(AppConstants.authTokenKey, normalized);
+      return _dtoForEmail(normalized);
+    }
+
     if (normalized != demoEmail && password.length < 6) {
       throw const AuthException();
     }
@@ -58,6 +69,15 @@ class AuthLocalDataSource {
   }
 
   AuthUserDto _dtoForEmail(String email) {
+    if (email == adminEmail) {
+      return const AuthUserDto(
+        id: AppConstants.adminUserId,
+        name: 'Admin',
+        email: adminEmail,
+        avatarUrl: '',
+        isAdmin: true,
+      );
+    }
     return AuthUserDto(
       id: DummyPeople.me.id,
       name: DummyPeople.me.name,

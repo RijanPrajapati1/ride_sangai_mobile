@@ -26,4 +26,10 @@ abstract class RideRepository {
     required List<String> requirements,
     String? imageUrl,
   });
+
+  /// Admin-only: every ride in the system, regardless of date or organizer.
+  Future<List<Ride>> getAllRides();
+
+  /// Admin-only: removes a ride from the platform.
+  Future<void> deleteRide(String rideId);
 }

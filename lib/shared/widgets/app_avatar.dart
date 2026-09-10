@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_text_styles.dart';
 import 'app_network_image.dart';
 
@@ -62,11 +63,11 @@ class _Initials extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+      decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
       child: Text(
         initials,
         style: AppTextStyles.titleMd.copyWith(
-          color: AppColors.primaryDark,
+          color: AppColors.primary,
           fontSize: size * 0.36,
         ),
       ),

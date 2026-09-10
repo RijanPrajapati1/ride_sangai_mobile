@@ -92,6 +92,16 @@ class RideLocalDataSource {
     return dto;
   }
 
+  Future<List<RideDto>> getAllRides() async {
+    await Future.delayed(AppConstants.dataSourceDelay);
+    return List.of(_rides)..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  Future<void> deleteRide(String rideId) async {
+    await Future.delayed(AppConstants.shortDataSourceDelay);
+    _rides.removeWhere((r) => r.id == rideId);
+  }
+
   List<RideParticipantDto> _seedParticipants(List<RideDto> rides) {
     final participants = <RideParticipantDto>[];
     var seq = 0;

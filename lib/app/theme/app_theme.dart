@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'app_colors_ext.dart';
 import 'app_dimensions.dart';
 import 'app_text_styles.dart';
 
@@ -11,14 +12,21 @@ class AppTheme {
 
   static ThemeData _build(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    final background = isDark ? AppColors.backgroundDark : AppColors.background;
-    final surface = isDark ? AppColors.surfaceDark : AppColors.surface;
-    final textPrimary = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
-    final textSecondary = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
-    final border = isDark ? AppColors.borderDark : AppColors.border;
+    final tokens = isDark ? AppColorsExt.dark : AppColorsExt.light;
+    final background = tokens.background;
+    final surface = tokens.surface;
+    final textPrimary = tokens.textPrimary;
+    final textSecondary = tokens.textSecondary;
+    final border = tokens.border;
 
-    final colorScheme = ColorScheme(
+    // Seed a full Material scheme from our brand color so every slot
+    // (tertiary, containers, outline, etc.) stays harmonious with the brand
+    // instead of falling back to Flutter's baked-in defaults, then pin the
+    // specific roles we brand explicitly.
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
       brightness: brightness,
+    ).copyWith(
       primary: AppColors.primary,
       onPrimary: Colors.white,
       secondary: AppColors.secondary,
@@ -37,6 +45,7 @@ class AppTheme {
       fontFamily: 'Roboto',
       dividerColor: border,
       splashFactory: InkRipple.splashFactory,
+      extensions: [tokens],
       appBarTheme: AppBarTheme(
         backgroundColor: background,
         surfaceTintColor: Colors.transparent,
@@ -94,9 +103,20 @@ class AppTheme {
           textStyle: AppTextStyles.button,
         ),
       ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected) ? Colors.white : textSecondary,
+          ),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected) ? AppColors.primary : surface,
+          ),
+          side: WidgetStatePropertyAll(BorderSide(color: border)),
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? AppColors.surfaceAltDark : AppColors.surfaceAlt,
+        fillColor: tokens.surfaceAlt,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.spaceMd,
           vertical: AppDimensions.spaceMd,
@@ -117,11 +137,11 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           borderSide: const BorderSide(color: AppColors.error, width: 1.2),
         ),
-        hintStyle: AppTextStyles.bodyMd,
-        labelStyle: AppTextStyles.bodyMd,
+        hintStyle: AppTextStyles.bodyMd.copyWith(color: tokens.textMuted),
+        labelStyle: AppTextStyles.bodyMd.copyWith(color: textSecondary),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: isDark ? AppColors.surfaceAltDark : AppColors.surfaceAlt,
+        backgroundColor: tokens.surfaceAlt,
         labelStyle: AppTextStyles.labelSm.copyWith(color: textPrimary),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         shape: RoundedRectangleBorder(
@@ -129,7 +149,7 @@ class AppTheme {
         ),
         side: BorderSide.none,
       ),
-      dividerTheme: DividerThemeData(color: border, thickness: 1, space: 1),
+      dividerTheme: DividerThemeData(color: tokens.divider, thickness: 1, space: 1),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: surface,
         shape: const RoundedRectangleBorder(

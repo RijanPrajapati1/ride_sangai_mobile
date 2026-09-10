@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/extensions/date_time_extensions.dart';
@@ -234,18 +235,19 @@ class _MapPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.appColors;
     return Container(
       height: 120,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surfaceAlt,
+        color: tokens.surfaceAlt,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: tokens.border),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.map_outlined, color: AppColors.textMuted, size: 28),
+          Icon(Icons.map_outlined, color: tokens.textMuted, size: 28),
           const SizedBox(height: 6),
           Text('Map preview coming soon', style: Theme.of(context).textTheme.bodySmall),
         ],

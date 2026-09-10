@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/extensions/date_time_extensions.dart';
 import '../../../../shared/widgets/app_avatar.dart';
@@ -104,7 +105,7 @@ class _ActionButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 18, color: color ?? AppColors.textSecondary),
+              Icon(icon, size: 18, color: color ?? context.appColors.textSecondary),
               const SizedBox(width: 6),
               Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color)),
             ],

@@ -8,6 +8,7 @@ class RouteNames {
   static const forgotPassword = '/forgot-password';
 
   static const home = '/home';
+  static const admin = '/admin';
 
   static const rides = '/rides';
   static const rideDetails = '/rides/:id';

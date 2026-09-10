@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_text_styles.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 
@@ -20,6 +20,7 @@ class ParticipantAvatarsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final shown = avatarUrls.take(5).toList();
     final remaining = totalCount - shown.length;
+    final tokens = context.appColors;
 
     return InkWell(
       onTap: onTap,
@@ -36,7 +37,7 @@ class ParticipantAvatarsRow extends StatelessWidget {
                   Positioned(
                     left: i * 22.0,
                     child: Container(
-                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: tokens.surface),
                       padding: const EdgeInsets.all(1.5),
                       child: AppAvatar(imageUrl: shown[i], name: 'Rider', size: 29),
                     ),
@@ -45,9 +46,9 @@ class ParticipantAvatarsRow extends StatelessWidget {
             ),
           ),
           if (remaining > 0)
-            Text('+$remaining more', style: AppTextStyles.bodySm.copyWith(color: AppColors.textSecondary))
+            Text('+$remaining more', style: AppTextStyles.bodySm.copyWith(color: tokens.textSecondary))
           else if (totalCount > 0)
-            Text('$totalCount joined', style: AppTextStyles.bodySm.copyWith(color: AppColors.textSecondary)),
+            Text('$totalCount joined', style: AppTextStyles.bodySm.copyWith(color: tokens.textSecondary)),
         ],
       ),
     );

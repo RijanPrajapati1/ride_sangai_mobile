@@ -18,4 +18,10 @@ class RideRequestRepositoryImpl implements RideRequestRepository {
 
   @override
   Future<void> decline(String requestId) => _dataSource.decline(requestId);
+
+  @override
+  Future<List<RideRequest>> getAllRequests() async {
+    final dtos = await _dataSource.getAllRequests();
+    return dtos.map((d) => d.toEntity()).toList();
+  }
 }

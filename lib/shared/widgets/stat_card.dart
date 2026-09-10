@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_dimensions.dart';
 
 class StatCard extends StatelessWidget {
@@ -28,18 +28,18 @@ class StatCardRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = context.appColors.border;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppDimensions.spaceMd),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: border),
       ),
       child: Row(
         children: [
           for (var i = 0; i < stats.length; i++) ...[
-            if (i != 0)
-              SizedBox(height: 32, child: VerticalDivider(width: 1, color: AppColors.border)),
+            if (i != 0) SizedBox(height: 32, child: VerticalDivider(width: 1, color: border)),
             Expanded(child: stats[i]),
           ],
         ],

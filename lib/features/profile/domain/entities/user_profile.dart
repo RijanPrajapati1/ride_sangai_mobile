@@ -35,6 +35,7 @@ class UserProfile {
 
   UserProfile copyWith({
     String? name,
+    String? avatarUrl,
     String? bio,
     String? location,
     ExperienceLevel? experienceLevel,
@@ -47,7 +48,7 @@ class UserProfile {
       id: id,
       name: name ?? this.name,
       email: email,
-      avatarUrl: avatarUrl,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       bio: bio ?? this.bio,
       location: location ?? this.location,
       experienceLevel: experienceLevel ?? this.experienceLevel,

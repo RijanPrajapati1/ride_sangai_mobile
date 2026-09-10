@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
@@ -75,7 +75,7 @@ class _ProfileBody extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.location_on_outlined, size: 16, color: AppColors.textMuted),
+              Icon(Icons.location_on_outlined, size: 16, color: context.appColors.textMuted),
               const SizedBox(width: 4),
               Text(profile.location, style: Theme.of(context).textTheme.bodyMedium),
             ],

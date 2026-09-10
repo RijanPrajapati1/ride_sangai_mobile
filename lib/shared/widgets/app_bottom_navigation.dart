@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 
 class AppBottomNavItem {
   final IconData icon;
@@ -33,7 +34,7 @@ class AppBottomNavigation extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: const Border(top: BorderSide(color: AppColors.border)),
+        border: Border(top: BorderSide(color: context.appColors.border)),
       ),
       child: SafeArea(
         child: SizedBox(
@@ -59,7 +60,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppColors.primary : AppColors.textMuted;
+    final color = selected ? AppColors.primary : context.appColors.textMuted;
     return InkWell(
       onTap: onTap,
       child: Column(

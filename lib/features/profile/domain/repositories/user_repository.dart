@@ -9,4 +9,10 @@ abstract class UserRepository {
   Future<List<UserProfile>> getRecommendedRiders();
   Future<UserPreferences> getPreferences();
   Future<UserPreferences> updatePreferences(UserPreferences preferences);
+
+  /// Admin-only: every rider registered in the app.
+  Future<List<UserProfile>> getAllUsers();
+
+  /// Admin-only: removes a rider from the platform.
+  Future<void> removeUser(String userId);
 }

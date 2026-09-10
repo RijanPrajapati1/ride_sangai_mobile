@@ -35,7 +35,11 @@ class AppColors {
   static const surfaceAltDark = Color(0xFF1E292E);
   static const textPrimaryDark = Color(0xFFF2F5F6);
   static const textSecondaryDark = Color(0xFF9AAAB1);
+  static const textMutedDark = Color(0xFF71828A);
   static const borderDark = Color(0xFF2A363B);
+  static const dividerDark = Color(0xFF263136);
+  static const primaryLightDark = Color(0xFF163430);
+  static const secondaryLightDark = Color(0xFF3A2A20);
 
   static const difficultyEasy = Color(0xFF2FB170);
   static const difficultyModerate = Color(0xFFF5A623);

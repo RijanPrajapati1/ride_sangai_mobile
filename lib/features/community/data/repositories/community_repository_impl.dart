@@ -37,4 +37,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
   @override
   Future<void> unlikePost(String postId) => _dataSource.unlikePost(postId);
+
+  @override
+  Future<void> deletePost(String postId) => _dataSource.deletePost(postId);
 }

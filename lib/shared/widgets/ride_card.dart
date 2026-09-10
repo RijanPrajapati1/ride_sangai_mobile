@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_dimensions.dart';
 import '../../core/enums/ride_enums.dart';
 import '../../core/extensions/date_time_extensions.dart';
@@ -18,6 +18,7 @@ class RideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textMuted = context.appColors.textMuted;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -74,7 +75,7 @@ class RideCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today_outlined, size: 14, color: AppColors.textMuted),
+                      Icon(Icons.calendar_today_outlined, size: 14, color: textMuted),
                       const SizedBox(width: 6),
                       Text('${ride.date.relativeDayLabel} · ${ride.date.toTime}',
                           style: Theme.of(context).textTheme.bodySmall),
@@ -83,7 +84,7 @@ class RideCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textMuted),
+                      Icon(Icons.location_on_outlined, size: 14, color: textMuted),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
@@ -108,7 +109,7 @@ class RideCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Icon(Icons.groups_outlined, size: 15, color: AppColors.textMuted),
+                      Icon(Icons.groups_outlined, size: 15, color: textMuted),
                       const SizedBox(width: 4),
                       Text('${ride.participantCount}/${ride.maxParticipants}',
                           style: Theme.of(context).textTheme.bodySmall),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../shared/widgets/app_app_bar.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
@@ -98,7 +98,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           DecoratedBox(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              border: const Border(top: BorderSide(color: AppColors.border)),
+              border: Border(top: BorderSide(color: context.appColors.border)),
             ),
             child: SafeArea(
               top: false,

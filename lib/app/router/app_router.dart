@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_constants.dart';
+import '../../features/admin/presentation/screens/admin_dashboard_screen.dart';
 import '../../features/authentication/presentation/providers/auth_providers.dart';
 import '../../features/authentication/presentation/screens/forgot_password_screen.dart';
 import '../../features/authentication/presentation/screens/login_screen.dart';
@@ -55,6 +56,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return isAuthRoute ? null : RouteNames.login;
       }
 
+      final isAdmin = authState.user?.isAdmin ?? false;
+      final isAdminRoute = location == RouteNames.admin;
+      const riderShellRoots = {
+        RouteNames.home,
+        RouteNames.rides,
+        RouteNames.community,
+        RouteNames.messages,
+        RouteNames.profile,
+      };
+
+      if (isAdmin) {
+        // Admins can still drill into a rider/ride/post's detail page (pushed
+        // on top of the dashboard) to review it before moderating — only the
+        // rider bottom-nav tabs themselves are off-limits.
+        final blocked = isSplash || isOnboardingRoute || isAuthRoute || riderShellRoots.contains(location);
+        return blocked ? RouteNames.admin : null;
+      }
+      if (isAdminRoute) {
+        return RouteNames.home;
+      }
+
       if (isSplash || isOnboardingRoute || isAuthRoute) {
         return RouteNames.home;
       }
@@ -62,6 +84,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: RouteNames.splash, builder: (context, state) => const SplashScreen()),
+      GoRoute(path: RouteNames.admin, builder: (context, state) => const AdminDashboardScreen()),
       GoRoute(path: RouteNames.onboarding, builder: (context, state) => const OnboardingScreen()),
       GoRoute(path: RouteNames.login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: RouteNames.register, builder: (context, state) => const RegisterScreen()),
@@ -85,11 +108,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.communityPost,
         builder: (context, state) => PostDetailScreen(postId: state.pathParameters['postId']!),
       ),
+      // Must be declared before RouteNames.userProfile ('/profile/:userId'):
+      // go_router matches sibling routes in declaration order, and the
+      // wildcard would otherwise swallow '/profile/edit' as userId='edit'.
+      GoRoute(path: RouteNames.editProfile, builder: (context, state) => const EditProfileScreen()),
       GoRoute(
         path: RouteNames.userProfile,
         builder: (context, state) => ProfileScreen(userId: state.pathParameters['userId']!),
       ),
-      GoRoute(path: RouteNames.editProfile, builder: (context, state) => const EditProfileScreen()),
       GoRoute(path: RouteNames.settings, builder: (context, state) => const SettingsScreen()),
       GoRoute(
         path: RouteNames.conversation,

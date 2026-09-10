@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../shared/widgets/app_network_image.dart';
 
@@ -59,6 +59,7 @@ class CoverImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.appColors;
     return InkWell(
       onTap: () => _pick(context),
       borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
@@ -67,15 +68,15 @@ class CoverImagePicker extends StatelessWidget {
         width: double.infinity,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: AppColors.surfaceAlt,
+          color: tokens.surfaceAlt,
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: tokens.border),
         ),
         child: imageUrl == null
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.add_photo_alternate_outlined, color: AppColors.textMuted, size: 30),
+                  Icon(Icons.add_photo_alternate_outlined, color: tokens.textMuted, size: 30),
                   const SizedBox(height: 6),
                   Text('Add cover photo', style: Theme.of(context).textTheme.bodyMedium),
                 ],

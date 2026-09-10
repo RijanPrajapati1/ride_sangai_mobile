@@ -53,6 +53,16 @@ class UserLocalDataSource {
     return _preferences;
   }
 
+  Future<List<UserProfileDto>> getAllUsers() async {
+    await Future.delayed(AppConstants.dataSourceDelay);
+    return _profiles.values.toList()..sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  Future<void> removeUser(String userId) async {
+    await Future.delayed(AppConstants.shortDataSourceDelay);
+    _profiles.remove(userId);
+  }
+
   Map<String, UserProfileDto> _seedProfiles() {
     UserProfileDto build(
       DummyPerson p, {
