@@ -34,6 +34,10 @@ final organizedRidesProvider = FutureProvider<List<Ride>>((ref) {
   return ref.watch(rideRepositoryProvider).getOrganizedRides(AppConstants.currentUserId);
 });
 
+final userOrganizedRidesProvider = FutureProvider.family<List<Ride>, String>((ref, userId) {
+  return ref.watch(rideRepositoryProvider).getOrganizedRides(userId);
+});
+
 final joinedRidesProvider = FutureProvider<List<Ride>>((ref) {
   return ref.watch(rideRepositoryProvider).getJoinedRides(AppConstants.currentUserId);
 });

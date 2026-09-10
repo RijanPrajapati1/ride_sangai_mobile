@@ -47,6 +47,32 @@ class MessageLocalDataSource {
     return message;
   }
 
+  Future<ConversationDto> getOrCreateConversationWith({
+    required String userId,
+    required String userName,
+    required String userAvatarUrl,
+  }) async {
+    await Future.delayed(AppConstants.shortDataSourceDelay);
+    final existing = _conversations.where((c) => c.userId == userId).cast<ConversationDto?>().firstWhere(
+          (c) => c != null,
+          orElse: () => null,
+        );
+    if (existing != null) return existing;
+
+    final conversation = ConversationDto(
+      id: 'c_${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      userName: userName,
+      userAvatarUrl: userAvatarUrl,
+      lastMessage: 'Say hello 👋',
+      lastMessageTime: DateTime.now(),
+      unreadCount: 0,
+    );
+    _conversations.add(conversation);
+    _messages[conversation.id] = [];
+    return conversation;
+  }
+
   List<ConversationDto> _seedConversations() {
     final now = DateTime.now();
     return [

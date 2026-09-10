@@ -23,6 +23,13 @@ final conversationMessagesProvider = FutureProvider.family<List<Message>, String
   return ref.watch(messageRepositoryProvider).getMessages(conversationId);
 });
 
+final totalUnreadMessagesProvider = Provider<int>((ref) {
+  return ref.watch(conversationsProvider).maybeWhen(
+        data: (items) => items.fold<int>(0, (sum, c) => sum + c.unreadCount),
+        orElse: () => 0,
+      );
+});
+
 final messageActionsControllerProvider = Provider((ref) => MessageActionsController(ref));
 
 class MessageActionsController {
@@ -34,5 +41,19 @@ class MessageActionsController {
     await SendMessage(_ref.read(messageRepositoryProvider))(conversationId: conversationId, text: text);
     _ref.invalidate(conversationMessagesProvider(conversationId));
     _ref.invalidate(conversationsProvider);
+  }
+
+  Future<Conversation> openConversationWith({
+    required String userId,
+    required String userName,
+    required String userAvatarUrl,
+  }) async {
+    final conversation = await _ref.read(messageRepositoryProvider).getOrCreateConversationWith(
+          userId: userId,
+          userName: userName,
+          userAvatarUrl: userAvatarUrl,
+        );
+    _ref.invalidate(conversationsProvider);
+    return conversation;
   }
 }

@@ -10,10 +10,11 @@ import '../dto/ride_participant_dto.dart';
 class RideLocalDataSource {
   RideLocalDataSource() {
     _rides = _seedRides();
+    _participants = _seedParticipants(_rides);
   }
 
   late final List<RideDto> _rides;
-  final List<RideParticipantDto> _participants = [];
+  late final List<RideParticipantDto> _participants;
 
   Future<List<RideDto>> getUpcomingRides() async {
     await Future.delayed(AppConstants.dataSourceDelay);
@@ -54,7 +55,13 @@ class RideLocalDataSource {
   Future<List<RideDto>> getPastRides(String userId) async {
     await Future.delayed(AppConstants.dataSourceDelay);
     final now = DateTime.now();
-    return _rides.where((r) => r.date.isBefore(now)).toList()
+    return _rides
+        .where((r) =>
+            r.date.isBefore(now) &&
+            (r.organizerId == userId ||
+                r.joinStatus == RideJoinStatus.approved ||
+                r.joinStatus == RideJoinStatus.organizer))
+        .toList()
       ..sort((a, b) => b.date.compareTo(a.date));
   }
 
@@ -83,6 +90,26 @@ class RideLocalDataSource {
     await Future.delayed(AppConstants.dataSourceDelay);
     _rides.insert(0, dto);
     return dto;
+  }
+
+  List<RideParticipantDto> _seedParticipants(List<RideDto> rides) {
+    final participants = <RideParticipantDto>[];
+    var seq = 0;
+    for (final ride in rides) {
+      for (final avatarUrl in ride.participantAvatars) {
+        final person = DummyPeople.all.where((p) => p.avatarUrl == avatarUrl).firstOrNull;
+        if (person == null) continue;
+        participants.add(RideParticipantDto(
+          id: 'pt_${seq++}',
+          rideId: ride.id,
+          userId: person.id,
+          name: person.name,
+          avatarUrl: person.avatarUrl,
+          joinedAt: ride.date.subtract(Duration(days: 1 + seq)),
+        ));
+      }
+    }
+    return participants;
   }
 
   List<RideDto> _seedRides() {

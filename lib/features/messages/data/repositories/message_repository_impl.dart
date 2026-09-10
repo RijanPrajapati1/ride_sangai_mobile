@@ -25,4 +25,18 @@ class MessageRepositoryImpl implements MessageRepository {
     final dto = await _dataSource.sendMessage(conversationId: conversationId, text: text);
     return dto.toEntity();
   }
+
+  @override
+  Future<Conversation> getOrCreateConversationWith({
+    required String userId,
+    required String userName,
+    required String userAvatarUrl,
+  }) async {
+    final dto = await _dataSource.getOrCreateConversationWith(
+      userId: userId,
+      userName: userName,
+      userAvatarUrl: userAvatarUrl,
+    );
+    return dto.toEntity();
+  }
 }
