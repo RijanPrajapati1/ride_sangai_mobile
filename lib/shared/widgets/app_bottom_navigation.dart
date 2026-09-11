@@ -36,24 +36,31 @@ class AppBottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      // Must differ from the scaffold background, or the notch Material cuts
+      // for the FAB has no contrast against it and never reads as a curve.
+      color: context.appColors.surface,
       shape: const CircularNotchedRectangle(),
-      notchMargin: 8,
-      elevation: 0,
+      notchMargin: 10,
+      // A visible elevation lets Material's shadow trace the notch's curve,
+      // instead of a straight border that would cut across it and hide it.
+      elevation: 6,
       padding: EdgeInsets.zero,
-      child: DecoratedBox(
-        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.appColors.border))),
-        child: SafeArea(
-          child: SizedBox(
-            height: 62,
-            child: Row(
-              children: [
-                for (var i = 0; i < items.length; i++) ...[
-                  Expanded(child: _NavItem(item: items[i], selected: i == currentIndex, onTap: () => onTap(i))),
-                  if (i == 1) const SizedBox(width: AppDimensions.spaceXxl),
-                ],
+      child: SafeArea(
+        child: SizedBox(
+          height: 62,
+          child: Row(
+            children: [
+              for (var i = 0; i < items.length; i++) ...[
+                Expanded(
+                  child: _NavItem(
+                    item: items[i],
+                    selected: i == currentIndex,
+                    onTap: () => onTap(i),
+                  ),
+                ),
+                if (i == 1) const SizedBox(width: AppDimensions.spaceXxl),
               ],
-            ),
+            ],
           ),
         ),
       ),
@@ -66,7 +73,11 @@ class _NavItem extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const _NavItem({required this.item, required this.selected, required this.onTap});
+  const _NavItem({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +90,13 @@ class _NavItem extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              Icon(selected ? item.activeIcon : item.icon, color: color, size: 24),
-              if (item.trailingBadge != null) Positioned(right: -6, top: -4, child: item.trailingBadge!),
+              Icon(
+                selected ? item.activeIcon : item.icon,
+                color: color,
+                size: 24,
+              ),
+              if (item.trailingBadge != null)
+                Positioned(right: -6, top: -4, child: item.trailingBadge!),
             ],
           ),
           const SizedBox(height: 4),
@@ -88,7 +104,11 @@ class _NavItem extends StatelessWidget {
             item.label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
           ),
         ],
       ),

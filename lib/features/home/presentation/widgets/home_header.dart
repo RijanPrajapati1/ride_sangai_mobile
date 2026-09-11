@@ -8,16 +8,20 @@ class HomeHeader extends StatelessWidget {
   final String name;
   final String avatarUrl;
   final int unreadNotifications;
+  final int unreadMessages;
   final VoidCallback onAvatarTap;
   final VoidCallback onNotificationsTap;
+  final VoidCallback onMessagesTap;
 
   const HomeHeader({
     super.key,
     required this.name,
     required this.avatarUrl,
     required this.unreadNotifications,
+    required this.unreadMessages,
     required this.onAvatarTap,
     required this.onNotificationsTap,
+    required this.onMessagesTap,
   });
 
   String get _greeting {
@@ -52,6 +56,21 @@ class HomeHeader extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text('Ready for your next ride?', style: Theme.of(context).textTheme.bodyMedium),
               ],
+            ),
+          ),
+          InkWell(
+            onTap: onMessagesTap,
+            borderRadius: BorderRadius.circular(24),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.chat_bubble_outline, size: 24),
+                  if (unreadMessages > 0)
+                    Positioned(right: -4, top: -4, child: AppBadge(count: unreadMessages)),
+                ],
+              ),
             ),
           ),
           InkWell(

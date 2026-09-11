@@ -62,7 +62,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         RouteNames.home,
         RouteNames.rides,
         RouteNames.community,
-        RouteNames.messages,
         RouteNames.profile,
       };
 
@@ -117,6 +116,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => ProfileScreen(userId: state.pathParameters['userId']!),
       ),
       GoRoute(path: RouteNames.settings, builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: RouteNames.messages, builder: (context, state) => const ConversationsScreen()),
       GoRoute(
         path: RouteNames.conversation,
         builder: (context, state) => ChatScreen(conversationId: state.pathParameters['conversationId']!),
@@ -132,9 +132,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: RouteNames.community, builder: (context, state) => const CommunityScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: RouteNames.messages, builder: (context, state) => const ConversationsScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
