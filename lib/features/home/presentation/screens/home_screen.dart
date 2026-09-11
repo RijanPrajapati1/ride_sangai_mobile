@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../shared/layouts/app_scaffold.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
@@ -26,7 +28,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(currentUserProfileProvider);
     final unreadNotifications = ref.watch(unreadNotificationCountProvider);
-    final ridesAsync = ref.watch(upcomingRidesProvider);
+    final category = ref.watch(selectedDashboardCategoryProvider);
+    final ridesAsync = ref.watch(dashboardUpcomingRidesProvider);
     final postsAsync = ref.watch(communityPostsProvider);
     final ridersAsync = ref.watch(recommendedRidersProvider);
 
@@ -61,12 +64,12 @@ class HomeScreen extends ConsumerWidget {
               actions: [
                 QuickAction(
                   icon: Icons.add_circle_outline,
-                  label: 'Create Ride',
+                  label: 'Create ${category.activitySingular}',
                   onTap: () => context.push(RouteNames.createRide),
                 ),
                 QuickAction(
                   icon: Icons.route_outlined,
-                  label: 'My Rides',
+                  label: 'My ${category.activityNoun}',
                   onTap: () => context.push(RouteNames.myRides),
                 ),
                 QuickAction(
@@ -83,7 +86,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppDimensions.spaceLg),
             SectionHeader(
-              title: 'Featured Ride',
+              title: 'Featured ${category.activitySingular}',
               actionLabel: 'See all',
               onAction: () => context.go(RouteNames.rides),
             ),
@@ -93,9 +96,12 @@ class HomeScreen extends ConsumerWidget {
               error: (e, st) => AppErrorWidget(message: e.toString()),
               data: (rides) {
                 if (rides.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
-                    child: EmptyState(title: 'No upcoming rides', message: 'Check back soon or create your own ride.'),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
+                    child: EmptyState(
+                      title: 'No upcoming ${category.activityNoun.toLowerCase()}',
+                      message: 'Check back soon or create your own ${category.activitySingular.toLowerCase()}.',
+                    ),
                   );
                 }
                 final featured = rides.first;
@@ -112,7 +118,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     if (upcoming.isNotEmpty) ...[
                       const SizedBox(height: AppDimensions.spaceLg),
-                      const SectionHeader(title: 'Upcoming Rides'),
+                      SectionHeader(title: 'Upcoming ${category.activityNoun}'),
                       const SizedBox(height: AppDimensions.spaceSm),
                       SizedBox(
                         height: 268,
@@ -167,12 +173,12 @@ class HomeScreen extends ConsumerWidget {
             const SectionHeader(title: 'Recommended Riders'),
             const SizedBox(height: AppDimensions.spaceSm),
             ridersAsync.when(
-              loading: () => const SizedBox(height: 160, child: LoadingWidget()),
+              loading: () => const SizedBox(height: 180, child: LoadingWidget()),
               error: (e, st) => AppErrorWidget(message: e.toString()),
               data: (riders) {
                 if (riders.isEmpty) return const SizedBox.shrink();
                 return SizedBox(
-                  height: 160,
+                  height: 180,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),

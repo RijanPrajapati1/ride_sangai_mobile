@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_colors_ext.dart';
+import '../../app/theme/app_dimensions.dart';
 
 class AppBottomNavItem {
   final IconData icon;
@@ -17,6 +18,9 @@ class AppBottomNavItem {
   });
 }
 
+/// Bottom nav with a notch left of center for the shell's floating category
+/// switcher (see [AppShell]) — pair with `floatingActionButtonLocation:
+/// FloatingActionButtonLocation.centerDocked`.
 class AppBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -31,19 +35,25 @@ class AppBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(top: BorderSide(color: context.appColors.border)),
-      ),
-      child: SafeArea(
-        child: SizedBox(
-          height: 62,
-          child: Row(
-            children: [
-              for (var i = 0; i < items.length; i++)
-                Expanded(child: _NavItem(item: items[i], selected: i == currentIndex, onTap: () => onTap(i))),
-            ],
+    return BottomAppBar(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      child: DecoratedBox(
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.appColors.border))),
+        child: SafeArea(
+          child: SizedBox(
+            height: 62,
+            child: Row(
+              children: [
+                for (var i = 0; i < items.length; i++) ...[
+                  Expanded(child: _NavItem(item: items[i], selected: i == currentIndex, onTap: () => onTap(i))),
+                  if (i == 1) const SizedBox(width: AppDimensions.spaceXxl),
+                ],
+              ],
+            ),
           ),
         ),
       ),
@@ -76,6 +86,8 @@ class _NavItem extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             item.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
           ),
         ],

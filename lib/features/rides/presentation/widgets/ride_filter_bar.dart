@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../providers/ride_providers.dart';
 
 class RideFilterBar extends StatelessWidget {
+  final DashboardCategory category;
   final RideFilters filters;
   final ValueChanged<RideType?> onTypeChanged;
   final ValueChanged<RideDifficulty?> onDifficultyChanged;
 
   const RideFilterBar({
     super.key,
+    required this.category,
     required this.filters,
     required this.onTypeChanged,
     required this.onDifficultyChanged,
@@ -25,7 +28,7 @@ class RideFilterBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
         children: [
-          for (final type in RideType.values) ...[
+          for (final type in category.rideTypes) ...[
             AppChip(
               label: type.label,
               icon: type.icon,

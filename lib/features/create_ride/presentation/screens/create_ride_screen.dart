@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -34,11 +36,19 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
 
   DateTime? _date;
   TimeOfDay? _time;
-  RideType _rideType = RideType.road;
+  late DashboardCategory _category;
+  late RideType _rideType;
   RideDifficulty _difficulty = RideDifficulty.easy;
   List<String> _requirements = ['Helmet'];
   String? _imageUrl;
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _category = ref.read(selectedDashboardCategoryProvider);
+    _rideType = _category.rideTypes.first;
+  }
 
   @override
   void dispose() {
@@ -88,7 +98,7 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Ride')),
+      appBar: AppBar(title: Text('Create ${_category.activitySingular}')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -96,10 +106,10 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
           children: [
             CoverImagePicker(imageUrl: _imageUrl, onChanged: (url) => setState(() => _imageUrl = url)),
             const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Ride details'),
+            SectionHeader(title: '${_category.activitySingular} details'),
             const SizedBox(height: AppDimensions.spaceSm),
             AppTextField(
-              label: 'Ride title',
+              label: '${_category.activitySingular} title',
               hint: 'e.g. Kathmandu Sunrise Ride',
               controller: _titleController,
               validator: (v) => Validators.required(v, field: 'Title'),
@@ -143,12 +153,12 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
               ],
             ),
             const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Ride profile'),
+            const SectionHeader(title: 'Details'),
             const SizedBox(height: AppDimensions.spaceSm),
             AppDropdown<RideType>(
-              label: 'Ride type',
+              label: 'Type',
               value: _rideType,
-              items: RideType.values,
+              items: _category.rideTypes,
               labelBuilder: (t) => t.label,
               onChanged: (t) => setState(() => _rideType = t ?? _rideType),
             ),
@@ -200,7 +210,7 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
               onChanged: (r) => setState(() => _requirements = r),
             ),
             const SizedBox(height: AppDimensions.spaceXl),
-            AppButton(label: 'Create Ride', onPressed: _submit, isLoading: _isSubmitting),
+            AppButton(label: 'Create ${_category.activitySingular}', onPressed: _submit, isLoading: _isSubmitting),
             const SizedBox(height: AppDimensions.spaceLg),
           ],
         ),

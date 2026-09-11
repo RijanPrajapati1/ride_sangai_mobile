@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../shared/layouts/app_scaffold.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
@@ -17,17 +19,24 @@ class RidesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final category = ref.watch(selectedDashboardCategoryProvider);
     final filters = ref.watch(rideFiltersProvider);
     final ridesAsync = ref.watch(filteredRidesProvider);
     final filtersController = ref.read(rideFiltersProvider.notifier);
 
+    // A type filter from a previous category no longer applies once the
+    // dashboard switches — drop it so the list isn't silently empty.
+    ref.listen(selectedDashboardCategoryProvider, (previous, next) {
+      if (previous != null && previous != next) filtersController.setType(null);
+    });
+
     return AppScaffold(
       appBar: AppBar(
-        title: const Text('Rides'),
+        title: Text(category.activityNoun),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            tooltip: 'Create ride',
+            tooltip: 'Create ${category.activitySingular.toLowerCase()}',
             onPressed: () => context.push(RouteNames.createRide),
           ),
         ],
@@ -43,13 +52,14 @@ class RidesScreen extends ConsumerWidget {
             ),
             child: TextField(
               onChanged: filtersController.setQuery,
-              decoration: const InputDecoration(
-                hintText: 'Search rides or locations',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                hintText: 'Search ${category.activityNoun.toLowerCase()} or locations',
+                prefixIcon: const Icon(Icons.search),
               ),
             ),
           ),
           RideFilterBar(
+            category: category,
             filters: filters,
             onTypeChanged: filtersController.setType,
             onDifficultyChanged: filtersController.setDifficulty,
@@ -63,7 +73,7 @@ class RidesScreen extends ConsumerWidget {
                 if (rides.isEmpty) {
                   return EmptyState(
                     icon: Icons.search_off,
-                    title: 'No rides found',
+                    title: 'No ${category.activityNoun.toLowerCase()} found',
                     message: 'Try adjusting your search or filters.',
                     actionLabel: filters.isActive ? 'Clear filters' : null,
                     onAction: filters.isActive ? filtersController.clear : null,
