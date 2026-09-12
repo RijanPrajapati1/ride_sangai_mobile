@@ -8,6 +8,7 @@ import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../../domain/entities/ride_request.dart';
 import '../providers/ride_request_providers.dart';
+import '../widgets/decline_reason_dialog.dart';
 import '../widgets/ride_request_tile.dart';
 
 class RideRequestsScreen extends ConsumerWidget {
@@ -68,7 +69,15 @@ class _RequestsList extends ConsumerWidget {
             return RideRequestTile(
               request: request,
               onApprove: () => actions.approve(request.id, rideId: rideId),
-              onDecline: () => actions.decline(request.id, rideId: rideId),
+              onDecline: () async {
+                final reason = await showDeclineReasonDialog(context, riderName: request.userName);
+                if (reason == null) return;
+                await actions.decline(
+                  request.id,
+                  rideId: rideId,
+                  reason: reason.isEmpty ? null : reason,
+                );
+              },
             );
           },
         );

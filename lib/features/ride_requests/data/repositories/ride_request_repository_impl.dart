@@ -17,7 +17,8 @@ class RideRequestRepositoryImpl implements RideRequestRepository {
   Future<void> approve(String requestId) => _dataSource.approve(requestId);
 
   @override
-  Future<void> decline(String requestId) => _dataSource.decline(requestId);
+  Future<void> decline(String requestId, {String? reason}) =>
+      _dataSource.decline(requestId, reason: reason);
 
   @override
   Future<List<RideRequest>> getAllRequests() async {

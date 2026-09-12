@@ -11,6 +11,7 @@ class RideRequest {
   final ExperienceLevel experienceLevel;
   final DateTime requestedAt;
   final RideRequestStatus status;
+  final String? declineReason;
 
   const RideRequest({
     required this.id,
@@ -23,9 +24,10 @@ class RideRequest {
     required this.experienceLevel,
     required this.requestedAt,
     this.status = RideRequestStatus.pending,
+    this.declineReason,
   });
 
-  RideRequest copyWith({RideRequestStatus? status}) {
+  RideRequest copyWith({RideRequestStatus? status, String? declineReason}) {
     return RideRequest(
       id: id,
       rideId: rideId,
@@ -37,6 +39,7 @@ class RideRequest {
       experienceLevel: experienceLevel,
       requestedAt: requestedAt,
       status: status ?? this.status,
+      declineReason: declineReason ?? this.declineReason,
     );
   }
 }

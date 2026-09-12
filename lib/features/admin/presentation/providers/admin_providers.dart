@@ -56,8 +56,8 @@ class AdminActionsController {
     _ref.invalidate(organizerRequestsProvider);
   }
 
-  Future<void> declineRequest(String requestId) async {
-    await _ref.read(rideRequestRepositoryProvider).decline(requestId);
+  Future<void> declineRequest(String requestId, {String? reason}) async {
+    await _ref.read(rideRequestRepositoryProvider).decline(requestId, reason: reason);
     _ref.invalidate(adminAllRequestsProvider);
     _ref.invalidate(organizerRequestsProvider);
   }

@@ -111,11 +111,6 @@ class HomeScreen extends ConsumerWidget {
                         label: 'Find Riders',
                         onTap: () => context.go(RouteNames.community),
                       ),
-                      QuickAction(
-                        icon: Icons.chat_bubble_outline,
-                        label: 'Messages',
-                        onTap: () => context.push(RouteNames.messages),
-                      ),
                     ],
                   ),
                   const SizedBox(height: AppDimensions.spaceLg),

@@ -35,6 +35,11 @@ class RidesScreen extends ConsumerWidget {
         title: Text(category.activityNoun),
         actions: [
           IconButton(
+            icon: const Icon(Icons.bookmark_outline),
+            tooltip: 'My ${category.activityNoun}',
+            onPressed: () => context.push(RouteNames.myRides),
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Create ${category.activitySingular.toLowerCase()}',
             onPressed: () => context.push(RouteNames.createRide),

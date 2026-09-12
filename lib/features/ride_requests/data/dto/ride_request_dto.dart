@@ -12,6 +12,7 @@ class RideRequestDto {
   final ExperienceLevel experienceLevel;
   final DateTime requestedAt;
   final RideRequestStatus status;
+  final String? declineReason;
 
   RideRequestDto({
     required this.id,
@@ -24,9 +25,10 @@ class RideRequestDto {
     required this.experienceLevel,
     required this.requestedAt,
     this.status = RideRequestStatus.pending,
+    this.declineReason,
   });
 
-  RideRequestDto copyWith({RideRequestStatus? status}) {
+  RideRequestDto copyWith({RideRequestStatus? status, String? declineReason}) {
     return RideRequestDto(
       id: id,
       rideId: rideId,
@@ -38,6 +40,7 @@ class RideRequestDto {
       experienceLevel: experienceLevel,
       requestedAt: requestedAt,
       status: status ?? this.status,
+      declineReason: declineReason ?? this.declineReason,
     );
   }
 
@@ -52,5 +55,6 @@ class RideRequestDto {
         experienceLevel: experienceLevel,
         requestedAt: requestedAt,
         status: status,
+        declineReason: declineReason,
       );
 }

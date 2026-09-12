@@ -55,6 +55,26 @@ final pastRidesProvider = FutureProvider<List<Ride>>((ref) {
   return ref.watch(rideRepositoryProvider).getPastRides(AppConstants.currentUserId);
 });
 
+/// "Mine" lists scoped to the active dashboard category, for the My Rides /
+/// My Hikes / My Treks screen reached from each category's tab.
+final dashboardOrganizedRidesProvider = Provider<AsyncValue<List<Ride>>>((ref) {
+  final category = ref.watch(selectedDashboardCategoryProvider);
+  final ridesAsync = ref.watch(organizedRidesProvider);
+  return ridesAsync.whenData((rides) => rides.where((r) => r.rideType.category == category).toList());
+});
+
+final dashboardJoinedRidesProvider = Provider<AsyncValue<List<Ride>>>((ref) {
+  final category = ref.watch(selectedDashboardCategoryProvider);
+  final ridesAsync = ref.watch(joinedRidesProvider);
+  return ridesAsync.whenData((rides) => rides.where((r) => r.rideType.category == category).toList());
+});
+
+final dashboardPastRidesProvider = Provider<AsyncValue<List<Ride>>>((ref) {
+  final category = ref.watch(selectedDashboardCategoryProvider);
+  final ridesAsync = ref.watch(pastRidesProvider);
+  return ridesAsync.whenData((rides) => rides.where((r) => r.rideType.category == category).toList());
+});
+
 /// Search + filter state for the ride discovery screen.
 class RideFilters {
   final String query;

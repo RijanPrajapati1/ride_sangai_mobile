@@ -12,6 +12,7 @@ import '../../../../shared/widgets/loading_widget.dart';
 import '../../../../shared/widgets/stat_card.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../../ride_requests/domain/entities/ride_request.dart';
+import '../../../ride_requests/presentation/widgets/decline_reason_dialog.dart';
 import '../providers/admin_providers.dart';
 import '../widgets/admin_post_row.dart';
 import '../widgets/admin_ride_row.dart';
@@ -184,7 +185,11 @@ class AdminDashboardScreen extends ConsumerWidget {
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.cancel_outlined, color: AppColors.error),
-                                          onPressed: () => actions.declineRequest(request.id),
+                                          onPressed: () async {
+                                            final reason = await showDeclineReasonDialog(context, riderName: request.userName);
+                                            if (reason == null) return;
+                                            await actions.declineRequest(request.id, reason: reason.isEmpty ? null : reason);
+                                          },
                                         ),
                                       ],
                                     )

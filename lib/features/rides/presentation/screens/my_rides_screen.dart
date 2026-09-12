@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
@@ -11,16 +13,19 @@ import '../../../../shared/widgets/ride_card.dart';
 import '../../domain/entities/ride.dart';
 import '../providers/ride_providers.dart';
 
-class MyRidesScreen extends StatelessWidget {
+class MyRidesScreen extends ConsumerWidget {
   const MyRidesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final category = ref.watch(selectedDashboardCategoryProvider);
+    final noun = category.activityNoun;
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My Rides'),
+          title: Text('My $noun'),
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
@@ -34,9 +39,9 @@ class MyRidesScreen extends StatelessWidget {
         body: TabBarView(
           children: [
             const _UpcomingTab(),
-            _RideListTab(provider: pastRidesProvider, emptyMessage: 'Rides you complete will show up here.'),
-            _RideListTab(provider: organizedRidesProvider, emptyMessage: 'Rides you organize will show up here.'),
-            _RideListTab(provider: joinedRidesProvider, emptyMessage: 'Rides you join will show up here.'),
+            _RideListTab(provider: dashboardPastRidesProvider, emptyMessage: '$noun you complete will show up here.'),
+            _RideListTab(provider: dashboardOrganizedRidesProvider, emptyMessage: '$noun you organize will show up here.'),
+            _RideListTab(provider: dashboardJoinedRidesProvider, emptyMessage: '$noun you join will show up here.'),
           ],
         ),
       ),
@@ -49,8 +54,9 @@ class _UpcomingTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final organizedAsync = ref.watch(organizedRidesProvider);
-    final joinedAsync = ref.watch(joinedRidesProvider);
+    final noun = ref.watch(selectedDashboardCategoryProvider).activityNoun;
+    final organizedAsync = ref.watch(dashboardOrganizedRidesProvider);
+    final joinedAsync = ref.watch(dashboardJoinedRidesProvider);
 
     if (organizedAsync.isLoading || joinedAsync.isLoading) return const LoadingWidget();
     if (organizedAsync.hasError) {
@@ -70,12 +76,12 @@ class _UpcomingTab extends ConsumerWidget {
     }
     final rides = combined.values.toList()..sort((a, b) => a.date.compareTo(b.date));
 
-    return _RideList(rides: rides, emptyMessage: 'You have no upcoming rides yet.');
+    return _RideList(rides: rides, emptyMessage: 'You have no upcoming ${noun.toLowerCase()} yet.');
   }
 }
 
 class _RideListTab extends ConsumerWidget {
-  final FutureProvider<List<Ride>> provider;
+  final ProviderBase<AsyncValue<List<Ride>>> provider;
   final String emptyMessage;
 
   const _RideListTab({required this.provider, required this.emptyMessage});

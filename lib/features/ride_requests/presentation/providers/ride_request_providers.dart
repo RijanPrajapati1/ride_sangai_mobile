@@ -33,8 +33,8 @@ class RideRequestActionsController {
     _invalidate(rideId);
   }
 
-  Future<void> decline(String requestId, {required String rideId}) async {
-    await DeclineRideRequest(_ref.read(rideRequestRepositoryProvider))(requestId);
+  Future<void> decline(String requestId, {required String rideId, String? reason}) async {
+    await DeclineRideRequest(_ref.read(rideRequestRepositoryProvider))(requestId, reason: reason);
     _invalidate(rideId);
   }
 

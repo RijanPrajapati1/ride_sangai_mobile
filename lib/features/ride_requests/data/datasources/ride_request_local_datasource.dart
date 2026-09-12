@@ -27,15 +27,15 @@ class RideRequestLocalDataSource {
     _update(requestId, RideRequestStatus.approved);
   }
 
-  Future<void> decline(String requestId) async {
+  Future<void> decline(String requestId, {String? reason}) async {
     await Future.delayed(AppConstants.shortDataSourceDelay);
-    _update(requestId, RideRequestStatus.declined);
+    _update(requestId, RideRequestStatus.declined, declineReason: reason);
   }
 
-  void _update(String requestId, RideRequestStatus status) {
+  void _update(String requestId, RideRequestStatus status, {String? declineReason}) {
     final index = _requests.indexWhere((r) => r.id == requestId);
     if (index == -1) throw const NotFoundException('This request no longer exists.');
-    _requests[index] = _requests[index].copyWith(status: status);
+    _requests[index] = _requests[index].copyWith(status: status, declineReason: declineReason);
   }
 
   List<RideRequestDto> _seedRequests() {
@@ -46,8 +46,9 @@ class RideRequestLocalDataSource {
       String bio,
       ExperienceLevel level,
       int hoursAgo,
-      RideRequestStatus status,
-    ) {
+      RideRequestStatus status, {
+      String? declineReason,
+    }) {
       return RideRequestDto(
         id: id,
         rideId: 'r_011',
@@ -59,6 +60,7 @@ class RideRequestLocalDataSource {
         experienceLevel: level,
         requestedAt: now.subtract(Duration(hours: hoursAgo)),
         status: status,
+        declineReason: declineReason,
       );
     }
 
@@ -102,6 +104,7 @@ class RideRequestLocalDataSource {
         ExperienceLevel.beginner,
         50,
         RideRequestStatus.declined,
+        declineReason: 'This route needs riders to stay for the full 4-hour loop — hope to see you on a shorter ride soon!',
       ),
     ];
   }

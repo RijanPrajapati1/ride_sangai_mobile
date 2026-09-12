@@ -5,5 +5,5 @@ class DeclineRideRequest {
 
   const DeclineRideRequest(this._repository);
 
-  Future<void> call(String requestId) => _repository.decline(requestId);
+  Future<void> call(String requestId, {String? reason}) => _repository.decline(requestId, reason: reason);
 }
