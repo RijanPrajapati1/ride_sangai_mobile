@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../data/datasources/ride_local_datasource.dart';
@@ -20,6 +21,14 @@ final rideRepositoryProvider = Provider<RideRepository>((ref) {
 
 final upcomingRidesProvider = FutureProvider<List<Ride>>((ref) {
   return ref.watch(rideRepositoryProvider).getUpcomingRides();
+});
+
+/// Upcoming rides scoped to the active dashboard (Cycling/Trekking/Hiking/
+/// Riding), for the Home screen and any other category-aware surface.
+final dashboardUpcomingRidesProvider = Provider<AsyncValue<List<Ride>>>((ref) {
+  final category = ref.watch(selectedDashboardCategoryProvider);
+  final ridesAsync = ref.watch(upcomingRidesProvider);
+  return ridesAsync.whenData((rides) => rides.where((r) => r.rideType.category == category).toList());
 });
 
 final rideDetailsProvider = FutureProvider.family<Ride, String>((ref, rideId) {
@@ -80,16 +89,18 @@ final rideFiltersProvider = StateNotifierProvider<RideFiltersController, RideFil
 });
 
 final filteredRidesProvider = Provider<AsyncValue<List<Ride>>>((ref) {
+  final category = ref.watch(selectedDashboardCategoryProvider);
   final ridesAsync = ref.watch(upcomingRidesProvider);
   final filters = ref.watch(rideFiltersProvider);
   return ridesAsync.whenData((rides) {
     return rides.where((ride) {
+      final matchesCategory = ride.rideType.category == category;
       final matchesQuery = filters.query.isEmpty ||
           ride.title.toLowerCase().contains(filters.query.toLowerCase()) ||
           ride.meetingPoint.toLowerCase().contains(filters.query.toLowerCase());
       final matchesType = filters.type == null || ride.rideType == filters.type;
       final matchesDifficulty = filters.difficulty == null || ride.difficulty == filters.difficulty;
-      return matchesQuery && matchesType && matchesDifficulty;
+      return matchesCategory && matchesQuery && matchesType && matchesDifficulty;
     }).toList();
   });
 });

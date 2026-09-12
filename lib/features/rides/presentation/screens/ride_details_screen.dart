@@ -199,6 +199,12 @@ class _RideDetailsContent extends StatelessWidget {
   }
 
   String _formatDuration(int minutes) {
+    if (minutes >= 1440) {
+      final days = minutes ~/ 1440;
+      final hours = (minutes % 1440) ~/ 60;
+      if (hours == 0) return '$days day${days == 1 ? '' : 's'}';
+      return '$days day${days == 1 ? '' : 's'} ${hours}h';
+    }
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
     if (hours == 0) return '${mins}m';
