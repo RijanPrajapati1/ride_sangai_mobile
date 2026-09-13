@@ -10,6 +10,9 @@ import '../../features/authentication/presentation/screens/register_screen.dart'
 import '../../features/community/presentation/screens/community_screen.dart';
 import '../../features/community/presentation/screens/post_detail_screen.dart';
 import '../../features/create_ride/presentation/screens/create_ride_screen.dart';
+import '../../features/groups/presentation/screens/create_group_screen.dart';
+import '../../features/groups/presentation/screens/group_chat_screen.dart';
+import '../../features/groups/presentation/screens/groups_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/messages/presentation/screens/chat_screen.dart';
 import '../../features/messages/presentation/screens/conversations_screen.dart';
@@ -106,6 +109,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.communityPost,
         builder: (context, state) => PostDetailScreen(postId: state.pathParameters['postId']!),
+      ),
+      GoRoute(path: RouteNames.groups, builder: (context, state) => const GroupsScreen()),
+      // Must be declared before RouteNames.groupChat ('/groups/:id'): same
+      // sibling-route ordering rule as editProfile vs userProfile below.
+      GoRoute(path: RouteNames.createGroup, builder: (context, state) => const CreateGroupScreen()),
+      GoRoute(
+        path: RouteNames.groupChat,
+        builder: (context, state) => GroupChatScreen(groupId: state.pathParameters['id']!),
       ),
       // Must be declared before RouteNames.userProfile ('/profile/:userId'):
       // go_router matches sibling routes in declaration order, and the

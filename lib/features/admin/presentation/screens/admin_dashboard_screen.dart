@@ -11,9 +11,11 @@ import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../../../../shared/widgets/stat_card.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
+import '../../../groups/domain/entities/group.dart';
 import '../../../ride_requests/domain/entities/ride_request.dart';
 import '../../../ride_requests/presentation/widgets/decline_reason_dialog.dart';
 import '../providers/admin_providers.dart';
+import '../widgets/admin_group_row.dart';
 import '../widgets/admin_post_row.dart';
 import '../widgets/admin_ride_row.dart';
 import '../widgets/admin_user_row.dart';
@@ -51,10 +53,11 @@ class AdminDashboardScreen extends ConsumerWidget {
     final ridesAsync = ref.watch(adminAllRidesProvider);
     final requestsAsync = ref.watch(adminAllRequestsProvider);
     final postsAsync = ref.watch(adminAllPostsProvider);
+    final groupsAsync = ref.watch(adminAllGroupsProvider);
     final actions = ref.read(adminActionsControllerProvider);
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Admin Dashboard'),
@@ -72,6 +75,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               Tab(text: 'Rides'),
               Tab(text: 'Requests'),
               Tab(text: 'Posts'),
+              Tab(text: 'Groups'),
             ],
           ),
         ),
@@ -93,6 +97,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                     label: 'Pending',
                   ),
                   StatCard(value: '${postsAsync.value?.length ?? '—'}', label: 'Posts'),
+                  StatCard(value: '${groupsAsync.value?.length ?? '—'}', label: 'Groups'),
                 ],
               ),
             ),
@@ -222,6 +227,35 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 message: 'This post and its comments will be removed.',
                               );
                               if (confirmed) await actions.deletePost(post.id);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  groupsAsync.when(
+                    loading: () => const LoadingWidget(),
+                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(adminAllGroupsProvider)),
+                    data: (groups) {
+                      if (groups.isEmpty) {
+                        return const EmptyState(icon: Icons.groups_outlined, title: 'No groups', message: 'Rider groups will show up here.');
+                      }
+                      return ListView.separated(
+                        padding: const EdgeInsets.all(AppDimensions.spaceMd),
+                        itemCount: groups.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: AppDimensions.spaceSm),
+                        itemBuilder: (context, index) {
+                          final Group group = groups[index];
+                          return AdminGroupRow(
+                            group: group,
+                            onTap: () => context.push(RouteNames.groupChatPath(group.id)),
+                            onDelete: () async {
+                              final confirmed = await _confirm(
+                                context,
+                                title: 'Delete "${group.name}"?',
+                                message: 'This group and its chat history will be removed for everyone.',
+                              );
+                              if (confirmed) await actions.deleteGroup(group.id);
                             },
                           );
                         },

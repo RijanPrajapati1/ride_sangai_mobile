@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../community/domain/entities/community_post.dart';
 import '../../../community/presentation/providers/community_providers.dart';
+import '../../../groups/domain/entities/group.dart';
+import '../../../groups/presentation/providers/group_providers.dart';
 import '../../../profile/domain/entities/user_profile.dart';
 import '../../../profile/presentation/providers/profile_providers.dart';
 import '../../../ride_requests/domain/entities/ride_request.dart';
@@ -23,6 +25,10 @@ final adminAllRequestsProvider = FutureProvider<List<RideRequest>>((ref) {
 
 final adminAllPostsProvider = FutureProvider<List<CommunityPost>>((ref) {
   return ref.watch(communityRepositoryProvider).getPosts();
+});
+
+final adminAllGroupsProvider = FutureProvider<List<Group>>((ref) {
+  return ref.watch(groupRepositoryProvider).getAllGroups();
 });
 
 final adminActionsControllerProvider = Provider((ref) => AdminActionsController(ref));
@@ -60,5 +66,12 @@ class AdminActionsController {
     await _ref.read(rideRequestRepositoryProvider).decline(requestId, reason: reason);
     _ref.invalidate(adminAllRequestsProvider);
     _ref.invalidate(organizerRequestsProvider);
+  }
+
+  Future<void> deleteGroup(String groupId) async {
+    await _ref.read(groupRepositoryProvider).deleteGroup(groupId);
+    _ref.invalidate(adminAllGroupsProvider);
+    _ref.invalidate(popularGroupsProvider);
+    _ref.invalidate(myGroupsProvider);
   }
 }

@@ -25,6 +25,10 @@ class RouteNames {
   static const community = '/community';
   static const communityPost = '/community/:postId';
 
+  static const groups = '/groups';
+  static const createGroup = '/groups/create';
+  static const groupChat = '/groups/:id';
+
   static const profile = '/profile';
   static const userProfile = '/profile/:userId';
   static const editProfile = '/profile/edit';
@@ -36,5 +40,6 @@ class RouteNames {
   static String rideRequestsPath(String id) => '/rides/$id/requests';
   static String conversationPath(String id) => '/messages/$id';
   static String communityPostPath(String id) => '/community/$id';
+  static String groupChatPath(String id) => '/groups/$id';
   static String userProfilePath(String id) => '/profile/$id';
 }
