@@ -42,7 +42,7 @@ class CommunityScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppDimensions.spaceSm),
               SizedBox(
-                height: 232,
+                height: 254,
                 child: groupsAsync.when(
                   loading: () => const LoadingWidget(),
                   error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(popularGroupsProvider)),
