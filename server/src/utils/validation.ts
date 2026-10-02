@@ -14,3 +14,17 @@ export function blankToNull(value: string | null | undefined): string | null {
   const trimmed = value?.trim();
   return trimmed ? trimmed : null;
 }
+
+/** Trims every entry, drops empties and case-insensitive duplicates (keeps the first). */
+export function cleanList(items: readonly string[] | undefined): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of items ?? []) {
+    const item = raw.trim();
+    const key = item.toLowerCase();
+    if (!item || seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+}

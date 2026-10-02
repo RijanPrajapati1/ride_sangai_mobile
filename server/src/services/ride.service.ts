@@ -19,8 +19,7 @@ import { audit } from '../utils/audit.js';
 import { isCheckViolation } from '../utils/db-errors.js';
 import { conflict, forbidden, notFound, unprocessable } from '../utils/errors.js';
 import { decodeTimeCursor, pageLimit, timeCursor, toPage, type Page } from '../utils/pagination.js';
-import { cleanList } from '../utils/sql.js';
-import { assertImageUrl, blankToNull } from '../utils/validation.js';
+import { assertImageUrl, blankToNull, cleanList } from '../utils/validation.js';
 import type { NotificationService } from './notification.service.js';
 
 export interface Actor {

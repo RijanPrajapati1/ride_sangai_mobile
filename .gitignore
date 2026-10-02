@@ -1,0 +1,6 @@
+# Monorepo root. App-specific rules live in mobile/.gitignore and server/.gitignore.
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json

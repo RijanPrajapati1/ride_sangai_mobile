@@ -1,4 +1,4 @@
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 
 /** 256-bit random token, URL-safe. Used for refresh and password-reset tokens. */
 export function generateToken(bytes = 32): string {
@@ -12,10 +12,4 @@ export function generateToken(bytes = 32): string {
  */
 export function hashToken(token: string): string {
   return createHash('sha256').update(token, 'utf8').digest('hex');
-}
-
-export function safeEqual(a: string, b: string): boolean {
-  const left = Buffer.from(a);
-  const right = Buffer.from(b);
-  return left.length === right.length && timingSafeEqual(left, right);
 }

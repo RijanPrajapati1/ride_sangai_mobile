@@ -12,8 +12,7 @@ import type { ProfileRecord, UserRepository } from '../repositories/user.reposit
 import { badRequest, notFound } from '../utils/errors.js';
 import { decodeCursor, decodeTimeCursor, pageLimit, toPage } from '../utils/pagination.js';
 import type { PasswordHasher } from '../utils/password.js';
-import { cleanList } from '../utils/sql.js';
-import { assertImageUrl } from '../utils/validation.js';
+import { assertImageUrl, cleanList } from '../utils/validation.js';
 import type { NotificationService } from './notification.service.js';
 import type { TokenService } from './token.service.js';
 
