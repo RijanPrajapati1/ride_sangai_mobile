@@ -32,7 +32,11 @@ const healthRoutes: FastifyPluginAsyncTypebox = async (app) => {
         tags,
         summary: 'Readiness probe (checks the database)',
         response: {
-          200: Type.Object({ status: Type.Literal('ready'), database: Type.Literal('up'), latencyMs: Type.Number() }),
+          200: Type.Object({
+            status: Type.Literal('ready'),
+            database: Type.Literal('up'),
+            latencyMs: Type.Number(),
+          }),
           503: Type.Object({ status: Type.Literal('unavailable'), database: Type.Literal('down') }),
         },
       },
@@ -41,7 +45,11 @@ const healthRoutes: FastifyPluginAsyncTypebox = async (app) => {
       const t0 = performance.now();
       try {
         await app.prisma.$queryRaw`SELECT 1`;
-        return { status: 'ready' as const, database: 'up' as const, latencyMs: Math.round((performance.now() - t0) * 100) / 100 };
+        return {
+          status: 'ready' as const,
+          database: 'up' as const,
+          latencyMs: Math.round((performance.now() - t0) * 100) / 100,
+        };
       } catch (err) {
         app.log.error({ err }, 'Readiness check failed');
         return reply.status(503).send({ status: 'unavailable' as const, database: 'down' as const });

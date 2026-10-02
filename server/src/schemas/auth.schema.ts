@@ -4,7 +4,11 @@ import { IdParams, NoContent, Nullable, Text, Timestamp, Uuid, errorResponses } 
 export const Email = Type.String({ format: 'email', maxLength: 254, description: 'Case-insensitive.' });
 
 /** Policy for new passwords. */
-export const NewPassword = Type.String({ minLength: 8, maxLength: 128, description: 'At least 8 characters.' });
+export const NewPassword = Type.String({
+  minLength: 8,
+  maxLength: 128,
+  description: 'At least 8 characters.',
+});
 
 /** Any existing password (older accounts may predate the current policy). */
 const ExistingPassword = Type.String({ minLength: 1, maxLength: 128 });
@@ -37,7 +41,10 @@ export const RegisterBody = Type.Object(
   { additionalProperties: false },
 );
 
-export const LoginBody = Type.Object({ email: Email, password: ExistingPassword }, { additionalProperties: false });
+export const LoginBody = Type.Object(
+  { email: Email, password: ExistingPassword },
+  { additionalProperties: false },
+);
 
 export const RefreshBody = Type.Object(
   { refreshToken: Type.String({ minLength: 20, maxLength: 200 }) },
@@ -96,8 +103,16 @@ export const authSchemas = {
     body: RefreshBody,
     response: { 200: AuthResponse, ...errorResponses(400, 401, 429) },
   },
-  logout: { tags, summary: 'Sign out of the current session', response: { 204: NoContent, ...errorResponses(401) } },
-  logoutAll: { tags, summary: 'Sign out of every session', response: { 204: NoContent, ...errorResponses(401) } },
+  logout: {
+    tags,
+    summary: 'Sign out of the current session',
+    response: { 204: NoContent, ...errorResponses(401) },
+  },
+  logoutAll: {
+    tags,
+    summary: 'Sign out of every session',
+    response: { 204: NoContent, ...errorResponses(401) },
+  },
   forgotPassword: {
     tags,
     summary: 'Email a password reset link',
@@ -119,7 +134,11 @@ export const authSchemas = {
     response: { 204: NoContent, ...errorResponses(400, 401) },
   },
   me: { tags, summary: 'The signed-in user', response: { 200: AuthUser, ...errorResponses(401) } },
-  sessions: { tags, summary: 'Active sessions (signed-in devices)', response: { 200: SessionList, ...errorResponses(401) } },
+  sessions: {
+    tags,
+    summary: 'Active sessions (signed-in devices)',
+    response: { 200: SessionList, ...errorResponses(401) },
+  },
   revokeSession: {
     tags,
     summary: 'Sign out one of your sessions',

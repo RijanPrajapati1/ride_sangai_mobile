@@ -44,7 +44,8 @@ export interface TxContext {
 function runDetached(callback: AfterCommit): void {
   try {
     const result = callback();
-    if (result instanceof Promise) result.catch((err: unknown) => console.error('afterCommit callback failed', err));
+    if (result instanceof Promise)
+      result.catch((err: unknown) => console.error('afterCommit callback failed', err));
   } catch (err) {
     console.error('afterCommit callback failed', err);
   }
@@ -72,13 +73,19 @@ export class UnitOfWork {
       try {
         const result = await this.prisma.$transaction(
           (tx) => work({ db: tx, afterCommit: (callback) => queue.push(callback) }),
-          { maxWait: 5_000, timeout: 15_000, ...(options.isolationLevel ? { isolationLevel: options.isolationLevel } : {}) },
+          {
+            maxWait: 5_000,
+            timeout: 15_000,
+            ...(options.isolationLevel ? { isolationLevel: options.isolationLevel } : {}),
+          },
         );
         for (const callback of queue) runDetached(callback);
         return result;
       } catch (err) {
         if (isRetryableTransactionError(err) && attempt < retries) {
-          await new Promise((resolve) => setTimeout(resolve, 10 * 2 ** attempt + Math.floor(Math.random() * 10)));
+          await new Promise((resolve) =>
+            setTimeout(resolve, 10 * 2 ** attempt + Math.floor(Math.random() * 10)),
+          );
           continue;
         }
         throw err;

@@ -26,10 +26,15 @@ export const MAX_PAGE_SIZE = 100;
 /** Spread into a querystring schema: `Type.Object({ ...paginationQuery, q: ... })`. */
 export const paginationQuery = {
   limit: Type.Optional(
-    Type.Integer({ minimum: 1, maximum: MAX_PAGE_SIZE, default: DEFAULT_PAGE_SIZE, description: 'Page size (1-100).' }),
+    Type.Integer({
+      minimum: 1,
+      maximum: MAX_PAGE_SIZE,
+      default: DEFAULT_PAGE_SIZE,
+      description: 'Page size (1-100).',
+    }),
   ),
   cursor: Type.Optional(
-    Type.String({ maxLength: 512, description: 'Opaque cursor from the previous page\'s `nextCursor`.' }),
+    Type.String({ maxLength: 512, description: "Opaque cursor from the previous page's `nextCursor`." }),
   ),
 };
 

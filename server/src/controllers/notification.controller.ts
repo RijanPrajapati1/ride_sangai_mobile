@@ -10,7 +10,9 @@ export class NotificationController {
 
   list = async (request: Req<S['list']>) => this.notifications.list(currentUser(request).id, request.query);
 
-  unreadCount = async (request: Req<S['unreadCount']>) => ({ count: await this.notifications.unreadCount(currentUser(request).id) });
+  unreadCount = async (request: Req<S['unreadCount']>) => ({
+    count: await this.notifications.unreadCount(currentUser(request).id),
+  });
 
   markRead = async (request: Req<S['markRead']>) => ({
     count: await this.notifications.markRead(currentUser(request).id, request.params.id),
@@ -27,7 +29,11 @@ export class NotificationController {
   };
 
   registerDevice = async (request: Req<S['registerDevice']>, reply: Rep<S['registerDevice']>) => {
-    await this.notifications.registerDevice(currentUser(request).id, request.body.token, request.body.platform);
+    await this.notifications.registerDevice(
+      currentUser(request).id,
+      request.body.token,
+      request.body.platform,
+    );
     return reply.status(204).send();
   };
 

@@ -33,7 +33,11 @@ function fromDatabaseError(err: Error): { status: number; code: string; message:
     case 'P2002':
       return { status: 409, code: 'CONFLICT', message: 'That already exists.' };
     case 'P2003':
-      return { status: 409, code: 'REFERENCE_CONFLICT', message: 'A related item does not exist or is still in use.' };
+      return {
+        status: 409,
+        code: 'REFERENCE_CONFLICT',
+        message: 'A related item does not exist or is still in use.',
+      };
     case 'P2025':
       return { status: 404, code: 'NOT_FOUND', message: 'The requested item was not found.' };
     case 'P2034':
@@ -45,7 +49,11 @@ function fromDatabaseError(err: Error): { status: number; code: string; message:
     case PgCode.uniqueViolation:
       return { status: 409, code: 'CONFLICT', message: 'That already exists.' };
     case PgCode.foreignKeyViolation:
-      return { status: 409, code: 'REFERENCE_CONFLICT', message: 'A related item does not exist or is still in use.' };
+      return {
+        status: 409,
+        code: 'REFERENCE_CONFLICT',
+        message: 'A related item does not exist or is still in use.',
+      };
     case PgCode.checkViolation:
     case PgCode.notNullViolation:
       return { status: 422, code: 'CONSTRAINT_VIOLATION', message: 'The request breaks a data rule.' };
@@ -61,14 +69,21 @@ function fromDatabaseError(err: Error): { status: number; code: string; message:
   return null;
 }
 
-export function toErrorResponse(err: FastifyError | Error, request: FastifyRequest): { status: number; body: ErrorBody } {
+export function toErrorResponse(
+  err: FastifyError | Error,
+  request: FastifyRequest,
+): { status: number; body: ErrorBody } {
   const requestId = request.id;
 
   if (err instanceof AppError) {
     return {
       status: err.statusCode,
       body: {
-        error: { code: err.code, message: err.message, ...(err.details !== undefined ? { details: err.details } : {}) },
+        error: {
+          code: err.code,
+          message: err.message,
+          ...(err.details !== undefined ? { details: err.details } : {}),
+        },
         requestId,
       },
     };
@@ -79,14 +94,22 @@ export function toErrorResponse(err: FastifyError | Error, request: FastifyReque
     return {
       status: 400,
       body: {
-        error: { code: 'VALIDATION_ERROR', message: 'Some fields are missing or invalid.', details: validationDetails(fastifyError) },
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Some fields are missing or invalid.',
+          details: validationDetails(fastifyError),
+        },
         requestId,
       },
     };
   }
 
   const dbError = fromDatabaseError(err);
-  if (dbError) return { status: dbError.status, body: { error: { code: dbError.code, message: dbError.message }, requestId } };
+  if (dbError)
+    return {
+      status: dbError.status,
+      body: { error: { code: dbError.code, message: dbError.message }, requestId },
+    };
 
   const status = fastifyError.statusCode;
   if (status !== undefined && status >= 400 && status < 500) {
@@ -95,7 +118,8 @@ export function toErrorResponse(err: FastifyError | Error, request: FastifyReque
       status,
       body: {
         error: {
-          code: known?.code ?? (status === 429 ? 'RATE_LIMITED' : status === 404 ? 'NOT_FOUND' : 'BAD_REQUEST'),
+          code:
+            known?.code ?? (status === 429 ? 'RATE_LIMITED' : status === 404 ? 'NOT_FOUND' : 'BAD_REQUEST'),
           message: known?.message ?? err.message,
         },
         requestId,
@@ -106,13 +130,19 @@ export function toErrorResponse(err: FastifyError | Error, request: FastifyReque
   if (status === 503) {
     return {
       status,
-      body: { error: { code: 'SERVICE_UNAVAILABLE', message: 'The server is busy. Please try again shortly.' }, requestId },
+      body: {
+        error: { code: 'SERVICE_UNAVAILABLE', message: 'The server is busy. Please try again shortly.' },
+        requestId,
+      },
     };
   }
 
   return {
     status: 500,
-    body: { error: { code: 'INTERNAL_ERROR', message: 'Something went wrong. Please try again.' }, requestId },
+    body: {
+      error: { code: 'INTERNAL_ERROR', message: 'Something went wrong. Please try again.' },
+      requestId,
+    },
   };
 }
 
@@ -123,7 +153,10 @@ export default fp(
       if (status >= 500) {
         request.log.error({ err }, 'Request failed');
       } else if (!(err instanceof AppError)) {
-        request.log.info({ err: { message: err.message, code: (err as FastifyError).code } }, 'Request rejected');
+        request.log.info(
+          { err: { message: err.message, code: (err as FastifyError).code } },
+          'Request rejected',
+        );
       }
       if (status === 429 || status === 503) {
         reply.header('retry-after', reply.getHeader('retry-after') ?? '10');
@@ -133,7 +166,10 @@ export default fp(
 
     app.setNotFoundHandler((request, reply) =>
       reply.status(404).send({
-        error: { code: 'ROUTE_NOT_FOUND', message: `Route ${request.method} ${request.url.split('?')[0]} not found.` },
+        error: {
+          code: 'ROUTE_NOT_FOUND',
+          message: `Route ${request.method} ${request.url.split('?')[0]} not found.`,
+        },
         requestId: request.id,
       } satisfies ErrorBody),
     );

@@ -32,7 +32,9 @@ export class AuthController {
 
   forgotPassword = async (request: Req<S['forgotPassword']>, reply: Rep<S['forgotPassword']>) => {
     await this.auth.requestPasswordReset(request.body.email);
-    return reply.status(202).send({ message: 'If an account exists for that email, a reset link has been sent.' });
+    return reply
+      .status(202)
+      .send({ message: 'If an account exists for that email, a reset link has been sent.' });
   };
 
   resetPassword = async (request: Req<S['resetPassword']>, reply: Rep<S['resetPassword']>) => {
@@ -41,7 +43,11 @@ export class AuthController {
   };
 
   changePassword = async (request: Req<S['changePassword']>, reply: Rep<S['changePassword']>) => {
-    await this.auth.changePassword(currentUser(request), request.body.currentPassword, request.body.newPassword);
+    await this.auth.changePassword(
+      currentUser(request),
+      request.body.currentPassword,
+      request.body.newPassword,
+    );
     return reply.status(204).send();
   };
 

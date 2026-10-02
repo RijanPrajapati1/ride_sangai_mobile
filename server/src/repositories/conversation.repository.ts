@@ -39,7 +39,9 @@ export class ConversationRepository {
   }
 
   inbox(viewerId: string, after: [Date, string] | null, limit: number): Promise<ConversationRow[]> {
-    const keyset = after ? Prisma.sql`AND (c.last_message_at, c.id) < (${after[0]}::timestamptz, ${after[1]}::uuid)` : Prisma.empty;
+    const keyset = after
+      ? Prisma.sql`AND (c.last_message_at, c.id) < (${after[0]}::timestamptz, ${after[1]}::uuid)`
+      : Prisma.empty;
     return this.inboxQuery(viewerId, keyset, limit + 1);
   }
 
@@ -61,7 +63,10 @@ export class ConversationRepository {
   /** Get-or-create for an unordered pair; safe when both users start it at once. */
   async findOrCreate(userA: string, userB: string): Promise<{ id: string; created: boolean }> {
     const [a, b] = userA < userB ? [userA, userB] : [userB, userA];
-    const existing = await this.prisma.conversation.findUnique({ where: { userAId_userBId: { userAId: a, userBId: b } }, select: { id: true } });
+    const existing = await this.prisma.conversation.findUnique({
+      where: { userAId_userBId: { userAId: a, userBId: b } },
+      select: { id: true },
+    });
     if (existing) return { id: existing.id, created: false };
     try {
       const created = await this.prisma.conversation.create({
@@ -71,7 +76,10 @@ export class ConversationRepository {
       return { id: created.id, created: true };
     } catch (err) {
       // Lost the race: the other request created it first.
-      const row = await this.prisma.conversation.findUnique({ where: { userAId_userBId: { userAId: a, userBId: b } }, select: { id: true } });
+      const row = await this.prisma.conversation.findUnique({
+        where: { userAId_userBId: { userAId: a, userBId: b } },
+        select: { id: true },
+      });
       if (row) return { id: row.id, created: false };
       throw err;
     }
@@ -79,7 +87,10 @@ export class ConversationRepository {
 
   /** The participant ids if the viewer belongs to the conversation, else null. */
   async participants(conversationId: string, db: Db = this.prisma): Promise<[string, string] | null> {
-    const row = await db.conversation.findUnique({ where: { id: conversationId }, select: { userAId: true, userBId: true } });
+    const row = await db.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
     return row ? [row.userAId, row.userBId] : null;
   }
 
@@ -88,7 +99,9 @@ export class ConversationRepository {
     return this.prisma.message.findMany({
       where: {
         conversationId,
-        ...(before ? { OR: [{ createdAt: { lt: before[0] } }, { createdAt: before[0], id: { lt: before[1] } }] } : {}),
+        ...(before
+          ? { OR: [{ createdAt: { lt: before[0] } }, { createdAt: before[0], id: { lt: before[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: limit + 1,
@@ -97,7 +110,10 @@ export class ConversationRepository {
   }
 
   createMessage(db: Db, data: { conversationId: string; senderId: string; text: string }) {
-    return db.message.create({ data, select: { id: true, conversationId: true, senderId: true, text: true, createdAt: true } });
+    return db.message.create({
+      data,
+      select: { id: true, conversationId: true, senderId: true, text: true, createdAt: true },
+    });
   }
 
   async markRead(conversationId: string, userId: string, at: Date, db: Db = this.prisma): Promise<void> {

@@ -7,7 +7,11 @@
 
 interface ErrorLike {
   code?: unknown;
-  meta?: { driverAdapterError?: { cause?: { originalCode?: string; kind?: string } }; modelName?: string; target?: unknown };
+  meta?: {
+    driverAdapterError?: { cause?: { originalCode?: string; kind?: string } };
+    modelName?: string;
+    target?: unknown;
+  };
   cause?: { originalCode?: string; code?: unknown };
 }
 
@@ -33,7 +37,12 @@ export function prismaCode(err: unknown): string | undefined {
 export function pgCode(err: unknown): string | undefined {
   const e = err as ErrorLike | null;
   if (!e) return undefined;
-  const candidates = [e.meta?.driverAdapterError?.cause?.originalCode, e.cause?.originalCode, e.cause?.code, e.code];
+  const candidates = [
+    e.meta?.driverAdapterError?.cause?.originalCode,
+    e.cause?.originalCode,
+    e.cause?.code,
+    e.code,
+  ];
   return candidates.find((c): c is string => typeof c === 'string' && /^[0-9A-Z]{5}$/.test(c));
 }
 
@@ -52,5 +61,7 @@ export function isNotFound(err: unknown): boolean {
 
 export function isRetryableTransactionError(err: unknown): boolean {
   const code = pgCode(err);
-  return prismaCode(err) === 'P2034' || code === PgCode.serializationFailure || code === PgCode.deadlockDetected;
+  return (
+    prismaCode(err) === 'P2034' || code === PgCode.serializationFailure || code === PgCode.deadlockDetected
+  );
 }

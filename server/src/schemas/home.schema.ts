@@ -70,6 +70,11 @@ export const homeSchemas = {
     },
   },
   badges: { tags, summary: 'Header badge counts', response: { 200: Badges, ...errorResponses(401) } },
-  banners: { tags, summary: 'Home carousel banners', querystring: CategoryQuery, response: { 200: Type.Object({ items: Type.Array(Banner) }), ...errorResponses(401) } },
+  banners: {
+    tags,
+    summary: 'Home carousel banners',
+    querystring: CategoryQuery,
+    response: { 200: Type.Object({ items: Type.Array(Banner) }), ...errorResponses(401) },
+  },
   meta: { tags, summary: 'Enum options and labels (public)', response: { 200: Meta } },
 };

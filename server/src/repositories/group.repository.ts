@@ -50,7 +50,9 @@ export class GroupRepository {
         ],
       };
     } else if (after) {
-      keyset = { OR: [{ createdAt: { lt: after.createdAt } }, { createdAt: after.createdAt, id: { lt: after.id } }] };
+      keyset = {
+        OR: [{ createdAt: { lt: after.createdAt } }, { createdAt: after.createdAt, id: { lt: after.id } }],
+      };
     }
     const orderBy: Prisma.GroupOrderByWithRelationInput[] =
       options.sort === 'popular'
@@ -69,7 +71,9 @@ export class GroupRepository {
     return this.prisma.groupMember.findMany({
       where: {
         userId,
-        ...(after ? { OR: [{ joinedAt: { lt: after[0] } }, { joinedAt: after[0], groupId: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ joinedAt: { lt: after[0] } }, { joinedAt: after[0], groupId: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ joinedAt: 'desc' }, { groupId: 'desc' }],
       take: limit + 1,
@@ -102,7 +106,10 @@ export class GroupRepository {
   }
 
   membership(groupId: string, userId: string, db: Db = this.prisma) {
-    return db.groupMember.findUnique({ where: { groupId_userId: { groupId, userId } }, select: { role: true } });
+    return db.groupMember.findUnique({
+      where: { groupId_userId: { groupId, userId } },
+      select: { role: true },
+    });
   }
 
   async addMember(groupId: string, userId: string): Promise<void> {
@@ -123,11 +130,18 @@ export class GroupRepository {
     return this.prisma.groupMember.findMany({
       where: {
         groupId,
-        ...(after ? { OR: [{ joinedAt: { gt: after[0] } }, { joinedAt: after[0], userId: { gt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ joinedAt: { gt: after[0] } }, { joinedAt: after[0], userId: { gt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ joinedAt: 'asc' }, { userId: 'asc' }],
       take: limit + 1,
-      select: { role: true, joinedAt: true, userId: true, user: { select: { id: true, name: true, avatarUrl: true } } },
+      select: {
+        role: true,
+        joinedAt: true,
+        userId: true,
+        user: { select: { id: true, name: true, avatarUrl: true } },
+      },
     });
   }
 
@@ -136,7 +150,9 @@ export class GroupRepository {
     return this.prisma.groupMessage.findMany({
       where: {
         groupId,
-        ...(before ? { OR: [{ createdAt: { lt: before[0] } }, { createdAt: before[0], id: { lt: before[1] } }] } : {}),
+        ...(before
+          ? { OR: [{ createdAt: { lt: before[0] } }, { createdAt: before[0], id: { lt: before[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: limit + 1,

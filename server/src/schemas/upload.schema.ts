@@ -23,5 +23,10 @@ export const uploadSchemas = {
     consumes: ['multipart/form-data'],
     response: { 201: UploadResult, ...errorResponses(400, 401, 413, 415) },
   },
-  remove: { tags, summary: 'Delete one of my uploads', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 404) } },
+  remove: {
+    tags,
+    summary: 'Delete one of my uploads',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 404) },
+  },
 };

@@ -17,7 +17,8 @@ export class GroupController {
 
   get = async (request: Req<S['get']>) => this.groups.get(request.params.id, currentUser(request).id);
 
-  update = async (request: Req<S['update']>) => this.groups.update(currentUser(request), request.params.id, request.body);
+  update = async (request: Req<S['update']>) =>
+    this.groups.update(currentUser(request), request.params.id, request.body);
 
   remove = async (request: Req<S['remove']>, reply: Rep<S['remove']>) => {
     await this.groups.remove(currentUser(request), request.params.id);
@@ -33,8 +34,11 @@ export class GroupController {
 
   members = async (request: Req<S['members']>) => this.groups.members(request.params.id, request.query);
 
-  messages = async (request: Req<S['messages']>) => this.groups.messages(request.params.id, currentUser(request).id, request.query);
+  messages = async (request: Req<S['messages']>) =>
+    this.groups.messages(request.params.id, currentUser(request).id, request.query);
 
   send = async (request: Req<S['send']>, reply: Rep<S['send']>) =>
-    reply.status(201).send(await this.groups.send(currentUser(request), request.params.id, request.body.text));
+    reply
+      .status(201)
+      .send(await this.groups.send(currentUser(request), request.params.id, request.body.text));
 }

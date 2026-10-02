@@ -20,7 +20,8 @@ export class AdminController {
 
   users = async (request: Req<S['users']>) => this.admin.listUsers(currentUser(request), request.query);
 
-  setRole = async (request: Req<S['setRole']>) => this.admin.setRole(currentUser(request), request.params.id, request.body.role);
+  setRole = async (request: Req<S['setRole']>) =>
+    this.admin.setRole(currentUser(request), request.params.id, request.body.role);
 
   removeUser = async (request: Req<S['removeUser']>, reply: Rep<S['removeUser']>) => {
     await this.admin.removeUser(currentUser(request), request.params.id);
@@ -50,7 +51,8 @@ export class AdminController {
     return reply.status(204).send();
   };
 
-  groups = async (request: Req<S['groups']>) => this.groupService.list(currentUser(request).id, { ...request.query, sort: 'newest' });
+  groups = async (request: Req<S['groups']>) =>
+    this.groupService.list(currentUser(request).id, { ...request.query, sort: 'newest' });
 
   removeGroup = async (request: Req<S['removeGroup']>, reply: Rep<S['removeGroup']>) => {
     await this.groupService.remove(currentUser(request), request.params.id);
@@ -62,7 +64,8 @@ export class AdminController {
   createBanner = async (request: Req<S['createBanner']>, reply: Rep<S['createBanner']>) =>
     reply.status(201).send(await this.admin.createBanner(request.body));
 
-  updateBanner = async (request: Req<S['updateBanner']>) => this.admin.updateBanner(request.params.id, request.body);
+  updateBanner = async (request: Req<S['updateBanner']>) =>
+    this.admin.updateBanner(request.params.id, request.body);
 
   deleteBanner = async (request: Req<S['deleteBanner']>, reply: Rep<S['deleteBanner']>) => {
     await this.admin.deleteBanner(request.params.id);

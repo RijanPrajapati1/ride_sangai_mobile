@@ -10,7 +10,8 @@ import type { Actor } from './ride.service.js';
 /** Shown as the last message of a conversation nobody has written in yet. */
 export const EMPTY_CONVERSATION_PREVIEW = 'Say hello 👋';
 
-const CONVERSATION_NOT_FOUND = () => notFound('This conversation could not be found.', 'CONVERSATION_NOT_FOUND');
+const CONVERSATION_NOT_FOUND = () =>
+  notFound('This conversation could not be found.', 'CONVERSATION_NOT_FOUND');
 
 /** Maps an inbox row to the API shape (the Dart `Conversation` entity), seen by the viewer. */
 export function toConversationDto(row: ConversationRow) {
@@ -71,7 +72,8 @@ export class ConversationService {
   /** "Message" button: the existing conversation with that rider, or a new empty one. */
   async open(viewerId: string, otherUserId: string) {
     if (otherUserId === viewerId) throw badRequest('You cannot message yourself.', 'CANNOT_MESSAGE_SELF');
-    if (!(await this.users.exists(otherUserId))) throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
+    if (!(await this.users.exists(otherUserId)))
+      throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
     const { id, created } = await this.repo.findOrCreate(viewerId, otherUserId);
     return { conversation: await this.get(id, viewerId), created };
   }
@@ -86,11 +88,20 @@ export class ConversationService {
    * One page of history, oldest → newest within the page; `nextCursor` loads
    * older messages. Loading the latest page marks the conversation read.
    */
-  async messages(conversationId: string, viewerId: string, query: { limit?: number; cursor?: string; markRead?: boolean }) {
+  async messages(
+    conversationId: string,
+    viewerId: string,
+    query: { limit?: number; cursor?: string; markRead?: boolean },
+  ) {
     const otherId = await this.assertParticipant(conversationId, viewerId);
     const limit = pageLimit(query.limit);
     const rows = await this.repo.messagesPage(conversationId, decodeTimeCursor(query.cursor), limit);
-    const page = toPage(rows, limit, (row) => timeCursor(row.createdAt, row.id), (row) => toMessageDto(row, viewerId));
+    const page = toPage(
+      rows,
+      limit,
+      (row) => timeCursor(row.createdAt, row.id),
+      (row) => toMessageDto(row, viewerId),
+    );
     page.items.reverse();
     if (!query.cursor && query.markRead !== false) await this.markRead(conversationId, viewerId, otherId);
     return page;
@@ -99,7 +110,11 @@ export class ConversationService {
   async send(sender: Actor, conversationId: string, text: string) {
     const recipientId = await this.assertParticipant(conversationId, sender.id);
     return this.uow.run(async (ctx) => {
-      const message = await this.repo.createMessage(ctx.db, { conversationId, senderId: sender.id, text: text.trim() });
+      const message = await this.repo.createMessage(ctx.db, {
+        conversationId,
+        senderId: sender.id,
+        text: text.trim(),
+      });
       // Writing in a conversation means you have read it.
       await this.repo.markRead(conversationId, sender.id, message.createdAt, ctx.db);
       await this.notifications.notify(ctx, {
@@ -114,8 +129,14 @@ export class ConversationService {
         collapseKey: `conversation:${conversationId}`,
       });
       ctx.afterCommit(() => {
-        this.realtime.publish([recipientId], { type: 'message.created', data: toMessageDto(message, recipientId) });
-        this.realtime.publish([sender.id], { type: 'message.created', data: toMessageDto(message, sender.id) });
+        this.realtime.publish([recipientId], {
+          type: 'message.created',
+          data: toMessageDto(message, recipientId),
+        });
+        this.realtime.publish([sender.id], {
+          type: 'message.created',
+          data: toMessageDto(message, sender.id),
+        });
       });
       return toMessageDto(message, sender.id);
     });
@@ -125,7 +146,10 @@ export class ConversationService {
     const other = otherId ?? (await this.assertParticipant(conversationId, viewerId));
     const readAt = new Date();
     await this.repo.markRead(conversationId, viewerId, readAt);
-    this.realtime.publish([other], { type: 'conversation.read', data: { conversationId, userId: viewerId, readAt } });
+    this.realtime.publish([other], {
+      type: 'conversation.read',
+      data: { conversationId, userId: viewerId, readAt },
+    });
   }
 
   totalUnread(viewerId: string): Promise<number> {

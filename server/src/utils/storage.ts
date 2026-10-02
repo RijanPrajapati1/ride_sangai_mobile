@@ -41,13 +41,22 @@ export class LocalDiskStorage implements FileStorage {
 
 /** Detects common image formats from their magic bytes (never trust the client's Content-Type). */
 export function sniffImage(data: Buffer): { contentType: string; ext: string } | null {
-  if (data.length >= 3 && data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff) return { contentType: 'image/jpeg', ext: 'jpg' };
-  if (data.length >= 8 && data.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+  if (data.length >= 3 && data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff)
+    return { contentType: 'image/jpeg', ext: 'jpg' };
+  if (
+    data.length >= 8 &&
+    data.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+  ) {
     return { contentType: 'image/png', ext: 'png' };
   }
-  if (data.length >= 12 && data.toString('ascii', 0, 4) === 'RIFF' && data.toString('ascii', 8, 12) === 'WEBP') {
+  if (
+    data.length >= 12 &&
+    data.toString('ascii', 0, 4) === 'RIFF' &&
+    data.toString('ascii', 8, 12) === 'WEBP'
+  ) {
     return { contentType: 'image/webp', ext: 'webp' };
   }
-  if (data.length >= 6 && /^GIF8[79]a$/.test(data.toString('ascii', 0, 6))) return { contentType: 'image/gif', ext: 'gif' };
+  if (data.length >= 6 && /^GIF8[79]a$/.test(data.toString('ascii', 0, 6)))
+    return { contentType: 'image/gif', ext: 'gif' };
   return null;
 }

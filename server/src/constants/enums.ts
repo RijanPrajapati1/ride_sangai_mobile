@@ -89,5 +89,13 @@ export function rideTypesFor(category: ActivityCategory): RideType[] {
 }
 
 /** What a notification points at, so the app can navigate when it is tapped. */
-export const NOTIFICATION_ENTITY_TYPES = ['ride', 'rideRequest', 'post', 'comment', 'user', 'conversation', 'group'] as const;
+export const NOTIFICATION_ENTITY_TYPES = [
+  'ride',
+  'rideRequest',
+  'post',
+  'comment',
+  'user',
+  'conversation',
+  'group',
+] as const;
 export type NotificationEntityType = (typeof NOTIFICATION_ENTITY_TYPES)[number];

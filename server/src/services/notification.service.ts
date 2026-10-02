@@ -104,10 +104,17 @@ export class NotificationService {
   async list(recipientId: string, query: { unreadOnly?: boolean; limit?: number; cursor?: string }) {
     const limit = pageLimit(query.limit);
     const [rows, unreadCount] = await Promise.all([
-      this.repo.list(recipientId, { unreadOnly: query.unreadOnly ?? false, after: decodeTimeCursor(query.cursor), limit }),
+      this.repo.list(recipientId, {
+        unreadOnly: query.unreadOnly ?? false,
+        after: decodeTimeCursor(query.cursor),
+        limit,
+      }),
       this.repo.countUnread(recipientId),
     ]);
-    return { ...toPage(rows, limit, (row) => timeCursor(row.createdAt, row.id), toNotificationDto), unreadCount };
+    return {
+      ...toPage(rows, limit, (row) => timeCursor(row.createdAt, row.id), toNotificationDto),
+      unreadCount,
+    };
   }
 
   unreadCount(recipientId: string): Promise<number> {
@@ -128,7 +135,8 @@ export class NotificationService {
   }
 
   async remove(recipientId: string, id: string): Promise<void> {
-    if (!(await this.repo.delete(id, recipientId))) throw notFound('This notification could not be found.', 'NOTIFICATION_NOT_FOUND');
+    if (!(await this.repo.delete(id, recipientId)))
+      throw notFound('This notification could not be found.', 'NOTIFICATION_NOT_FOUND');
   }
 
   registerDevice(userId: string, token: string, platform: 'android' | 'ios' | 'web'): Promise<void> {

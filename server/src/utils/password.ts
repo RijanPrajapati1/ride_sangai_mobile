@@ -10,7 +10,11 @@ export class PasswordHasher {
   constructor(private readonly params: { memoryCostKib: number; timeCost: number }) {}
 
   hash(password: string): Promise<string> {
-    return hash(password, { memoryCost: this.params.memoryCostKib, timeCost: this.params.timeCost, parallelism: 1 });
+    return hash(password, {
+      memoryCost: this.params.memoryCostKib,
+      timeCost: this.params.timeCost,
+      parallelism: 1,
+    });
   }
 
   async verify(passwordHash: string, password: string): Promise<boolean> {

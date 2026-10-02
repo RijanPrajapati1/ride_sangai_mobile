@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist/', 'coverage/', 'uploads/', 'node_modules/'] },
+  { ignores: ['dist/', 'coverage/', 'uploads/', 'node_modules/', 'src/generated/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -14,7 +14,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/db/cli.ts', 'scripts/**'],
+    files: ['scripts/**', 'prisma/**'],
     rules: { 'no-console': 'off' },
   },
 );

@@ -37,7 +37,10 @@ export class PgFanout {
   }
 
   private async connect(): Promise<void> {
-    const client = new pg.Client({ connectionString: this.connectionString, application_name: 'ride-sangai-realtime' });
+    const client = new pg.Client({
+      connectionString: this.connectionString,
+      application_name: 'ride-sangai-realtime',
+    });
     client.on('notification', (message) => {
       if (message.channel !== CHANNEL || !message.payload) return;
       try {

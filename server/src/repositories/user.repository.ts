@@ -1,6 +1,6 @@
 import type { ExperienceLevel, RideType, UserRole } from '../constants/enums.js';
 import type { Db, PrismaClient } from '../db/prisma.js';
-import { Prisma } from '../db/prisma.js';
+import type { Prisma } from '../db/prisma.js';
 
 /** Everything needed to render a profile for a given viewer. */
 export interface ProfileRecord {
@@ -66,7 +66,10 @@ export class UserRepository {
    * Ride stats for many users in one round trip: rides organized plus rides
    * joined (approved); "completed" are those that have started.
    */
-  async rideStats(userIds: string[], db: Db = this.prisma): Promise<Map<string, { total: number; completed: number }>> {
+  async rideStats(
+    userIds: string[],
+    db: Db = this.prisma,
+  ): Promise<Map<string, { total: number; completed: number }>> {
     if (userIds.length === 0) return new Map();
     const rows = await db.$queryRaw<Array<{ id: string; total: number; completed: number }>>`
       SELECT u.id,
@@ -80,7 +83,10 @@ export class UserRepository {
   }
 
   private async withStats(rows: ProfileSelectResult[], db: Db = this.prisma): Promise<ProfileRecord[]> {
-    const stats = await this.rideStats(rows.map((row) => row.id), db);
+    const stats = await this.rideStats(
+      rows.map((row) => row.id),
+      db,
+    );
     return rows.map(({ preferences, followers, ...user }) => ({
       ...user,
       publicProfile: preferences?.publicProfile ?? true,
@@ -91,7 +97,11 @@ export class UserRepository {
     }));
   }
 
-  async findProfile(userId: string, viewerId: string | null, db: Db = this.prisma): Promise<ProfileRecord | null> {
+  async findProfile(
+    userId: string,
+    viewerId: string | null,
+    db: Db = this.prisma,
+  ): Promise<ProfileRecord | null> {
     const row = await db.user.findUnique({ where: { id: userId }, select: profileSelect(viewerId) });
     if (!row) return null;
     const [profile] = await this.withStats([row], db);
@@ -103,7 +113,10 @@ export class UserRepository {
   }
 
   findCredentials(userId: string, db: Db = this.prisma) {
-    return db.user.findUnique({ where: { id: userId }, select: { name: true, passwordHash: true, role: true } });
+    return db.user.findUnique({
+      where: { id: userId },
+      select: { name: true, passwordHash: true, role: true },
+    });
   }
 
   async update(userId: string, data: Prisma.UserUpdateInput, db: Db = this.prisma): Promise<void> {
@@ -121,7 +134,11 @@ export class UserRepository {
   }
 
   updatePreferences(userId: string, data: Prisma.UserPreferencesUpdateInput, db: Db = this.prisma) {
-    return db.userPreferences.upsert({ where: { userId }, create: { userId, ...(data as object) }, update: data });
+    return db.userPreferences.upsert({
+      where: { userId },
+      create: { userId, ...(data as object) },
+      update: data,
+    });
   }
 
   /** Inserts the follow edge; returns false when it already existed. */
@@ -144,7 +161,11 @@ export class UserRepository {
    * private. Riders whose preferred ride type is in `rideTypes` (the requested
    * category) come first; the rest is filled with the most-followed riders.
    */
-  async recommended(viewerId: string, rideTypes: readonly RideType[], limit: number): Promise<ProfileRecord[]> {
+  async recommended(
+    viewerId: string,
+    rideTypes: readonly RideType[],
+    limit: number,
+  ): Promise<ProfileRecord[]> {
     const base: Prisma.UserWhereInput = {
       id: { not: viewerId },
       role: 'user',
@@ -194,7 +215,10 @@ export class UserRepository {
     }
     if (q) {
       and.push({
-        OR: [{ name: { contains: q, mode: 'insensitive' } }, ...(options.includePrivate ? [{ email: { contains: q.toLowerCase() } }] : [])],
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          ...(options.includePrivate ? [{ email: { contains: q.toLowerCase() } }] : []),
+        ],
       });
     }
     if (options.after) {
@@ -226,7 +250,10 @@ export class UserRepository {
         followers: { where: { followerId: viewerId }, select: { followerId: true }, take: 1 },
       },
     } as const;
-    const toEdge = (createdAt: Date, user: { id: string; name: string; avatarUrl: string; location: string; followers: unknown[] }) => ({
+    const toEdge = (
+      createdAt: Date,
+      user: { id: string; name: string; avatarUrl: string; location: string; followers: unknown[] },
+    ) => ({
       id: user.id,
       name: user.name,
       avatarUrl: user.avatarUrl,
@@ -239,7 +266,9 @@ export class UserRepository {
       const rows = await this.prisma.follow.findMany({
         where: {
           followingId: userId,
-          ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], followerId: { lt: after[1] } }] } : {}),
+          ...(after
+            ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], followerId: { lt: after[1] } }] }
+            : {}),
         },
         orderBy: [{ createdAt: 'desc' }, { followerId: 'desc' }],
         take: limit + 1,
@@ -250,7 +279,9 @@ export class UserRepository {
     const rows = await this.prisma.follow.findMany({
       where: {
         followerId: userId,
-        ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], followingId: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], followingId: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { followingId: 'desc' }],
       take: limit + 1,

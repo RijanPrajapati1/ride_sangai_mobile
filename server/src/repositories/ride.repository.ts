@@ -73,16 +73,29 @@ export class RideRepository {
       ...(filters.rideType ? { rideType: filters.rideType } : {}),
       ...(filters.difficulty ? { difficulty: filters.difficulty } : {}),
       ...(filters.from || filters.to
-        ? { startsAt: { ...(filters.from ? { gte: filters.from } : {}), ...(filters.to ? { lte: filters.to } : {}) } }
+        ? {
+            startsAt: {
+              ...(filters.from ? { gte: filters.from } : {}),
+              ...(filters.to ? { lte: filters.to } : {}),
+            },
+          }
         : {}),
       ...(q
-        ? { OR: [{ title: { contains: q, mode: 'insensitive' } }, { meetingPoint: { contains: q, mode: 'insensitive' } }] }
+        ? {
+            OR: [
+              { title: { contains: q, mode: 'insensitive' } },
+              { meetingPoint: { contains: q, mode: 'insensitive' } },
+            ],
+          }
         : {}),
     };
   }
 
   /** One page of rides ordered by start time (plus one probe row for `nextCursor`). */
-  findPage(where: Prisma.RideWhereInput, options: { direction: 'asc' | 'desc'; after: [Date, string] | null; limit: number }) {
+  findPage(
+    where: Prisma.RideWhereInput,
+    options: { direction: 'asc' | 'desc'; after: [Date, string] | null; limit: number },
+  ) {
     return this.prisma.ride.findMany({
       where: { AND: [where, startsAtKeyset(options.after, options.direction)] },
       orderBy: [{ startsAt: options.direction }, { id: options.direction }],
@@ -136,7 +149,10 @@ export class RideRepository {
     return db.rideRequest.findUnique({ where: { rideId_userId: { rideId, userId } } });
   }
 
-  createRequest(db: Db, data: { rideId: string; userId: string; message: string | null }): Promise<RideRequestRecord> {
+  createRequest(
+    db: Db,
+    data: { rideId: string; userId: string; message: string | null },
+  ): Promise<RideRequestRecord> {
     return db.rideRequest.create({ data, include: rideRequestInclude });
   }
 
@@ -144,7 +160,14 @@ export class RideRepository {
   resubmitRequest(db: Db, id: string, message: string | null): Promise<RideRequestRecord> {
     return db.rideRequest.update({
       where: { id },
-      data: { status: 'pending', message, declineReason: null, decidedAt: null, decidedById: null, requestedAt: new Date() },
+      data: {
+        status: 'pending',
+        message,
+        declineReason: null,
+        decidedAt: null,
+        decidedById: null,
+        requestedAt: new Date(),
+      },
       include: rideRequestInclude,
     });
   }
@@ -156,7 +179,12 @@ export class RideRepository {
   ): Promise<RideRequestRecord> {
     return db.rideRequest.update({
       where: { id },
-      data: { status: decision.status, declineReason: decision.declineReason, decidedAt: new Date(), decidedById: decision.deciderId },
+      data: {
+        status: decision.status,
+        declineReason: decision.declineReason,
+        decidedAt: new Date(),
+        decidedById: decision.deciderId,
+      },
       include: rideRequestInclude,
     });
   }
@@ -171,7 +199,9 @@ export class RideRepository {
       where: {
         AND: [
           where,
-          after ? { OR: [{ requestedAt: { lt: after[0] } }, { requestedAt: after[0], id: { lt: after[1] } }] } : {},
+          after
+            ? { OR: [{ requestedAt: { lt: after[0] } }, { requestedAt: after[0], id: { lt: after[1] } }] }
+            : {},
         ],
       },
       orderBy: [{ requestedAt: 'desc' }, { id: 'desc' }],
@@ -186,11 +216,19 @@ export class RideRepository {
       where: {
         rideId,
         status: 'approved',
-        ...(after ? { OR: [{ decidedAt: { gt: after[0] } }, { decidedAt: after[0], id: { gt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ decidedAt: { gt: after[0] } }, { decidedAt: after[0], id: { gt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ decidedAt: 'asc' }, { id: 'asc' }],
       take: limit + 1,
-      select: { id: true, rideId: true, decidedAt: true, requestedAt: true, user: { select: { id: true, name: true, avatarUrl: true } } },
+      select: {
+        id: true,
+        rideId: true,
+        decidedAt: true,
+        requestedAt: true,
+        user: { select: { id: true, name: true, avatarUrl: true } },
+      },
     });
   }
 
@@ -204,7 +242,9 @@ export class RideRepository {
   }
 
   countPendingForOrganizer(organizerId: string): Promise<number> {
-    return this.prisma.rideRequest.count({ where: { status: 'pending', ride: { organizerId, startsAt: { gt: new Date() } } } });
+    return this.prisma.rideRequest.count({
+      where: { status: 'pending', ride: { organizerId, startsAt: { gt: new Date() } } },
+    });
   }
 
   /**

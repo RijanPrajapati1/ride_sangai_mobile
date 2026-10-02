@@ -30,8 +30,12 @@ export const UserProfile = Type.Object({
   followingCount: Type.Integer(),
   isFollowing: Type.Boolean({ description: 'Whether the viewer follows this rider.' }),
   isMe: Type.Boolean(),
-  isPrivate: Type.Boolean({ description: 'publicProfile is off: bio, location, interests and stats are hidden from others.' }),
-  statsHidden: Type.Boolean({ description: 'showRidingStats is off: ride stats are reported as 0 to others.' }),
+  isPrivate: Type.Boolean({
+    description: 'publicProfile is off: bio, location, interests and stats are hidden from others.',
+  }),
+  statsHidden: Type.Boolean({
+    description: 'showRidingStats is off: ride stats are reported as 0 to others.',
+  }),
 });
 
 export const UserProfilePage = Paginated(UserProfile);
@@ -66,7 +70,10 @@ export const PatchPreferencesBody = Type.Partial(Type.Object(preferenceFields), 
   minProperties: 1,
 });
 
-export const DeleteAccountBody = Type.Object({ password: Type.String({ minLength: 1, maxLength: 128 }) }, { additionalProperties: false });
+export const DeleteAccountBody = Type.Object(
+  { password: Type.String({ minLength: 1, maxLength: 128 }) },
+  { additionalProperties: false },
+);
 
 export const FollowState = Type.Object({
   isFollowing: Type.Boolean(),
@@ -114,7 +121,11 @@ export const userSchemas = {
     body: DeleteAccountBody,
     response: { 204: NoContent, ...errorResponses(400, 401) },
   },
-  getPreferences: { tags, summary: 'My settings toggles', response: { 200: UserPreferences, ...errorResponses(401) } },
+  getPreferences: {
+    tags,
+    summary: 'My settings toggles',
+    response: { 200: UserPreferences, ...errorResponses(401) },
+  },
   replacePreferences: {
     tags,
     summary: 'Replace all settings toggles',
@@ -128,17 +139,50 @@ export const userSchemas = {
     body: PatchPreferencesBody,
     response: { 200: UserPreferences, ...errorResponses(400, 401) },
   },
-  search: { tags, summary: 'Search riders by name', querystring: UserSearchQuery, response: { 200: UserProfilePage, ...errorResponses(400, 401) } },
+  search: {
+    tags,
+    summary: 'Search riders by name',
+    querystring: UserSearchQuery,
+    response: { 200: UserProfilePage, ...errorResponses(400, 401) },
+  },
   recommended: {
     tags,
     summary: 'Riders to follow',
-    description: 'Excludes you, riders you follow, admins and private profiles. Matching category first, then most followed.',
+    description:
+      'Excludes you, riders you follow, admins and private profiles. Matching category first, then most followed.',
     querystring: RecommendedQuery,
     response: { 200: Type.Object({ items: Type.Array(UserProfile) }), ...errorResponses(401) },
   },
-  getById: { tags, summary: "A rider's profile", params: IdParams, response: { 200: UserProfile, ...errorResponses(401, 404) } },
-  follow: { tags, summary: 'Follow a rider (idempotent)', params: IdParams, response: { 200: FollowState, ...errorResponses(400, 401, 404) } },
-  unfollow: { tags, summary: 'Unfollow a rider (idempotent)', params: IdParams, response: { 200: FollowState, ...errorResponses(401, 404) } },
-  followers: { tags, summary: "A rider's followers", params: IdParams, querystring: PageQuery, response: { 200: FollowEdgePage, ...errorResponses(401, 404) } },
-  following: { tags, summary: 'Riders this rider follows', params: IdParams, querystring: PageQuery, response: { 200: FollowEdgePage, ...errorResponses(401, 404) } },
+  getById: {
+    tags,
+    summary: "A rider's profile",
+    params: IdParams,
+    response: { 200: UserProfile, ...errorResponses(401, 404) },
+  },
+  follow: {
+    tags,
+    summary: 'Follow a rider (idempotent)',
+    params: IdParams,
+    response: { 200: FollowState, ...errorResponses(400, 401, 404) },
+  },
+  unfollow: {
+    tags,
+    summary: 'Unfollow a rider (idempotent)',
+    params: IdParams,
+    response: { 200: FollowState, ...errorResponses(401, 404) },
+  },
+  followers: {
+    tags,
+    summary: "A rider's followers",
+    params: IdParams,
+    querystring: PageQuery,
+    response: { 200: FollowEdgePage, ...errorResponses(401, 404) },
+  },
+  following: {
+    tags,
+    summary: 'Riders this rider follows',
+    params: IdParams,
+    querystring: PageQuery,
+    response: { 200: FollowEdgePage, ...errorResponses(401, 404) },
+  },
 };

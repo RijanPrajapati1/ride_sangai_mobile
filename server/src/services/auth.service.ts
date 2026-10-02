@@ -39,8 +39,16 @@ type RefreshOutcome =
   | { ok: false; error: 'invalid' | 'revoked' | 'expired' }
   | { ok: false; error: 'reused'; sessionId: string };
 
-export function toAuthUser(user: Pick<AuthUserRecord, 'id' | 'name' | 'email' | 'avatarUrl' | 'role'>): AuthUserDto {
-  return { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl, isAdmin: user.role === 'admin' };
+export function toAuthUser(
+  user: Pick<AuthUserRecord, 'id' | 'name' | 'email' | 'avatarUrl' | 'role'>,
+): AuthUserDto {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    avatarUrl: user.avatarUrl,
+    isAdmin: user.role === 'admin',
+  };
 }
 
 export function normalizeEmail(email: string): string {
@@ -60,7 +68,10 @@ export class AuthService {
     private readonly log: FastifyBaseLogger,
   ) {}
 
-  async register(input: { name: string; email: string; password: string }, client: ClientInfo): Promise<AuthResult> {
+  async register(
+    input: { name: string; email: string; password: string },
+    client: ClientInfo,
+  ): Promise<AuthResult> {
     const email = normalizeEmail(input.email);
     const passwordHash = await this.passwords.hash(input.password);
     try {
@@ -100,7 +111,8 @@ export class AuthService {
     const outcome = await this.uow.run(async ({ db }): Promise<RefreshOutcome> => {
       const token = await this.repo.findRefreshTokenForUpdate(db, tokenHash);
       if (!token) return { ok: false, error: 'invalid' };
-      if (token.session_revoked_at || token.session_expires_at <= new Date()) return { ok: false, error: 'revoked' };
+      if (token.session_revoked_at || token.session_expires_at <= new Date())
+        return { ok: false, error: 'revoked' };
       if (token.used_at) {
         await this.repo.revokeSession(token.session_id, 'refresh_token_reuse', db);
         return { ok: false, error: 'reused', sessionId: token.session_id };
@@ -113,7 +125,11 @@ export class AuthService {
       await this.repo.markRefreshTokenUsed(db, token.id);
       const next = await this.createRefreshToken(db, token.session_id);
       await this.repo.extendSession(db, token.session_id, next.expiresAt);
-      const access = await this.tokens.signAccessToken({ sub: user.id, sid: token.session_id, role: user.role });
+      const access = await this.tokens.signAccessToken({
+        sub: user.id,
+        sid: token.session_id,
+        role: user.role,
+      });
       return { ok: true, result: this.toResult(user, access, next) };
     });
 
@@ -122,7 +138,10 @@ export class AuthService {
       case 'reused':
         this.tokens.forgetSession(outcome.sessionId);
         this.log.warn({ sessionId: outcome.sessionId }, 'Refresh token reuse detected; session revoked');
-        throw unauthorized('This session was ended for your security. Please sign in again.', 'REFRESH_TOKEN_REUSED');
+        throw unauthorized(
+          'This session was ended for your security. Please sign in again.',
+          'REFRESH_TOKEN_REUSED',
+        );
       case 'expired':
         throw unauthorized('Your session has expired. Please sign in again.', 'REFRESH_TOKEN_EXPIRED');
       case 'revoked':
@@ -149,7 +168,8 @@ export class AuthService {
 
   async revokeOwnSession(userId: string, sessionId: string): Promise<void> {
     const sessions = await this.repo.listActiveSessions(userId);
-    if (!sessions.some((session) => session.id === sessionId)) throw notFound('Session not found.', 'SESSION_NOT_FOUND');
+    if (!sessions.some((session) => session.id === sessionId))
+      throw notFound('Session not found.', 'SESSION_NOT_FOUND');
     await this.repo.revokeSession(sessionId, 'revoked_by_user');
     this.tokens.forgetSession(sessionId);
   }
@@ -194,7 +214,11 @@ export class AuthService {
     this.realtime.disconnectUser(userId, 'password changed');
   }
 
-  async changePassword(user: { id: string; sessionId: string }, currentPassword: string, newPassword: string): Promise<void> {
+  async changePassword(
+    user: { id: string; sessionId: string },
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
     const record = await this.repo.findUserById(user.id);
     if (!record) throw unauthorized();
     if (!(await this.passwords.verify(record.passwordHash, currentPassword))) {
@@ -203,7 +227,12 @@ export class AuthService {
     const passwordHash = await this.passwords.hash(newPassword);
     await this.uow.run(async ({ db }) => {
       await this.repo.updatePasswordHash(user.id, passwordHash, db);
-      await this.repo.revokeUserSessions(user.id, 'password_changed', { exceptSessionId: user.sessionId }, db);
+      await this.repo.revokeUserSessions(
+        user.id,
+        'password_changed',
+        { exceptSessionId: user.sessionId },
+        db,
+      );
     });
     this.tokens.forgetUser(user.id);
   }
@@ -237,7 +266,11 @@ export class AuthService {
     return new Date(Date.now() + this.config.refreshTokenTtlDays * 86_400_000);
   }
 
-  private toResult(user: AuthUserRecord, access: { token: string; expiresAt: Date }, refresh: { token: string; expiresAt: Date }): AuthResult {
+  private toResult(
+    user: AuthUserRecord,
+    access: { token: string; expiresAt: Date },
+    refresh: { token: string; expiresAt: Date },
+  ): AuthResult {
     return {
       user: toAuthUser(user),
       accessToken: access.token,

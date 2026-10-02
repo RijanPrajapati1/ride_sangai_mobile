@@ -1,5 +1,17 @@
-import { ACTIVITY_CATEGORIES, EXPERIENCE_LEVELS, NOTIFICATION_TYPES, RIDE_DIFFICULTIES, rideTypesFor, type ActivityCategory } from '../constants/enums.js';
-import { CATEGORY_LABELS, DIFFICULTY_LABELS, EXPERIENCE_LABELS, RIDE_TYPE_LABELS } from '../constants/labels.js';
+import {
+  ACTIVITY_CATEGORIES,
+  EXPERIENCE_LEVELS,
+  NOTIFICATION_TYPES,
+  RIDE_DIFFICULTIES,
+  rideTypesFor,
+  type ActivityCategory,
+} from '../constants/enums.js';
+import {
+  CATEGORY_LABELS,
+  DIFFICULTY_LABELS,
+  EXPERIENCE_LABELS,
+  RIDE_TYPE_LABELS,
+} from '../constants/labels.js';
 import type { BannerRepository } from '../repositories/banner.repository.js';
 import type { Banner } from '../generated/prisma/client.js';
 import type { ConversationService } from './conversation.service.js';

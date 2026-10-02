@@ -1,6 +1,15 @@
 import { Type } from 'typebox';
 import { paginationQuery } from '../utils/pagination.js';
-import { IdParams, NoContent, Nullable, Paginated, Text, Timestamp, Uuid, errorResponses } from './common.schema.js';
+import {
+  IdParams,
+  NoContent,
+  Nullable,
+  Paginated,
+  Text,
+  Timestamp,
+  Uuid,
+  errorResponses,
+} from './common.schema.js';
 
 /** Mirrors the Dart `Group` entity, for the viewer. */
 export const Group = Type.Object({
@@ -44,7 +53,11 @@ export const CreateGroupBody = Type.Object(
   { additionalProperties: false },
 );
 export const UpdateGroupBody = Type.Object(
-  { name: Type.Optional(Text(80)), description: Type.Optional(Text(1000)), coverImageUrl: Type.Optional(cover) },
+  {
+    name: Type.Optional(Text(80)),
+    description: Type.Optional(Text(1000)),
+    coverImageUrl: Type.Optional(cover),
+  },
   { additionalProperties: false, minProperties: 1 },
 );
 export const GroupListQuery = Type.Object({
@@ -65,7 +78,12 @@ export const groupSchemas = {
     querystring: GroupListQuery,
     response: { 200: Paginated(Group), ...errorResponses(400, 401) },
   },
-  mine: { tags, summary: 'Groups I belong to, most recently joined first', querystring: PageQuery, response: { 200: Paginated(Group), ...errorResponses(401) } },
+  mine: {
+    tags,
+    summary: 'Groups I belong to, most recently joined first',
+    querystring: PageQuery,
+    response: { 200: Paginated(Group), ...errorResponses(401) },
+  },
   create: {
     tags,
     summary: 'Start a group',
@@ -74,11 +92,38 @@ export const groupSchemas = {
     response: { 201: Group, ...errorResponses(400, 401) },
   },
   get: { tags, summary: 'A group', params: IdParams, response: { 200: Group, ...errorResponses(401, 404) } },
-  update: { tags, summary: 'Edit a group (owner or admin)', params: IdParams, body: UpdateGroupBody, response: { 200: Group, ...errorResponses(400, 401, 403, 404) } },
-  remove: { tags, summary: 'Delete a group and its chat (owner or admin)', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  join: { tags, summary: 'Join a group (idempotent)', params: IdParams, response: { 200: Group, ...errorResponses(401, 404) } },
-  leave: { tags, summary: 'Leave a group (idempotent; owners cannot leave)', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 404, 409) } },
-  members: { tags, summary: 'Group members', params: IdParams, querystring: PageQuery, response: { 200: Paginated(GroupMember), ...errorResponses(401, 404) } },
+  update: {
+    tags,
+    summary: 'Edit a group (owner or admin)',
+    params: IdParams,
+    body: UpdateGroupBody,
+    response: { 200: Group, ...errorResponses(400, 401, 403, 404) },
+  },
+  remove: {
+    tags,
+    summary: 'Delete a group and its chat (owner or admin)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  join: {
+    tags,
+    summary: 'Join a group (idempotent)',
+    params: IdParams,
+    response: { 200: Group, ...errorResponses(401, 404) },
+  },
+  leave: {
+    tags,
+    summary: 'Leave a group (idempotent; owners cannot leave)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 404, 409) },
+  },
+  members: {
+    tags,
+    summary: 'Group members',
+    params: IdParams,
+    querystring: PageQuery,
+    response: { 200: Paginated(GroupMember), ...errorResponses(401, 404) },
+  },
   messages: {
     tags,
     summary: 'Group chat history',

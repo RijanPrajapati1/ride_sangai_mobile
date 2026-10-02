@@ -105,7 +105,10 @@ export const CreateRideBody = Type.Object(
   { additionalProperties: false },
 );
 
-export const UpdateRideBody = Type.Partial(Type.Object(rideFields), { additionalProperties: false, minProperties: 1 });
+export const UpdateRideBody = Type.Partial(Type.Object(rideFields), {
+  additionalProperties: false,
+  minProperties: 1,
+});
 
 export const RideListQuery = Type.Object({
   category: Type.Optional(ActivityCategorySchema),
@@ -155,7 +158,8 @@ export const rideSchemas = {
   discover: {
     tags,
     summary: 'Upcoming rides (discovery)',
-    description: 'Rides that have not started yet, soonest first. Filter by dashboard category, type, difficulty, text or dates.',
+    description:
+      'Rides that have not started yet, soonest first. Filter by dashboard category, type, difficulty, text or dates.',
     querystring: RideListQuery,
     response: { 200: RidePage, ...errorResponses(400, 401) },
   },
@@ -166,11 +170,17 @@ export const rideSchemas = {
     body: CreateRideBody,
     response: { 201: Ride, ...errorResponses(400, 401, 422) },
   },
-  get: { tags, summary: 'Ride details', params: IdParams, response: { 200: Ride, ...errorResponses(401, 404) } },
+  get: {
+    tags,
+    summary: 'Ride details',
+    params: IdParams,
+    response: { 200: Ride, ...errorResponses(401, 404) },
+  },
   update: {
     tags,
     summary: 'Edit a ride (organizer or admin)',
-    description: 'Approved riders and pending requesters get a rideUpdated notification describing what changed.',
+    description:
+      'Approved riders and pending requesters get a rideUpdated notification describing what changed.',
     params: IdParams,
     body: UpdateRideBody,
     response: { 200: Ride, ...errorResponses(400, 401, 403, 404, 409, 422) },
@@ -209,7 +219,12 @@ export const rideSchemas = {
     querystring: RequestListQuery,
     response: { 200: RideRequestPage, ...errorResponses(401, 403, 404) },
   },
-  myRides: { tags, summary: 'My rides (tabs of the My Rides screen)', querystring: MyRidesQuery, response: { 200: RidePage, ...errorResponses(400, 401) } },
+  myRides: {
+    tags,
+    summary: 'My rides (tabs of the My Rides screen)',
+    querystring: MyRidesQuery,
+    response: { 200: RidePage, ...errorResponses(400, 401) },
+  },
   inbox: {
     tags: requestTags,
     summary: 'Join requests across all rides I organize',

@@ -40,7 +40,9 @@ export function Nullable<T extends TSchema>(schema: T) {
 export function Paginated<T extends TSchema>(item: T) {
   return Type.Object({
     items: Type.Array(item),
-    nextCursor: Nullable(Type.String({ description: 'Pass as `cursor` to get the next page; null on the last page.' })),
+    nextCursor: Nullable(
+      Type.String({ description: 'Pass as `cursor` to get the next page; null on the last page.' }),
+    ),
   });
 }
 

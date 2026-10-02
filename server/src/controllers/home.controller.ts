@@ -8,11 +8,14 @@ type S = typeof homeSchemas;
 export class HomeController {
   constructor(private readonly home: HomeService) {}
 
-  get = async (request: Req<S['home']>) => this.home.home(currentUser(request), request.query.category ?? 'cycling');
+  get = async (request: Req<S['home']>) =>
+    this.home.home(currentUser(request), request.query.category ?? 'cycling');
 
   badges = async (request: Req<S['badges']>) => this.home.badges(currentUser(request).id);
 
-  banners = async (request: Req<S['banners']>) => ({ items: await this.home.listBanners(request.query.category) });
+  banners = async (request: Req<S['banners']>) => ({
+    items: await this.home.listBanners(request.query.category),
+  });
 
   meta = async () => this.home.meta();
 }

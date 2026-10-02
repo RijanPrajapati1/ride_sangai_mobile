@@ -52,7 +52,10 @@ function loggerOptions(config: AppConfig): FastifyServerOptions['logger'] {
     },
   };
   if (config.env === 'development') {
-    return { ...base, transport: { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss.l', ignore: 'pid,hostname' } } };
+    return {
+      ...base,
+      transport: { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss.l', ignore: 'pid,hostname' } },
+    };
   }
   return base;
 }
@@ -88,7 +91,17 @@ export async function buildApp(config: AppConfig, deps: AppDependencies = {}): P
   app.decorate('config', config);
   app.decorate('prisma', prisma);
   app.decorate('realtime', realtime);
-  app.decorate('services', createServices({ config, prisma, realtime, mailer, log: app.log, ...(deps.push ? { push: deps.push } : {}) }));
+  app.decorate(
+    'services',
+    createServices({
+      config,
+      prisma,
+      realtime,
+      mailer,
+      log: app.log,
+      ...(deps.push ? { push: deps.push } : {}),
+    }),
+  );
 
   await app.register(errorHandler);
   await app.register(authenticate);

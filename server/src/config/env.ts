@@ -160,7 +160,11 @@ export function loadConfig(env: Env = process.env): AppConfig {
     isProduction,
     host,
     port,
-    logLevel: r.oneOf('LOG_LEVEL', ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'], isTest ? 'silent' : 'info'),
+    logLevel: r.oneOf(
+      'LOG_LEVEL',
+      ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'],
+      isTest ? 'silent' : 'info',
+    ),
     publicUrl,
     trustProxy: r.bool('TRUST_PROXY', false),
     corsOrigins,

@@ -6,7 +6,14 @@ type Purpose = 'avatar' | 'rideCover' | 'post' | 'groupCover' | 'other';
 export class UploadRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  create(data: { id: string; ownerId: string; storageKey: string; contentType: string; sizeBytes: number; purpose: Purpose | null }) {
+  create(data: {
+    id: string;
+    ownerId: string;
+    storageKey: string;
+    contentType: string;
+    sizeBytes: number;
+    purpose: Purpose | null;
+  }) {
     return this.prisma.upload.create({ data });
   }
 

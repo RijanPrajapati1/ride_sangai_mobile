@@ -67,13 +67,45 @@ export function createServices(deps: ServiceDependencies) {
 
   const ride = new RideService(uow, repositories.ride, notification);
   const post = new PostService(uow, repositories.post, notification);
-  const conversation = new ConversationService(uow, repositories.conversation, repositories.user, notification, realtime);
+  const conversation = new ConversationService(
+    uow,
+    repositories.conversation,
+    repositories.user,
+    notification,
+    realtime,
+  );
   const group = new GroupService(uow, repositories.group, realtime);
-  const upload = new UploadService(repositories.upload, new LocalDiskStorage(config.uploads.dir, config.publicUrl));
+  const upload = new UploadService(
+    repositories.upload,
+    new LocalDiskStorage(config.uploads.dir, config.publicUrl),
+  );
   const admin = new AdminService(uow, repositories.admin, user, repositories.banner);
-  const home = new HomeService(ride, post, user, notification, conversation, repositories.banner, config.uploads.maxBytes);
+  const home = new HomeService(
+    ride,
+    post,
+    user,
+    notification,
+    conversation,
+    repositories.banner,
+    config.uploads.maxBytes,
+  );
 
-  return { uow, repositories, passwords, tokens, notification, auth, user, ride, post, conversation, group, home, admin, upload };
+  return {
+    uow,
+    repositories,
+    passwords,
+    tokens,
+    notification,
+    auth,
+    user,
+    ride,
+    post,
+    conversation,
+    group,
+    home,
+    admin,
+    upload,
+  };
 }
 
 export type Services = ReturnType<typeof createServices>;

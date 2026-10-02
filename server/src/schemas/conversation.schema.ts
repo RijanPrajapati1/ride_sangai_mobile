@@ -1,6 +1,15 @@
 import { Type } from 'typebox';
 import { paginationQuery } from '../utils/pagination.js';
-import { IdParams, NoContent, Nullable, Paginated, Text, Timestamp, Uuid, errorResponses } from './common.schema.js';
+import {
+  IdParams,
+  NoContent,
+  Nullable,
+  Paginated,
+  Text,
+  Timestamp,
+  Uuid,
+  errorResponses,
+} from './common.schema.js';
 
 /** Mirrors the Dart `Conversation` entity, as seen by the viewer. */
 export const Conversation = Type.Object({
@@ -28,7 +37,9 @@ export const OpenConversationBody = Type.Object({ userId: Uuid }, { additionalPr
 export const SendMessageBody = Type.Object({ text: Text(2000) }, { additionalProperties: false });
 export const MessagesQuery = Type.Object({
   ...paginationQuery,
-  markRead: Type.Optional(Type.Boolean({ default: true, description: 'Mark the conversation read when loading the latest page.' })),
+  markRead: Type.Optional(
+    Type.Boolean({ default: true, description: 'Mark the conversation read when loading the latest page.' }),
+  ),
 });
 export const UnreadCount = Type.Object({ count: Type.Integer() });
 
@@ -48,8 +59,17 @@ export const conversationSchemas = {
     body: OpenConversationBody,
     response: { 200: Conversation, 201: Conversation, ...errorResponses(400, 401, 404) },
   },
-  unreadCount: { tags, summary: 'Unread messages across all conversations', response: { 200: UnreadCount, ...errorResponses(401) } },
-  get: { tags, summary: 'A conversation', params: IdParams, response: { 200: Conversation, ...errorResponses(401, 404) } },
+  unreadCount: {
+    tags,
+    summary: 'Unread messages across all conversations',
+    response: { 200: UnreadCount, ...errorResponses(401) },
+  },
+  get: {
+    tags,
+    summary: 'A conversation',
+    params: IdParams,
+    response: { 200: Conversation, ...errorResponses(401, 404) },
+  },
   messages: {
     tags,
     summary: 'Message history',
@@ -58,6 +78,17 @@ export const conversationSchemas = {
     querystring: MessagesQuery,
     response: { 200: Paginated(Message), ...errorResponses(400, 401, 404) },
   },
-  send: { tags, summary: 'Send a message', params: IdParams, body: SendMessageBody, response: { 201: Message, ...errorResponses(400, 401, 404) } },
-  markRead: { tags, summary: 'Mark a conversation read', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 404) } },
+  send: {
+    tags,
+    summary: 'Send a message',
+    params: IdParams,
+    body: SendMessageBody,
+    response: { 201: Message, ...errorResponses(400, 401, 404) },
+  },
+  markRead: {
+    tags,
+    summary: 'Mark a conversation read',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 404) },
+  },
 };

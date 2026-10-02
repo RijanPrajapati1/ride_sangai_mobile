@@ -40,7 +40,11 @@ export async function registerUser(
 }
 
 /** Registers a user and promotes them to admin (takes effect on their next request). */
-export async function registerAdmin(app: App, prisma: PrismaClient, overrides: Parameters<typeof registerUser>[1] = {}) {
+export async function registerAdmin(
+  app: App,
+  prisma: PrismaClient,
+  overrides: Parameters<typeof registerUser>[1] = {},
+) {
   const user = await registerUser(app, { name: 'Admin', ...overrides });
   await prisma.user.update({ where: { id: user.id }, data: { role: 'admin' } });
   return user;

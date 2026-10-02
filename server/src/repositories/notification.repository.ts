@@ -52,7 +52,9 @@ export class NotificationRepository {
       where: {
         recipientId,
         ...(options.unreadOnly ? { readAt: null } : {}),
-        ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: options.limit + 1,
@@ -65,7 +67,10 @@ export class NotificationRepository {
   }
 
   findOwned(id: string, recipientId: string) {
-    return this.prisma.notification.findFirst({ where: { id, recipientId }, select: { id: true, readAt: true } });
+    return this.prisma.notification.findFirst({
+      where: { id, recipientId },
+      select: { id: true, readAt: true },
+    });
   }
 
   async markRead(id: string): Promise<void> {

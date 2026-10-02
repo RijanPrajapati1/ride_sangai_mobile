@@ -1,6 +1,15 @@
 import { Type } from 'typebox';
 import { paginationQuery } from '../utils/pagination.js';
-import { IdParams, NoContent, Nullable, Paginated, Text, Timestamp, Uuid, errorResponses } from './common.schema.js';
+import {
+  IdParams,
+  NoContent,
+  Nullable,
+  Paginated,
+  Text,
+  Timestamp,
+  Uuid,
+  errorResponses,
+} from './common.schema.js';
 
 /** Mirrors the Dart `CommunityPost` entity. */
 export const CommunityPost = Type.Object({
@@ -33,9 +42,14 @@ export const Comment = Type.Object({
 
 export const LikeState = Type.Object({ isLiked: Type.Boolean(), likeCount: Type.Integer() });
 
-const imageUrl = Nullable(Type.String({ maxLength: 2048, description: 'http(s) URL; null or "" for no image.' }));
+const imageUrl = Nullable(
+  Type.String({ maxLength: 2048, description: 'http(s) URL; null or "" for no image.' }),
+);
 
-export const CreatePostBody = Type.Object({ text: Text(2000), imageUrl: Type.Optional(imageUrl) }, { additionalProperties: false });
+export const CreatePostBody = Type.Object(
+  { text: Text(2000), imageUrl: Type.Optional(imageUrl) },
+  { additionalProperties: false },
+);
 export const UpdatePostBody = Type.Object(
   { text: Type.Optional(Text(2000)), imageUrl: Type.Optional(imageUrl) },
   { additionalProperties: false, minProperties: 1 },
@@ -54,12 +68,43 @@ export const postSchemas = {
     querystring: FeedQuery,
     response: { 200: Paginated(CommunityPost), ...errorResponses(400, 401) },
   },
-  create: { tags, summary: 'Share a post', body: CreatePostBody, response: { 201: CommunityPost, ...errorResponses(400, 401) } },
-  get: { tags, summary: 'A post', params: IdParams, response: { 200: CommunityPost, ...errorResponses(401, 404) } },
-  update: { tags, summary: 'Edit my post', params: IdParams, body: UpdatePostBody, response: { 200: CommunityPost, ...errorResponses(400, 401, 403, 404) } },
-  remove: { tags, summary: 'Delete a post (author or admin)', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  like: { tags, summary: 'Like a post (idempotent)', params: IdParams, response: { 200: LikeState, ...errorResponses(401, 404) } },
-  unlike: { tags, summary: 'Remove my like (idempotent)', params: IdParams, response: { 200: LikeState, ...errorResponses(401, 404) } },
+  create: {
+    tags,
+    summary: 'Share a post',
+    body: CreatePostBody,
+    response: { 201: CommunityPost, ...errorResponses(400, 401) },
+  },
+  get: {
+    tags,
+    summary: 'A post',
+    params: IdParams,
+    response: { 200: CommunityPost, ...errorResponses(401, 404) },
+  },
+  update: {
+    tags,
+    summary: 'Edit my post',
+    params: IdParams,
+    body: UpdatePostBody,
+    response: { 200: CommunityPost, ...errorResponses(400, 401, 403, 404) },
+  },
+  remove: {
+    tags,
+    summary: 'Delete a post (author or admin)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  like: {
+    tags,
+    summary: 'Like a post (idempotent)',
+    params: IdParams,
+    response: { 200: LikeState, ...errorResponses(401, 404) },
+  },
+  unlike: {
+    tags,
+    summary: 'Remove my like (idempotent)',
+    params: IdParams,
+    response: { 200: LikeState, ...errorResponses(401, 404) },
+  },
   comments: {
     tags,
     summary: "A post's comments, oldest first",
@@ -67,13 +112,29 @@ export const postSchemas = {
     querystring: PageQuery,
     response: { 200: Paginated(Comment), ...errorResponses(401, 404) },
   },
-  addComment: { tags, summary: 'Comment on a post', params: IdParams, body: CreateCommentBody, response: { 201: Comment, ...errorResponses(400, 401, 404) } },
+  addComment: {
+    tags,
+    summary: 'Comment on a post',
+    params: IdParams,
+    body: CreateCommentBody,
+    response: { 201: Comment, ...errorResponses(400, 401, 404) },
+  },
   removeComment: {
     tags,
     summary: 'Delete a comment (its author, the post author, or an admin)',
     params: IdParams,
     response: { 204: NoContent, ...errorResponses(401, 403, 404) },
   },
-  likeComment: { tags, summary: 'Like a comment (idempotent)', params: IdParams, response: { 200: LikeState, ...errorResponses(401, 404) } },
-  unlikeComment: { tags, summary: 'Remove my comment like (idempotent)', params: IdParams, response: { 200: LikeState, ...errorResponses(401, 404) } },
+  likeComment: {
+    tags,
+    summary: 'Like a comment (idempotent)',
+    params: IdParams,
+    response: { 200: LikeState, ...errorResponses(401, 404) },
+  },
+  unlikeComment: {
+    tags,
+    summary: 'Remove my comment like (idempotent)',
+    params: IdParams,
+    response: { 200: LikeState, ...errorResponses(401, 404) },
+  },
 };

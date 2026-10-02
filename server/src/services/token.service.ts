@@ -77,7 +77,12 @@ export class TokenService {
     const session = await this.authRepo.findActiveSessionUser(sid, sub);
     if (!session) throw unauthorized('Your session has ended. Please sign in again.', 'SESSION_REVOKED');
 
-    const context: AuthContext = { id: session.user.id, role: session.user.role, name: session.user.name, sessionId: sid };
+    const context: AuthContext = {
+      id: session.user.id,
+      role: session.user.role,
+      name: session.user.name,
+      sessionId: sid,
+    };
     this.sessionCache.set(sid, context);
     return context;
   }

@@ -25,12 +25,19 @@ export class PostRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   /** Newest first (keyset on createdAt, id). */
-  findPage(options: { viewerId: string | null; authorId?: string; after: [Date, string] | null; limit: number }) {
+  findPage(options: {
+    viewerId: string | null;
+    authorId?: string;
+    after: [Date, string] | null;
+    limit: number;
+  }) {
     const { after } = options;
     return this.prisma.post.findMany({
       where: {
         ...(options.authorId ? { authorId: options.authorId } : {}),
-        ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: options.limit + 1,
@@ -78,7 +85,9 @@ export class PostRepository {
     return this.prisma.comment.findMany({
       where: {
         postId,
-        ...(after ? { OR: [{ createdAt: { gt: after[0] } }, { createdAt: after[0], id: { gt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { gt: after[0] } }, { createdAt: after[0], id: { gt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
       take: limit + 1,
@@ -91,7 +100,10 @@ export class PostRepository {
   }
 
   findComment(id: string, db: Db = this.prisma) {
-    return db.comment.findUnique({ where: { id }, select: { id: true, authorId: true, postId: true, post: { select: { authorId: true } } } });
+    return db.comment.findUnique({
+      where: { id },
+      select: { id: true, authorId: true, postId: true, post: { select: { authorId: true } } },
+    });
   }
 
   async deleteComment(id: string, db: Db = this.prisma): Promise<void> {
@@ -107,7 +119,10 @@ export class PostRepository {
   }
 
   async commentLikeCount(commentId: string): Promise<number> {
-    const row = await this.prisma.comment.findUniqueOrThrow({ where: { id: commentId }, select: { likeCount: true } });
+    const row = await this.prisma.comment.findUniqueOrThrow({
+      where: { id: commentId },
+      select: { likeCount: true },
+    });
     return row.likeCount;
   }
 }

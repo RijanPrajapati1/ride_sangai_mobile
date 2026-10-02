@@ -69,7 +69,10 @@ export const CreateBannerBody = Type.Object(
   { ...Type.Partial(Type.Object(bannerFields)).properties, title: bannerFields.title },
   { additionalProperties: false },
 );
-export const UpdateBannerBody = Type.Partial(Type.Object(bannerFields), { additionalProperties: false, minProperties: 1 });
+export const UpdateBannerBody = Type.Partial(Type.Object(bannerFields), {
+  additionalProperties: false,
+  minProperties: 1,
+});
 
 const tags = ['Admin'];
 const PageQuery = Type.Object(paginationQuery);
@@ -108,7 +111,12 @@ export const adminSchemas = {
     }),
     response: { 200: Paginated(Ride), ...errorResponses(400, 401, 403) },
   },
-  removeRide: { tags, summary: 'Remove a ride (participants are notified)', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
+  removeRide: {
+    tags,
+    summary: 'Remove a ride (participants are notified)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
   rideRequests: {
     tags,
     summary: 'All join requests, newest first',
@@ -116,13 +124,58 @@ export const adminSchemas = {
     querystring: Type.Object({ status: Type.Optional(RideRequestStatusSchema), ...paginationQuery }),
     response: { 200: RideRequestPage, ...errorResponses(400, 401, 403) },
   },
-  posts: { tags, summary: 'All posts, newest first', querystring: PageQuery, response: { 200: Paginated(CommunityPost), ...errorResponses(400, 401, 403) } },
-  removePost: { tags, summary: 'Remove a post and its comments', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  groups: { tags, summary: 'All groups, newest first', querystring: PageQuery, response: { 200: Paginated(Group), ...errorResponses(400, 401, 403) } },
-  removeGroup: { tags, summary: 'Remove a group and its chat', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  banners: { tags, summary: 'All banners (including inactive)', response: { 200: Type.Object({ items: Type.Array(Banner) }), ...errorResponses(401, 403) } },
-  createBanner: { tags, summary: 'Create a home banner', body: CreateBannerBody, response: { 201: Banner, ...errorResponses(400, 401, 403) } },
-  updateBanner: { tags, summary: 'Edit a home banner', params: IdParams, body: UpdateBannerBody, response: { 200: Banner, ...errorResponses(400, 401, 403, 404) } },
-  deleteBanner: { tags, summary: 'Delete a home banner', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  auditLog: { tags, summary: 'Moderation log, newest first', querystring: PageQuery, response: { 200: Paginated(AuditEntry), ...errorResponses(400, 401, 403) } },
+  posts: {
+    tags,
+    summary: 'All posts, newest first',
+    querystring: PageQuery,
+    response: { 200: Paginated(CommunityPost), ...errorResponses(400, 401, 403) },
+  },
+  removePost: {
+    tags,
+    summary: 'Remove a post and its comments',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  groups: {
+    tags,
+    summary: 'All groups, newest first',
+    querystring: PageQuery,
+    response: { 200: Paginated(Group), ...errorResponses(400, 401, 403) },
+  },
+  removeGroup: {
+    tags,
+    summary: 'Remove a group and its chat',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  banners: {
+    tags,
+    summary: 'All banners (including inactive)',
+    response: { 200: Type.Object({ items: Type.Array(Banner) }), ...errorResponses(401, 403) },
+  },
+  createBanner: {
+    tags,
+    summary: 'Create a home banner',
+    body: CreateBannerBody,
+    response: { 201: Banner, ...errorResponses(400, 401, 403) },
+  },
+  updateBanner: {
+    tags,
+    summary: 'Edit a home banner',
+    params: IdParams,
+    body: UpdateBannerBody,
+    response: { 200: Banner, ...errorResponses(400, 401, 403, 404) },
+  },
+  deleteBanner: {
+    tags,
+    summary: 'Delete a home banner',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  auditLog: {
+    tags,
+    summary: 'Moderation log, newest first',
+    querystring: PageQuery,
+    response: { 200: Paginated(AuditEntry), ...errorResponses(400, 401, 403) },
+  },
 };

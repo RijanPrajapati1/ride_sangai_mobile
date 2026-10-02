@@ -22,17 +22,21 @@ export class RideController {
 
   get = async (request: Req<S['get']>) => this.rides.get(request.params.id, currentUser(request).id);
 
-  update = async (request: Req<S['update']>) => this.rides.update(currentUser(request), request.params.id, request.body);
+  update = async (request: Req<S['update']>) =>
+    this.rides.update(currentUser(request), request.params.id, request.body);
 
   remove = async (request: Req<S['remove']>, reply: Rep<S['remove']>) => {
     await this.rides.remove(currentUser(request), request.params.id);
     return reply.status(204).send();
   };
 
-  participants = async (request: Req<S['participants']>) => this.rides.participants(request.params.id, request.query);
+  participants = async (request: Req<S['participants']>) =>
+    this.rides.participants(request.params.id, request.query);
 
   join = async (request: Req<S['join']>, reply: Rep<S['join']>) =>
-    reply.status(201).send(await this.rides.requestToJoin(currentUser(request), request.params.id, request.body?.message));
+    reply
+      .status(201)
+      .send(await this.rides.requestToJoin(currentUser(request), request.params.id, request.body?.message));
 
   leave = async (request: Req<S['leave']>, reply: Rep<S['leave']>) => {
     await this.rides.leave(currentUser(request), request.params.id);

@@ -25,7 +25,8 @@ export interface BannerInput {
 }
 
 function bannerData(input: BannerInput) {
-  const date = (value: string | null | undefined) => (value === undefined ? undefined : value === null ? null : new Date(value));
+  const date = (value: string | null | undefined) =>
+    value === undefined ? undefined : value === null ? null : new Date(value);
   return {
     ...(input.category !== undefined ? { category: input.category } : {}),
     ...(input.title !== undefined ? { title: input.title.trim() } : {}),
@@ -70,16 +71,28 @@ export class AdminService {
       rows,
       limit,
       (row) => [row.name, row.id],
-      (row) => ({ ...toUserProfile(row, admin), role: row.role, createdAt: row.createdAt, lastLoginAt: row.lastLoginAt }),
+      (row) => ({
+        ...toUserProfile(row, admin),
+        role: row.role,
+        createdAt: row.createdAt,
+        lastLoginAt: row.lastLoginAt,
+      }),
     );
   }
 
   async setRole(admin: Actor, userId: string, role: UserRole) {
     if (userId === admin.id) throw conflict('You cannot change your own role.', 'CANNOT_CHANGE_OWN_ROLE');
-    if (!(await this.users.repo.exists(userId))) throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
+    if (!(await this.users.repo.exists(userId)))
+      throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
     await this.uow.run(async ({ db }) => {
       await this.users.repo.update(userId, { role }, db);
-      await audit(db, { actorId: admin.id, action: 'user.setRole', targetType: 'user', targetId: userId, details: { role } });
+      await audit(db, {
+        actorId: admin.id,
+        action: 'user.setRole',
+        targetType: 'user',
+        targetId: userId,
+        details: { role },
+      });
     });
     return this.users.getProfile(userId, admin);
   }
@@ -89,8 +102,15 @@ export class AdminService {
     if (userId === admin.id) throw conflict('You cannot remove your own account here.', 'CANNOT_REMOVE_SELF');
     const target = await this.users.repo.findCredentials(userId);
     if (!target) throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
-    if (target.role === 'admin') throw forbidden('Demote this admin before removing them.', 'CANNOT_REMOVE_ADMIN');
-    await audit(this.uow.prisma, { actorId: admin.id, action: 'user.remove', targetType: 'user', targetId: userId, details: { name: target.name } });
+    if (target.role === 'admin')
+      throw forbidden('Demote this admin before removing them.', 'CANNOT_REMOVE_ADMIN');
+    await audit(this.uow.prisma, {
+      actorId: admin.id,
+      action: 'user.remove',
+      targetType: 'user',
+      targetId: userId,
+      details: { name: target.name },
+    });
     await this.users.removeUser(userId);
   }
 
@@ -123,11 +143,13 @@ export class AdminService {
   }
 
   async updateBanner(id: string, input: BannerInput) {
-    if (!(await this.banners.findById(id))) throw notFound('This banner could not be found.', 'BANNER_NOT_FOUND');
+    if (!(await this.banners.findById(id)))
+      throw notFound('This banner could not be found.', 'BANNER_NOT_FOUND');
     return toBannerDto(await this.banners.update(id, bannerData(input)));
   }
 
   async deleteBanner(id: string): Promise<void> {
-    if (!(await this.banners.delete(id))) throw notFound('This banner could not be found.', 'BANNER_NOT_FOUND');
+    if (!(await this.banners.delete(id)))
+      throw notFound('This banner could not be found.', 'BANNER_NOT_FOUND');
   }
 }

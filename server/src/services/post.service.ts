@@ -65,7 +65,12 @@ export class PostService {
       after: decodeTimeCursor(query.cursor),
       limit,
     });
-    return toPage(rows, limit, (post) => timeCursor(post.createdAt, post.id), (post) => toPostDto(post, viewerId));
+    return toPage(
+      rows,
+      limit,
+      (post) => timeCursor(post.createdAt, post.id),
+      (post) => toPostDto(post, viewerId),
+    );
   }
 
   async get(postId: string, viewerId: string) {
@@ -75,7 +80,11 @@ export class PostService {
   }
 
   async create(author: Actor, input: { text: string; imageUrl?: string | null }) {
-    const post = await this.repo.create({ authorId: author.id, text: input.text.trim(), imageUrl: cleanImage(input.imageUrl) });
+    const post = await this.repo.create({
+      authorId: author.id,
+      text: input.text.trim(),
+      imageUrl: cleanImage(input.imageUrl),
+    });
     return toPostDto(post, author.id);
   }
 
@@ -99,9 +108,16 @@ export class PostService {
     await this.uow.run(async ({ db }) => {
       const post = await this.repo.findOwner(postId, db);
       if (!post) throw POST_NOT_FOUND();
-      if (post.authorId !== actor.id && actor.role !== 'admin') throw forbidden('Only the author can delete this post.', 'NOT_POST_AUTHOR');
+      if (post.authorId !== actor.id && actor.role !== 'admin')
+        throw forbidden('Only the author can delete this post.', 'NOT_POST_AUTHOR');
       if (post.authorId !== actor.id) {
-        await audit(db, { actorId: actor.id, action: 'post.delete', targetType: 'post', targetId: postId, details: { text: post.text.slice(0, 120) } });
+        await audit(db, {
+          actorId: actor.id,
+          action: 'post.delete',
+          targetType: 'post',
+          targetId: postId,
+          details: { text: post.text.slice(0, 120) },
+        });
       }
       await this.repo.delete(postId, db);
     });
@@ -138,14 +154,23 @@ export class PostService {
     if (!(await this.repo.findOwner(postId))) throw POST_NOT_FOUND();
     const limit = pageLimit(query.limit);
     const rows = await this.repo.findCommentsPage(postId, viewerId, decodeTimeCursor(query.cursor), limit);
-    return toPage(rows, limit, (comment) => timeCursor(comment.createdAt, comment.id), (comment) => toCommentDto(comment, viewerId));
+    return toPage(
+      rows,
+      limit,
+      (comment) => timeCursor(comment.createdAt, comment.id),
+      (comment) => toCommentDto(comment, viewerId),
+    );
   }
 
   async addComment(actor: Actor, postId: string, text: string) {
     return this.uow.run(async (ctx) => {
       const post = await this.repo.findOwner(postId, ctx.db);
       if (!post) throw POST_NOT_FOUND();
-      const comment = await this.repo.createComment(ctx.db, { postId, authorId: actor.id, text: text.trim() });
+      const comment = await this.repo.createComment(ctx.db, {
+        postId,
+        authorId: actor.id,
+        text: text.trim(),
+      });
       await this.notifications.notify(ctx, {
         recipientId: post.authorId,
         actorId: actor.id,
@@ -163,7 +188,8 @@ export class PostService {
   async removeComment(actor: Actor, commentId: string): Promise<void> {
     const comment = await this.repo.findComment(commentId);
     if (!comment) throw COMMENT_NOT_FOUND();
-    const allowed = comment.authorId === actor.id || comment.post.authorId === actor.id || actor.role === 'admin';
+    const allowed =
+      comment.authorId === actor.id || comment.post.authorId === actor.id || actor.role === 'admin';
     if (!allowed) throw forbidden('You cannot delete this comment.', 'NOT_COMMENT_AUTHOR');
     await this.repo.deleteComment(commentId);
   }

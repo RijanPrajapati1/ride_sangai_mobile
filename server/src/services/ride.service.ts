@@ -51,7 +51,11 @@ const RIDE_NOT_FOUND = () => notFound('This ride no longer exists.', 'RIDE_NOT_F
 const REQUEST_NOT_FOUND = () => notFound('This request no longer exists.', 'REQUEST_NOT_FOUND');
 
 /** Maps a ride to the API shape (the Dart `Ride` entity) for one viewer. */
-export function toRideDto(ride: RideRecord, myRequest: MyRequestRecord | null | undefined, viewerId: string | null) {
+export function toRideDto(
+  ride: RideRecord,
+  myRequest: MyRequestRecord | null | undefined,
+  viewerId: string | null,
+) {
   const joinStatus: RideJoinStatus =
     viewerId !== null && ride.organizerId === viewerId ? 'organizer' : (myRequest?.status ?? 'none');
   return {
@@ -76,7 +80,12 @@ export function toRideDto(ride: RideRecord, myRequest: MyRequestRecord | null | 
     participantAvatars: ride.requests.map((request) => request.user.avatarUrl),
     joinStatus,
     myRequest: myRequest
-      ? { id: myRequest.id, status: myRequest.status, declineReason: myRequest.declineReason, requestedAt: myRequest.requestedAt }
+      ? {
+          id: myRequest.id,
+          status: myRequest.status,
+          declineReason: myRequest.declineReason,
+          requestedAt: myRequest.requestedAt,
+        }
       : null,
     createdAt: ride.createdAt,
   };
@@ -132,10 +141,20 @@ export class RideService {
 
   // --- Reading -----------------------------------------------------------------
 
-  private async toPageDto(rows: RideRecord[], limit: number, viewerId: string | null): Promise<Page<RideDto>> {
+  private async toPageDto(
+    rows: RideRecord[],
+    limit: number,
+    viewerId: string | null,
+  ): Promise<Page<RideDto>> {
     const page = toPage(rows, limit, (ride) => timeCursor(ride.startsAt, ride.id));
-    const mine = await this.repo.myRequests(page.items.map((ride) => ride.id), viewerId);
-    return { items: page.items.map((ride) => toRideDto(ride, mine.get(ride.id), viewerId)), nextCursor: page.nextCursor };
+    const mine = await this.repo.myRequests(
+      page.items.map((ride) => ride.id),
+      viewerId,
+    );
+    return {
+      items: page.items.map((ride) => toRideDto(ride, mine.get(ride.id), viewerId)),
+      nextCursor: page.nextCursor,
+    };
   }
 
   /** Discovery: upcoming rides, soonest first. */
@@ -144,22 +163,37 @@ export class RideService {
     const where: Prisma.RideWhereInput = {
       AND: [{ startsAt: { gt: new Date() } }, this.repo.filterWhere(query)],
     };
-    const rows = await this.repo.findPage(where, { direction: 'asc', after: decodeTimeCursor(query.cursor), limit });
+    const rows = await this.repo.findPage(where, {
+      direction: 'asc',
+      after: decodeTimeCursor(query.cursor),
+      limit,
+    });
     return this.toPageDto(rows, limit, viewerId);
   }
 
   /** The "My Rides" tabs. */
-  async mine(viewerId: string, query: { scope?: MyRidesScope; category?: ActivityCategory; limit?: number; cursor?: string }) {
+  async mine(
+    viewerId: string,
+    query: { scope?: MyRidesScope; category?: ActivityCategory; limit?: number; cursor?: string },
+  ) {
     const limit = pageLimit(query.limit);
     const now = new Date();
     const scope = query.scope ?? 'upcoming';
-    const active = { some: { userId: viewerId, status: { in: ['pending', 'approved'] as RideRequestStatus[] } } };
+    const active = {
+      some: { userId: viewerId, status: { in: ['pending', 'approved'] as RideRequestStatus[] } },
+    };
     const byScope: Record<MyRidesScope, { where: Prisma.RideWhereInput; direction: 'asc' | 'desc' }> = {
-      upcoming: { where: { startsAt: { gt: now }, OR: [{ organizerId: viewerId }, { requests: active }] }, direction: 'asc' },
+      upcoming: {
+        where: { startsAt: { gt: now }, OR: [{ organizerId: viewerId }, { requests: active }] },
+        direction: 'asc',
+      },
       organized: { where: { organizerId: viewerId }, direction: 'asc' },
       joined: { where: { startsAt: { gt: now }, requests: active }, direction: 'asc' },
       past: {
-        where: { startsAt: { lte: now }, OR: [{ organizerId: viewerId }, { requests: { some: { userId: viewerId, status: 'approved' } } }] },
+        where: {
+          startsAt: { lte: now },
+          OR: [{ organizerId: viewerId }, { requests: { some: { userId: viewerId, status: 'approved' } } }],
+        },
         direction: 'desc',
       },
     };
@@ -174,15 +208,26 @@ export class RideService {
   /** Rides a rider organizes (all dates, oldest first) — the profile's "Rides Organized". */
   async byOrganizer(userId: string, viewerId: string, query: { limit?: number; cursor?: string }) {
     const limit = pageLimit(query.limit);
-    const rows = await this.repo.findPage({ organizerId: userId }, { direction: 'asc', after: decodeTimeCursor(query.cursor), limit });
+    const rows = await this.repo.findPage(
+      { organizerId: userId },
+      { direction: 'asc', after: decodeTimeCursor(query.cursor), limit },
+    );
     return this.toPageDto(rows, limit, viewerId);
   }
 
   /** Admin list: every ride, newest start first. */
-  async listAll(viewerId: string, query: RideFilters & { when?: 'upcoming' | 'past' | 'all'; limit?: number; cursor?: string }) {
+  async listAll(
+    viewerId: string,
+    query: RideFilters & { when?: 'upcoming' | 'past' | 'all'; limit?: number; cursor?: string },
+  ) {
     const limit = pageLimit(query.limit);
     const now = new Date();
-    const when = query.when === 'upcoming' ? { startsAt: { gt: now } } : query.when === 'past' ? { startsAt: { lte: now } } : {};
+    const when =
+      query.when === 'upcoming'
+        ? { startsAt: { gt: now } }
+        : query.when === 'past'
+          ? { startsAt: { lte: now } }
+          : {};
     const rows = await this.repo.findPage(
       { AND: [when, this.repo.filterWhere(query)] },
       { direction: 'desc', after: decodeTimeCursor(query.cursor), limit },
@@ -258,28 +303,51 @@ export class RideService {
 
       const data: Prisma.RideUpdateInput = {};
       const changed: string[] = [];
-      const set = <K extends keyof Prisma.RideUpdateInput>(key: K, value: Prisma.RideUpdateInput[K], label: string, same: boolean) => {
+      const set = <K extends keyof Prisma.RideUpdateInput>(
+        key: K,
+        value: Prisma.RideUpdateInput[K],
+        label: string,
+        same: boolean,
+      ) => {
         if (same) return;
         data[key] = value;
         changed.push(label);
       };
-      if (input.title !== undefined) set('title', input.title.trim(), 'title', input.title.trim() === current.title);
+      if (input.title !== undefined)
+        set('title', input.title.trim(), 'title', input.title.trim() === current.title);
       if (input.description !== undefined)
-        set('description', input.description.trim(), 'description', input.description.trim() === current.description);
+        set(
+          'description',
+          input.description.trim(),
+          'description',
+          input.description.trim() === current.description,
+        );
       if (input.date !== undefined) {
         const startsAt = parseStart(input.date);
         set('startsAt', startsAt, 'start time', startsAt.getTime() === current.startsAt.getTime());
       }
       if (input.meetingPoint !== undefined)
-        set('meetingPoint', input.meetingPoint.trim(), 'meeting point', input.meetingPoint.trim() === current.meetingPoint);
+        set(
+          'meetingPoint',
+          input.meetingPoint.trim(),
+          'meeting point',
+          input.meetingPoint.trim() === current.meetingPoint,
+        );
       if (input.rideType !== undefined) {
         set('rideType', input.rideType, 'ride type', input.rideType === current.rideType);
         data.category = RIDE_TYPE_CATEGORY[input.rideType];
       }
-      if (input.difficulty !== undefined) set('difficulty', input.difficulty, 'difficulty', input.difficulty === current.difficulty);
-      if (input.distanceKm !== undefined) set('distanceKm', input.distanceKm, 'distance', input.distanceKm === current.distanceKm);
+      if (input.difficulty !== undefined)
+        set('difficulty', input.difficulty, 'difficulty', input.difficulty === current.difficulty);
+      if (input.distanceKm !== undefined)
+        set('distanceKm', input.distanceKm, 'distance', input.distanceKm === current.distanceKm);
       if (input.durationMinutes !== undefined)
-        set('durationMinutes', input.durationMinutes, 'duration', input.durationMinutes === current.durationMinutes);
+        set(
+          'durationMinutes',
+          input.durationMinutes,
+          'duration',
+          input.durationMinutes === current.durationMinutes,
+        );
       if (input.maxParticipants !== undefined) {
         if (input.maxParticipants < current.participantCount) {
           throw unprocessable(
@@ -287,11 +355,21 @@ export class RideService {
             'MAX_BELOW_PARTICIPANTS',
           );
         }
-        set('maxParticipants', input.maxParticipants, 'group size', input.maxParticipants === current.maxParticipants);
+        set(
+          'maxParticipants',
+          input.maxParticipants,
+          'group size',
+          input.maxParticipants === current.maxParticipants,
+        );
       }
       if (input.requirements !== undefined) {
         const requirements = cleanList(input.requirements);
-        set('requirements', requirements, 'requirements', requirements.join('\n') === current.requirements.join('\n'));
+        set(
+          'requirements',
+          requirements,
+          'requirements',
+          requirements.join('\n') === current.requirements.join('\n'),
+        );
       }
       if (input.imageUrl !== undefined) {
         const imageUrl = input.imageUrl?.trim() ?? '';
@@ -337,13 +415,21 @@ export class RideService {
           actorId: byModerator ? null : actor.id,
           type: 'rideUpdated' as const,
           title: 'Ride cancelled',
-          body: byModerator ? `${ride.title} was removed by a moderator.` : `${ride.title} was cancelled by the organizer.`,
+          body: byModerator
+            ? `${ride.title} was removed by a moderator.`
+            : `${ride.title} was cancelled by the organizer.`,
           entityType: 'ride' as const,
           entityId: rideId,
         })),
       );
       if (byModerator) {
-        await audit(ctx.db, { actorId: actor.id, action: 'ride.delete', targetType: 'ride', targetId: rideId, details: { title: ride.title } });
+        await audit(ctx.db, {
+          actorId: actor.id,
+          action: 'ride.delete',
+          targetType: 'ride',
+          targetId: rideId,
+          details: { title: ride.title },
+        });
       }
       await this.repo.delete(rideId, ctx.db);
     });
@@ -357,14 +443,18 @@ export class RideService {
     return this.uow.run(async (ctx) => {
       const ride = await this.repo.findById(rideId, ctx.db);
       if (!ride) throw RIDE_NOT_FOUND();
-      if (ride.organizerId === rider.id) throw conflict('You are organizing this ride.', 'CANNOT_JOIN_OWN_RIDE');
-      if (ride.startsAt <= new Date()) throw conflict('This ride has already started.', 'RIDE_ALREADY_STARTED');
+      if (ride.organizerId === rider.id)
+        throw conflict('You are organizing this ride.', 'CANNOT_JOIN_OWN_RIDE');
+      if (ride.startsAt <= new Date())
+        throw conflict('This ride has already started.', 'RIDE_ALREADY_STARTED');
       if (ride.participantCount >= ride.maxParticipants) throw conflict('This ride is full.', 'RIDE_FULL');
 
       const existing = await this.repo.findRequestFor(rideId, rider.id, ctx.db);
       if (existing && existing.status !== 'declined') {
         throw conflict(
-          existing.status === 'approved' ? 'You are already going on this ride.' : 'You have already asked to join this ride.',
+          existing.status === 'approved'
+            ? 'You are already going on this ride.'
+            : 'You have already asked to join this ride.',
           'ALREADY_REQUESTED',
         );
       }
@@ -392,7 +482,10 @@ export class RideService {
       const ride = await this.repo.findById(rideId, ctx.db);
       if (!ride) throw RIDE_NOT_FOUND();
       if (ride.organizerId === rider.id) {
-        throw conflict('Organizers cannot leave their own ride. Cancel the ride instead.', 'ORGANIZER_CANNOT_LEAVE');
+        throw conflict(
+          'Organizers cannot leave their own ride. Cancel the ride instead.',
+          'ORGANIZER_CANNOT_LEAVE',
+        );
       }
       const existing = await this.repo.findRequestFor(rideId, rider.id, ctx.db);
       if (!existing || existing.status === 'declined') {
@@ -404,7 +497,11 @@ export class RideService {
 
   // --- Organizer request inbox --------------------------------------------------
 
-  async requestsForRide(actor: Actor, rideId: string, query: { status?: RideRequestStatus; limit?: number; cursor?: string }) {
+  async requestsForRide(
+    actor: Actor,
+    rideId: string,
+    query: { status?: RideRequestStatus; limit?: number; cursor?: string },
+  ) {
     const ride = await this.repo.findById(rideId);
     if (!ride) throw RIDE_NOT_FOUND();
     this.assertCanManage(ride, actor);
@@ -413,7 +510,10 @@ export class RideService {
 
   /** Requests across every ride the organizer runs. */
   async inbox(organizerId: string, query: { status?: RideRequestStatus; limit?: number; cursor?: string }) {
-    return this.requestPage({ ride: { organizerId }, ...(query.status ? { status: query.status } : {}) }, query);
+    return this.requestPage(
+      { ride: { organizerId }, ...(query.status ? { status: query.status } : {}) },
+      query,
+    );
   }
 
   /** Admin: every request. */
@@ -435,7 +535,12 @@ export class RideService {
     return this.decide(actor, requestId, 'declined', blankToNull(reason));
   }
 
-  private async decide(actor: Actor, requestId: string, status: 'approved' | 'declined', reason: string | null) {
+  private async decide(
+    actor: Actor,
+    requestId: string,
+    status: 'approved' | 'declined',
+    reason: string | null,
+  ) {
     try {
       return await this.uow.run(async (ctx: TxContext) => {
         await this.repo.lockRequestAndRide(ctx.db, requestId);
@@ -445,13 +550,19 @@ export class RideService {
         if (request.status !== 'pending') {
           throw conflict(`This request was already ${request.status}.`, 'REQUEST_NOT_PENDING');
         }
-        if (request.ride.startsAt <= new Date()) throw conflict('This ride has already started.', 'RIDE_ALREADY_STARTED');
+        if (request.ride.startsAt <= new Date())
+          throw conflict('This ride has already started.', 'RIDE_ALREADY_STARTED');
         if (status === 'approved') {
           const ride = await this.repo.findById(request.rideId, ctx.db);
-          if (ride && ride.participantCount >= ride.maxParticipants) throw conflict('This ride is full.', 'RIDE_FULL');
+          if (ride && ride.participantCount >= ride.maxParticipants)
+            throw conflict('This ride is full.', 'RIDE_FULL');
         }
 
-        const decided = await this.repo.decideRequest(ctx.db, requestId, { status, deciderId: actor.id, declineReason: reason });
+        const decided = await this.repo.decideRequest(ctx.db, requestId, {
+          status,
+          deciderId: actor.id,
+          declineReason: reason,
+        });
         const title = decided.ride.title;
         await this.notifications.notify(ctx, {
           recipientId: decided.userId,
@@ -466,7 +577,12 @@ export class RideService {
           entityId: decided.rideId,
         });
         if (actor.role === 'admin' && request.ride.organizerId !== actor.id) {
-          await audit(ctx.db, { actorId: actor.id, action: `rideRequest.${status}`, targetType: 'rideRequest', targetId: requestId });
+          await audit(ctx.db, {
+            actorId: actor.id,
+            action: `rideRequest.${status}`,
+            targetType: 'rideRequest',
+            targetId: requestId,
+          });
         }
         return toRideRequestDto(decided);
       });

@@ -10,7 +10,14 @@ export interface AuthUserRecord {
   passwordHash: string;
 }
 
-const authUserSelect = { id: true, email: true, name: true, avatarUrl: true, role: true, passwordHash: true } as const;
+const authUserSelect = {
+  id: true,
+  email: true,
+  name: true,
+  avatarUrl: true,
+  role: true,
+  passwordHash: true,
+} as const;
 
 /** Data access for accounts, sessions and auth tokens. */
 export class AuthRepository {
@@ -40,12 +47,18 @@ export class AuthRepository {
     await db.user.update({ where: { id: userId }, data: { passwordHash }, select: { id: true } });
   }
 
-  async createSession(db: Db, session: { userId: string; userAgent: string | null; ip: string | null; expiresAt: Date }): Promise<string> {
+  async createSession(
+    db: Db,
+    session: { userId: string; userAgent: string | null; ip: string | null; expiresAt: Date },
+  ): Promise<string> {
     const row = await db.session.create({ data: session, select: { id: true } });
     return row.id;
   }
 
-  async createRefreshToken(db: Db, token: { sessionId: string; tokenHash: string; expiresAt: Date }): Promise<void> {
+  async createRefreshToken(
+    db: Db,
+    token: { sessionId: string; tokenHash: string; expiresAt: Date },
+  ): Promise<void> {
     await db.refreshToken.create({ data: token, select: { id: true } });
   }
 
@@ -78,7 +91,11 @@ export class AuthRepository {
   }
 
   async extendSession(db: Db, sessionId: string, expiresAt: Date): Promise<void> {
-    await db.session.update({ where: { id: sessionId }, data: { lastUsedAt: new Date(), expiresAt }, select: { id: true } });
+    await db.session.update({
+      where: { id: sessionId },
+      data: { lastUsedAt: new Date(), expiresAt },
+      select: { id: true },
+    });
   }
 
   /** Validates an access token's session; returns the caller or null if revoked/expired. */
@@ -97,9 +114,18 @@ export class AuthRepository {
     return result.count > 0;
   }
 
-  async revokeUserSessions(userId: string, reason: string, options: { exceptSessionId?: string } = {}, db: Db = this.prisma) {
+  async revokeUserSessions(
+    userId: string,
+    reason: string,
+    options: { exceptSessionId?: string } = {},
+    db: Db = this.prisma,
+  ) {
     await db.session.updateMany({
-      where: { userId, revokedAt: null, ...(options.exceptSessionId ? { id: { not: options.exceptSessionId } } : {}) },
+      where: {
+        userId,
+        revokedAt: null,
+        ...(options.exceptSessionId ? { id: { not: options.exceptSessionId } } : {}),
+      },
       data: { revokedAt: new Date(), revokedReason: reason },
     });
   }
@@ -113,8 +139,14 @@ export class AuthRepository {
   }
 
   /** Issues a reset token and invalidates any earlier unused ones. */
-  async createPasswordResetToken(db: Db, reset: { userId: string; tokenHash: string; expiresAt: Date }): Promise<void> {
-    await db.passwordResetToken.updateMany({ where: { userId: reset.userId, usedAt: null }, data: { usedAt: new Date() } });
+  async createPasswordResetToken(
+    db: Db,
+    reset: { userId: string; tokenHash: string; expiresAt: Date },
+  ): Promise<void> {
+    await db.passwordResetToken.updateMany({
+      where: { userId: reset.userId, usedAt: null },
+      data: { usedAt: new Date() },
+    });
     await db.passwordResetToken.create({ data: reset, select: { id: true } });
   }
 
@@ -136,9 +168,13 @@ export class AuthRepository {
     const dayAgo = new Date(now - 86_400_000);
     const weekAgo = new Date(now - 7 * 86_400_000);
     const [sessions, tokens, resets] = await this.prisma.$transaction([
-      this.prisma.session.deleteMany({ where: { OR: [{ expiresAt: { lt: dayAgo } }, { revokedAt: { lt: dayAgo } }] } }),
+      this.prisma.session.deleteMany({
+        where: { OR: [{ expiresAt: { lt: dayAgo } }, { revokedAt: { lt: dayAgo } }] },
+      }),
       // Used refresh tokens are kept for a week so replaying one is still detected as reuse.
-      this.prisma.refreshToken.deleteMany({ where: { OR: [{ expiresAt: { lt: new Date(now) } }, { usedAt: { lt: weekAgo } }] } }),
+      this.prisma.refreshToken.deleteMany({
+        where: { OR: [{ expiresAt: { lt: new Date(now) } }, { usedAt: { lt: weekAgo } }] },
+      }),
       this.prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lt: dayAgo } } }),
     ]);
     return sessions.count + tokens.count + resets.count;

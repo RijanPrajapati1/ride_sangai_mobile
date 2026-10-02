@@ -1,4 +1,11 @@
-import { RIDE_TYPE_CATEGORY, rideTypesFor, type ActivityCategory, type ExperienceLevel, type RideType, type UserRole } from '../constants/enums.js';
+import {
+  RIDE_TYPE_CATEGORY,
+  rideTypesFor,
+  type ActivityCategory,
+  type ExperienceLevel,
+  type RideType,
+  type UserRole,
+} from '../constants/enums.js';
 import type { UnitOfWork } from '../db/prisma.js';
 import type { RealtimeHub } from '../realtime/hub.js';
 import type { ProfileRecord, UserRepository } from '../repositories/user.repository.js';
@@ -169,13 +176,20 @@ export class UserService {
   }
 
   /** Category defaults to the dashboard category of the viewer's preferred ride type. */
-  async recommended(viewer: Viewer & { id: string }, options: { category?: ActivityCategory; limit?: number }) {
+  async recommended(
+    viewer: Viewer & { id: string },
+    options: { category?: ActivityCategory; limit?: number },
+  ) {
     let category = options.category;
     if (!category) {
       const me = await this.repo.findProfile(viewer.id, null);
       category = me ? RIDE_TYPE_CATEGORY[me.preferredRideType] : 'cycling';
     }
-    const rows = await this.repo.recommended(viewer.id, rideTypesFor(category), Math.min(options.limit ?? 10, 50));
+    const rows = await this.repo.recommended(
+      viewer.id,
+      rideTypesFor(category),
+      Math.min(options.limit ?? 10, 50),
+    );
     return rows.map((row) => toUserProfile(row, viewer));
   }
 
@@ -183,10 +197,20 @@ export class UserService {
     const limit = pageLimit(query.limit);
     const after = decodeCursor(query.cursor, ['string', 'string']) as [string, string] | null;
     const rows = await this.repo.list({ viewerId: viewer.id, q: query.q, role: 'user', after, limit });
-    return toPage(rows, limit, (row) => [row.name, row.id], (row) => toUserProfile(row, viewer));
+    return toPage(
+      rows,
+      limit,
+      (row) => [row.name, row.id],
+      (row) => toUserProfile(row, viewer),
+    );
   }
 
-  async followEdges(userId: string, direction: 'followers' | 'following', viewerId: string, query: { limit?: number; cursor?: string }) {
+  async followEdges(
+    userId: string,
+    direction: 'followers' | 'following',
+    viewerId: string,
+    query: { limit?: number; cursor?: string },
+  ) {
     if (!(await this.repo.exists(userId))) throw USER_NOT_FOUND();
     const limit = pageLimit(query.limit);
     const after = decodeTimeCursor(query.cursor);

@@ -15,7 +15,8 @@ export class PostController {
 
   get = async (request: Req<S['get']>) => this.posts.get(request.params.id, currentUser(request).id);
 
-  update = async (request: Req<S['update']>) => this.posts.update(currentUser(request), request.params.id, request.body);
+  update = async (request: Req<S['update']>) =>
+    this.posts.update(currentUser(request), request.params.id, request.body);
 
   remove = async (request: Req<S['remove']>, reply: Rep<S['remove']>) => {
     await this.posts.remove(currentUser(request), request.params.id);
@@ -26,17 +27,22 @@ export class PostController {
 
   unlike = async (request: Req<S['unlike']>) => this.posts.unlike(currentUser(request), request.params.id);
 
-  comments = async (request: Req<S['comments']>) => this.posts.comments(request.params.id, currentUser(request).id, request.query);
+  comments = async (request: Req<S['comments']>) =>
+    this.posts.comments(request.params.id, currentUser(request).id, request.query);
 
   addComment = async (request: Req<S['addComment']>, reply: Rep<S['addComment']>) =>
-    reply.status(201).send(await this.posts.addComment(currentUser(request), request.params.id, request.body.text));
+    reply
+      .status(201)
+      .send(await this.posts.addComment(currentUser(request), request.params.id, request.body.text));
 
   removeComment = async (request: Req<S['removeComment']>, reply: Rep<S['removeComment']>) => {
     await this.posts.removeComment(currentUser(request), request.params.id);
     return reply.status(204).send();
   };
 
-  likeComment = async (request: Req<S['likeComment']>) => this.posts.likeComment(currentUser(request), request.params.id);
+  likeComment = async (request: Req<S['likeComment']>) =>
+    this.posts.likeComment(currentUser(request), request.params.id);
 
-  unlikeComment = async (request: Req<S['unlikeComment']>) => this.posts.unlikeComment(currentUser(request), request.params.id);
+  unlikeComment = async (request: Req<S['unlikeComment']>) =>
+    this.posts.unlikeComment(currentUser(request), request.params.id);
 }

@@ -5,7 +5,8 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import underPressure from '@fastify/under-pressure';
 import fp from 'fastify-plugin';
-import { AppError, tooManyRequests } from '../utils/errors.js';
+import type { AppError } from '../utils/errors.js';
+import { tooManyRequests } from '../utils/errors.js';
 
 /**
  * Transport hardening and protection:
@@ -31,7 +32,13 @@ export default fp(
       origin: config.corsOrigins,
       methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['authorization', 'content-type', 'x-request-id'],
-      exposedHeaders: ['x-request-id', 'retry-after', 'x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-reset'],
+      exposedHeaders: [
+        'x-request-id',
+        'retry-after',
+        'x-ratelimit-limit',
+        'x-ratelimit-remaining',
+        'x-ratelimit-reset',
+      ],
       maxAge: 86_400,
     });
 
