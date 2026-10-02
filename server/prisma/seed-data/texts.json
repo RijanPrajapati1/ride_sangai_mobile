@@ -1,0 +1,63 @@
+{
+  "rideDescriptions": {
+    "r_001": "Beat the traffic and greet the sun on a mellow loop through Kathmandu's quiet early-morning streets, finishing with tea at Ratna Park. A great starter ride for anyone new to group cycling.",
+    "r_002": "A relaxed cultural ride through the medieval alleys and squares of Bhaktapur. We'll stop at Nyatapola Temple and Dattatreya Square for photos before looping back along the Hanumante River.",
+    "r_003": "A demanding climb up to Nagarkot for sweeping Himalayan views. Expect steady gradients for the first 15km and a fast, technical descent back. Strong legs recommended.",
+    "r_004": "An easygoing after-work spin around Lalitpur's ring road, wrapping up with coffee at Pulchowk. Lights required as we'll finish after dusk.",
+    "r_005": "Singletrack, fire roads, and a punishing final ascent through the Godavari botanical hills. This is a proper mountain-bike test with technical descents.",
+    "r_006": "Cool pine-forest air and gentle singletrack inside Shivapuri Nagarjun National Park. A great half-day escape from the city with a packed-lunch stop at the viewpoint.",
+    "r_007": "A brutal but rewarding switchback climb to Chandragiri Hills. Cable car ticket included for anyone who wants to ride up and enjoy a scenic descent instead.",
+    "r_008": "Rolling gravel roads east of the valley with far-reaching mountain views at sunrise. Mixed surfaces throughout, gravel or MTB tyres recommended.",
+    "r_009": "A fun, low-key night ride through the lit-up streets of Thamel and around Kathmandu Durbar Square, wrapping up with momos for everyone.",
+    "r_010": "A gentle historical circuit through the hilltop town of Kirtipur, taking in Chilancho Stupa and the old Newari courtyards, with a slow climb up to the viewpoint at the end.",
+    "r_011": "A full lap of the Kathmandu Ring Road for those training for longer distances. Two rolling support stops along the way.",
+    "r_012": "A friendly climb toward Budhanilkantha with a stop at the reclining Vishnu statue before rolling back downhill.",
+    "r_101": "A classic 3-day teahouse trek through rhododendron forests to the Poon Hill viewpoint for a 360° sunrise over the Annapurna and Dhaulagiri ranges.",
+    "r_102": "A 4-day off-the-beaten-path trek through forest and ridge trails to Mardi Himal Base Camp, with close-up views of Machapuchare.",
+    "r_103": "A 7-day Himalayan trek through the Langtang valley, Tamang villages, and glacial moraines just north of Kathmandu.",
+    "r_104": "A 2-day ridge trek from Chisapani to Nagarkot along the rim of the Kathmandu valley, with wide Himalayan views at sunrise.",
+    "r_105": "A steep climb to Phulchowki, the highest hill rim of the Kathmandu valley, through birding trails and dense forest.",
+    "r_106": "A shaded, easy loop through Nagarjun Forest Reserve up to the Jamacho viewpoint, popular with birdwatchers and families.",
+    "r_107": "A rewarding day hike along the Bagmati source, climbing through Shivapuri National Park to the Chisapani ridge.",
+    "r_108": "A gentle, family-friendly hike up Champadevi hill with a picnic stop and views over the whole Kathmandu valley.",
+    "r_109": "An evening motorbike cruise up to Nagarkot for city lights and a late dinner, back down before midnight.",
+    "r_110": "A full-day highway run to Chitwan for lunch by the Narayani river before heading back to the valley.",
+    "r_111": "A technical off-road ride through the fire roads of Shivapuri National Park for dual-sport and adventure bikes.",
+    "r_112": "A 3-day overland motorbike expedition to Upper Mustang's high-desert landscapes and Buddhist monasteries."
+  },
+  "bios": {
+    "me": "Weekend warrior chasing sunrise rides around the valley. Always up for a hill climb and a good cup of coffee after.",
+    "aarav": "Organizing sunrise and heritage rides across the valley for six years. Believer in slow mornings and steady climbs.",
+    "priya": "Cultural-loop specialist. If there is a temple on the route, I am leading it.",
+    "bibek": "Night owl on two wheels. You will usually find me out after sunset.",
+    "anita": "Trail dog. Pine forests, singletrack, and a thermos of tea at the top.",
+    "suresh": "Climbing specialist. Nagarkot is basically my backyard at this point.",
+    "kabita": "Evening spins, good playlists, and even better company.",
+    "nischal": "Switchbacks and suffering, then a cable car ride down. Chandragiri regular.",
+    "roshani": "Gravel over everything. Give me rolling hills and a sunrise.",
+    "dipesh": "Mountain bike or nothing. Godavari trails are my playground.",
+    "sabina": "Slow historical circuits are underrated. Kirtipur every Sunday."
+  },
+  "posts": {
+    "p_001": "Finally cracked 50km/h on the Nagarkot descent this morning. Legs are jelly but absolutely worth the sunrise view from the top. 🚵‍♂️",
+    "p_002": "Yesterday's Bhaktapur heritage loop was pure magic — golden light on the temple roofs and a perfectly quiet Durbar Square before the crowds arrived.",
+    "p_003": "PSA: new singletrack has opened up near Godavari — flowy, fast, and a real test on the climbs. Bringing the group there next month.",
+    "p_004": "Small win: talked three coworkers into joining their first evening spin around Lalitpur. Watching people fall in love with cycling never gets old.",
+    "p_005": "Gravel bike finally set up with wider tyres for the Dhulikhel route. Who's in for a sunrise test ride this weekend?",
+    "p_006": "Hit 200km for the month! Slowly building up toward my first century ride. Thanks to everyone who's been pacing me on the ring road loops."
+  },
+  "messages": {
+    "m_001": "Hey! Are you in for the Kathmandu Sunrise Ride this Saturday?",
+    "m_002": "Yes, count me in. What time should I be there?",
+    "m_003": "We're meeting at Ratna Park at 5:30am, before the traffic picks up.",
+    "m_004": "Bring lights just in case, and a light jacket, it's chilly that early.",
+    "m_005": "Perfect, I'll be there. Thanks for organizing!",
+    "m_006": "Great, see you at Ratna Park at 5:30 sharp!",
+    "m_010": "The Nagarkot descent has some loose gravel patches this week.",
+    "m_011": "Good to know, I'll take it easy on the way down.",
+    "m_012": "Bring a spare tube, the descent is rough this season.",
+    "m_020": "Loved the photos from Sunday's ride!",
+    "m_030": "Are you joining the Shivapuri trail next weekend?",
+    "m_040": "Thanks for leading the spin yesterday 🙌"
+  }
+}
