@@ -1,6 +1,6 @@
 # Ride Sangai
 
-Group rides, treks, hikes and motorbike meetups. Find a ride, ask to join, and chat with other riders and groups.
+Group rides, treks, hikes and motorbike meetups. Find a ride, ask to join, chat with other riders and groups, and explore hidden places that locals share and review.
 
 This monorepo holds two apps:
 

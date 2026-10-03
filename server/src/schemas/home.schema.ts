@@ -69,7 +69,9 @@ export const homeSchemas = {
         upcomingRides: Type.Array(Ride),
         communityPreview: Type.Array(CommunityPost),
         recommendedRiders: Type.Array(UserProfile),
-        explorePlaces: Type.Array(Place, { description: 'Nearby places (if lat/lng sent) or the best rated.' }),
+        explorePlaces: Type.Array(Place, {
+          description: 'Nearby places (if lat/lng sent) or the best rated.',
+        }),
         banners: Type.Array(Banner),
         badges: Badges,
       }),

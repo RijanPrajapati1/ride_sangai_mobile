@@ -90,7 +90,10 @@ export const CreatePlaceBody = Type.Object(
   },
   { additionalProperties: false },
 );
-export const UpdatePlaceBody = Type.Partial(Type.Object(placeFields), { additionalProperties: false, minProperties: 1 });
+export const UpdatePlaceBody = Type.Partial(Type.Object(placeFields), {
+  additionalProperties: false,
+  minProperties: 1,
+});
 
 export const ReviewBody = Type.Object(
   {
@@ -147,8 +150,19 @@ export const placeSchemas = {
     querystring: PlaceListQuery,
     response: { 200: Paginated(Place), ...errorResponses(400, 401) },
   },
-  create: { tags, summary: 'Share a place', body: CreatePlaceBody, response: { 201: Place, ...errorResponses(400, 401) } },
-  get: { tags, summary: 'A place', params: IdParams, querystring: LocationQuery, response: { 200: Place, ...errorResponses(401, 404) } },
+  create: {
+    tags,
+    summary: 'Share a place',
+    body: CreatePlaceBody,
+    response: { 201: Place, ...errorResponses(400, 401) },
+  },
+  get: {
+    tags,
+    summary: 'A place',
+    params: IdParams,
+    querystring: LocationQuery,
+    response: { 200: Place, ...errorResponses(401, 404) },
+  },
   update: {
     tags,
     summary: 'Edit a place (its author or an admin)',
@@ -156,9 +170,24 @@ export const placeSchemas = {
     body: UpdatePlaceBody,
     response: { 200: Place, ...errorResponses(400, 401, 403, 404) },
   },
-  remove: { tags, summary: 'Delete a place (its author or an admin)', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 403, 404) } },
-  save: { tags, summary: 'Save to "want to go" (idempotent)', params: IdParams, response: { 200: SaveState, ...errorResponses(401, 404) } },
-  unsave: { tags, summary: 'Remove from "want to go" (idempotent)', params: IdParams, response: { 200: SaveState, ...errorResponses(401, 404) } },
+  remove: {
+    tags,
+    summary: 'Delete a place (its author or an admin)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  save: {
+    tags,
+    summary: 'Save to "want to go" (idempotent)',
+    params: IdParams,
+    response: { 200: SaveState, ...errorResponses(401, 404) },
+  },
+  unsave: {
+    tags,
+    summary: 'Remove from "want to go" (idempotent)',
+    params: IdParams,
+    response: { 200: SaveState, ...errorResponses(401, 404) },
+  },
   saved: {
     tags,
     summary: 'My saved places, most recently saved first',
@@ -182,10 +211,16 @@ export const placeSchemas = {
   review: {
     tags,
     summary: 'Write or update my review',
-    description: 'One review per rider per place: 201 when created, 200 when updated. Authors cannot review their own place.',
+    description:
+      'One review per rider per place: 201 when created, 200 when updated. Authors cannot review their own place.',
     params: IdParams,
     body: ReviewBody,
     response: { 200: PlaceReview, 201: PlaceReview, ...errorResponses(400, 401, 404, 409) },
   },
-  removeReview: { tags, summary: 'Delete my review', params: IdParams, response: { 204: NoContent, ...errorResponses(401, 404) } },
+  removeReview: {
+    tags,
+    summary: 'Delete my review',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 404) },
+  },
 };

@@ -178,19 +178,19 @@ class _PlaceDetailsContent extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: AppButton(
-                        label: 'Directions',
+                        label: 'Get directions',
                         icon: Icons.directions_outlined,
                         onPressed: () => _openDirections(context),
                       ),
                     ),
                     const SizedBox(width: AppDimensions.spaceSm),
-                    Expanded(
-                      child: AppOutlinedButton(
-                        label: place.isSaved ? 'Saved' : 'Want to go',
-                        icon: place.isSaved ? Icons.bookmark : Icons.bookmark_add_outlined,
-                        onPressed: () =>
-                            ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved),
-                      ),
+                    IconButton.outlined(
+                      tooltip: place.isSaved ? 'Remove from saved' : 'Want to go',
+                      iconSize: 26,
+                      padding: const EdgeInsets.all(12),
+                      icon: Icon(place.isSaved ? Icons.bookmark : Icons.bookmark_add_outlined, color: AppColors.primary),
+                      onPressed: () =>
+                          ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved),
                     ),
                   ],
                 ),
@@ -395,16 +395,17 @@ class _RatingSummary extends StatelessWidget {
             )
           : Row(
               children: [
-                Text(place.averageRating!.toStringAsFixed(1), style: theme.textTheme.displayMedium),
+                Text(place.averageRating!.toStringAsFixed(1), style: theme.textTheme.headlineMedium),
                 const SizedBox(width: AppDimensions.spaceSm),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RatingStars(rating: place.averageRating!, size: 18),
-                    Text('${place.reviewCount} review${place.reviewCount == 1 ? '' : 's'}', style: theme.textTheme.bodySmall),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RatingStars(rating: place.averageRating!, size: 18),
+                      Text('${place.reviewCount} review${place.reviewCount == 1 ? '' : 's'}', style: theme.textTheme.bodySmall),
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 if (place.worthItPercent != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,

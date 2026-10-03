@@ -1,6 +1,11 @@
 import type { ActivityCategory, PlaceCategory } from '../constants/enums.js';
 import type { UnitOfWork } from '../db/prisma.js';
-import type { PlaceFilters, PlaceRecord, PlaceRepository, PlaceReviewRecord } from '../repositories/place.repository.js';
+import type {
+  PlaceFilters,
+  PlaceRecord,
+  PlaceRepository,
+  PlaceReviewRecord,
+} from '../repositories/place.repository.js';
 import { audit } from '../utils/audit.js';
 import { badRequest, conflict, forbidden, notFound } from '../utils/errors.js';
 import { distanceKm, roundKm } from '../utils/geo.js';
@@ -39,9 +44,15 @@ export interface ReviewInput {
 }
 
 /** Maps a place to the API shape for one viewer (distance only when the viewer's location is known). */
-export function toPlaceDto(place: PlaceRecord, viewerId: string | null, from: Point | null, knownDistance?: number) {
+export function toPlaceDto(
+  place: PlaceRecord,
+  viewerId: string | null,
+  from: Point | null,
+  knownDistance?: number,
+) {
   const myReview = Array.isArray(place.reviews) ? place.reviews[0] : undefined;
-  const distance = knownDistance ?? (from ? distanceKm(from.lat, from.lng, place.latitude, place.longitude) : null);
+  const distance =
+    knownDistance ?? (from ? distanceKm(from.lat, from.lng, place.latitude, place.longitude) : null);
   return {
     id: place.id,
     name: place.name,
@@ -123,7 +134,10 @@ export class PlaceService {
       limit,
     });
     const page = toPage(rows, limit, (row) => [row.distance_km, row.id]);
-    const places = await this.repo.findByIds(page.items.map((row) => row.id), viewerId);
+    const places = await this.repo.findByIds(
+      page.items.map((row) => row.id),
+      viewerId,
+    );
     const distances = new Map(page.items.map((row) => [row.id, row.distance_km]));
     return {
       items: places.map((place) => toPlaceDto(place, viewerId, null, distances.get(place.id))),
@@ -134,14 +148,22 @@ export class PlaceService {
   /** Browse: best rated (`top`) or `newest`; distance is filled in when lat/lng are given. */
   async list(
     viewerId: string,
-    query: PlaceFilters & { sort?: 'top' | 'newest'; lat?: number; lng?: number; authorId?: string; limit?: number; cursor?: string },
+    query: PlaceFilters & {
+      sort?: 'top' | 'newest';
+      lat?: number;
+      lng?: number;
+      authorId?: string;
+      limit?: number;
+      cursor?: string;
+    },
   ) {
     const sort = query.sort ?? 'top';
     const limit = pageLimit(query.limit);
     let after: { ratingAvg?: number; reviewCount?: number; createdAt?: Date; id: string } | null = null;
     if (sort === 'top') {
       const parts = decodeCursor(query.cursor, ['number', 'number', 'string']);
-      if (parts) after = { ratingAvg: parts[0] as number, reviewCount: parts[1] as number, id: parts[2] as string };
+      if (parts)
+        after = { ratingAvg: parts[0] as number, reviewCount: parts[1] as number, id: parts[2] as string };
     } else {
       const parts = decodeTimeCursor(query.cursor);
       if (parts) after = { createdAt: parts[0], id: parts[1] };
@@ -154,11 +176,15 @@ export class PlaceService {
       limit,
       viewerId,
     });
-    const from = query.lat !== undefined && query.lng !== undefined ? { lat: query.lat, lng: query.lng } : null;
+    const from =
+      query.lat !== undefined && query.lng !== undefined ? { lat: query.lat, lng: query.lng } : null;
     return toPage(
       rows,
       limit,
-      (place) => (sort === 'top' ? [place.ratingAvg, place.reviewCount, place.id] : timeCursor(place.createdAt, place.id)),
+      (place) =>
+        sort === 'top'
+          ? [place.ratingAvg, place.reviewCount, place.id]
+          : timeCursor(place.createdAt, place.id),
       (place) => toPlaceDto(place, viewerId, from),
     );
   }
@@ -223,7 +249,13 @@ export class PlaceService {
     const place = await this.assertCanManage(placeId, actor);
     await this.uow.run(async ({ db }) => {
       if (place.authorId !== actor.id) {
-        await audit(db, { actorId: actor.id, action: 'place.delete', targetType: 'place', targetId: placeId, details: { name: place.name } });
+        await audit(db, {
+          actorId: actor.id,
+          action: 'place.delete',
+          targetType: 'place',
+          targetId: placeId,
+          details: { name: place.name },
+        });
       }
       await this.repo.delete(placeId, db);
     });
@@ -244,15 +276,26 @@ export class PlaceService {
   async saved(viewerId: string, query: { lat?: number; lng?: number; limit?: number; cursor?: string }) {
     const limit = pageLimit(query.limit);
     const rows = await this.repo.findSaved(viewerId, decodeTimeCursor(query.cursor), limit);
-    const from = query.lat !== undefined && query.lng !== undefined ? { lat: query.lat, lng: query.lng } : null;
-    return toPage(rows, limit, (row) => timeCursor(row.createdAt, row.placeId), (row) => toPlaceDto(row.place, viewerId, from));
+    const from =
+      query.lat !== undefined && query.lng !== undefined ? { lat: query.lat, lng: query.lng } : null;
+    return toPage(
+      rows,
+      limit,
+      (row) => timeCursor(row.createdAt, row.placeId),
+      (row) => toPlaceDto(row.place, viewerId, from),
+    );
   }
 
   async reviews(placeId: string, viewerId: string, query: { limit?: number; cursor?: string }) {
     if (!(await this.repo.findOwner(placeId))) throw PLACE_NOT_FOUND();
     const limit = pageLimit(query.limit);
     const rows = await this.repo.findReviewsPage(placeId, decodeTimeCursor(query.cursor), limit);
-    return toPage(rows, limit, (row) => timeCursor(row.createdAt, row.id), (row) => toPlaceReviewDto(row, viewerId));
+    return toPage(
+      rows,
+      limit,
+      (row) => timeCursor(row.createdAt, row.id),
+      (row) => toPlaceReviewDto(row, viewerId),
+    );
   }
 
   /** Creates or replaces the viewer's review. Returns whether it was new. */
@@ -264,7 +307,8 @@ export class PlaceService {
     return this.uow.run(async (ctx) => {
       const place = await this.repo.findOwner(placeId, ctx.db);
       if (!place) throw PLACE_NOT_FOUND();
-      if (place.authorId === reviewer.id) throw conflict('You shared this place, so you cannot review it.', 'CANNOT_REVIEW_OWN_PLACE');
+      if (place.authorId === reviewer.id)
+        throw conflict('You shared this place, so you cannot review it.', 'CANNOT_REVIEW_OWN_PLACE');
       const existed = (await this.repo.findReview(placeId, reviewer.id, ctx.db)) !== null;
       const review = await this.repo.upsertReview(ctx.db, {
         placeId,

@@ -218,7 +218,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
               ],
             ),
             const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Tips for visitors (optional)'),
+            const SectionHeader(title: 'Tips for visitors'),
             const SizedBox(height: AppDimensions.spaceSm),
             AppTextField(
               label: 'Best time to go',

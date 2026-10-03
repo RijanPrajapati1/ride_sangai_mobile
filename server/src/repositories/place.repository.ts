@@ -15,7 +15,9 @@ function placeInclude(viewerId: string | null) {
 
 export type PlaceRecord = Prisma.PlaceGetPayload<{ include: ReturnType<typeof placeInclude> }>;
 
-const reviewInclude = { author: { select: { id: true, name: true, avatarUrl: true } } } satisfies Prisma.PlaceReviewInclude;
+const reviewInclude = {
+  author: { select: { id: true, name: true, avatarUrl: true } },
+} satisfies Prisma.PlaceReviewInclude;
 export type PlaceReviewRecord = Prisma.PlaceReviewGetPayload<{ include: typeof reviewInclude }>;
 
 export interface PlaceFilters {
@@ -51,7 +53,12 @@ export class PlaceRepository {
       ...(filters.activity ? { activities: { has: filters.activity } } : {}),
       ...(filters.minRating ? { ratingAvg: { gte: filters.minRating } } : {}),
       ...(q
-        ? { OR: [{ name: { contains: q, mode: 'insensitive' } }, { locationName: { contains: q, mode: 'insensitive' } }] }
+        ? {
+            OR: [
+              { name: { contains: q, mode: 'insensitive' } },
+              { locationName: { contains: q, mode: 'insensitive' } },
+            ],
+          }
         : {}),
     };
   }
@@ -77,7 +84,8 @@ export class PlaceRepository {
       Prisma.sql`p.longitude BETWEEN ${box.minLng} AND ${box.maxLng}`,
     ];
     if (filters.category) conditions.push(Prisma.sql`p.category = ${filters.category}::place_category`);
-    if (filters.activity) conditions.push(Prisma.sql`${filters.activity}::activity_category = ANY (p.activities)`);
+    if (filters.activity)
+      conditions.push(Prisma.sql`${filters.activity}::activity_category = ANY (p.activities)`);
     if (filters.minRating) conditions.push(Prisma.sql`p.rating_avg >= ${filters.minRating}`);
     if (q) {
       const pattern = `%${q.replace(/[\\%_]/g, (ch) => `\\${ch}`)}%`;
@@ -106,7 +114,10 @@ export class PlaceRepository {
   /** Loads places by id, returned in the order of `ids`. */
   async findByIds(ids: string[], viewerId: string | null): Promise<PlaceRecord[]> {
     if (ids.length === 0) return [];
-    const rows = await this.prisma.place.findMany({ where: { id: { in: ids } }, include: placeInclude(viewerId) });
+    const rows = await this.prisma.place.findMany({
+      where: { id: { in: ids } },
+      include: placeInclude(viewerId),
+    });
     const byId = new Map(rows.map((row) => [row.id, row]));
     return ids.map((id) => byId.get(id)).filter((row): row is PlaceRecord => row !== undefined);
   }
@@ -131,11 +142,17 @@ export class PlaceRepository {
         ],
       };
     } else if (after && after.createdAt) {
-      keyset = { OR: [{ createdAt: { lt: after.createdAt } }, { createdAt: after.createdAt, id: { lt: after.id } }] };
+      keyset = {
+        OR: [{ createdAt: { lt: after.createdAt } }, { createdAt: after.createdAt, id: { lt: after.id } }],
+      };
     }
     return this.prisma.place.findMany({
       where: {
-        AND: [this.filterWhere(options.filters), options.authorId ? { authorId: options.authorId } : {}, keyset],
+        AND: [
+          this.filterWhere(options.filters),
+          options.authorId ? { authorId: options.authorId } : {},
+          keyset,
+        ],
       },
       orderBy:
         sort === 'top'
@@ -175,7 +192,10 @@ export class PlaceRepository {
   }
 
   async saveCount(placeId: string): Promise<number> {
-    const row = await this.prisma.place.findUniqueOrThrow({ where: { id: placeId }, select: { saveCount: true } });
+    const row = await this.prisma.place.findUniqueOrThrow({
+      where: { id: placeId },
+      select: { saveCount: true },
+    });
     return row.saveCount;
   }
 
@@ -184,7 +204,9 @@ export class PlaceRepository {
     return this.prisma.placeSave.findMany({
       where: {
         userId,
-        ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], placeId: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], placeId: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { placeId: 'desc' }],
       take: limit + 1,
@@ -197,7 +219,9 @@ export class PlaceRepository {
     return this.prisma.placeReview.findMany({
       where: {
         placeId,
-        ...(after ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: limit + 1,
@@ -206,12 +230,23 @@ export class PlaceRepository {
   }
 
   findReview(placeId: string, authorId: string, db: Db = this.prisma) {
-    return db.placeReview.findUnique({ where: { placeId_authorId: { placeId, authorId } }, select: { id: true } });
+    return db.placeReview.findUnique({
+      where: { placeId_authorId: { placeId, authorId } },
+      select: { id: true },
+    });
   }
 
   upsertReview(
     db: Db,
-    data: { placeId: string; authorId: string; rating: number; worthIt: boolean; text: string; visitedOn: Date | null; photos: string[] },
+    data: {
+      placeId: string;
+      authorId: string;
+      rating: number;
+      worthIt: boolean;
+      text: string;
+      visitedOn: Date | null;
+      photos: string[];
+    },
   ): Promise<PlaceReviewRecord> {
     const { placeId, authorId, ...fields } = data;
     return db.placeReview.upsert({

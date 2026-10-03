@@ -12,7 +12,7 @@ const thamel = GeoPoint(27.7154, 85.3123);
 
 void main() {
   group('geo', () {
-    test('haversine distance Thamel → Taudaha is about 9 km', () {
+    test('haversine distance Thamel → Taudaha is about 8 km', () {
       final km = distanceKm(thamel, const GeoPoint(27.6476, 85.2813));
       expect(km, closeTo(8.2, 1));
     });

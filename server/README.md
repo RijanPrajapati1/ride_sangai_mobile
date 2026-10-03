@@ -1,6 +1,6 @@
 # Ride Sangai API
 
-Backend for the Ride Sangai (Biker Sync) mobile app. It covers group rides, treks, hikes and motorbike meetups, plus join requests, community posts, direct messages, groups, notifications and an admin dashboard.
+Backend for the Ride Sangai (Biker Sync) mobile app. It covers group rides, treks, hikes and motorbike meetups, plus join requests, community posts, direct messages, groups, Explore (places shared by locals, with reviews), notifications and an admin dashboard.
 
 **Stack:** Node.js 22 · TypeScript · [Fastify 5](https://fastify.dev) · [Prisma 7](https://www.prisma.io) · PostgreSQL · TypeBox (validation and OpenAPI) · Argon2id · JWT · WebSockets · Vitest
 
@@ -155,9 +155,10 @@ Full request and response details are at `/docs`. All paths are under `/api/v1`.
 | **Messages** | `GET /conversations` · `POST /conversations` `{ userId }` (returns the existing chat or creates one) · `GET /conversations/unread-count` · `GET /conversations/:id` · `GET/POST /conversations/:id/messages` · `POST /conversations/:id/read` |
 | **Groups** | `GET /groups?sort=popular\|newest` · `GET /groups/mine` · `POST /groups` · `GET/PATCH/DELETE /groups/:id` · `POST /groups/:id/join` · `POST /groups/:id/leave` · `GET /groups/:id/members` · `GET/POST /groups/:id/messages` |
 | **Notifications** | `GET /notifications` (includes `unreadCount`) · `GET /notifications/unread-count` · `POST /notifications/:id/read` · `POST /notifications/read-all` · `DELETE /notifications/:id` · `POST/DELETE /me/devices` (push tokens) |
-| **Home** | `GET /home?category=` (featured ride, next 6 rides, 2 posts, recommended riders, banners, badges) · `GET /me/badges` · `GET /banners` · `GET /meta` (public: enum options and labels) |
+| **Explore** | `GET /places/nearby?lat=&lng=&radiusKm=` (nearest first; filters: `category`, `activity`, `minRating`, `q`) · `GET /places?sort=top\|newest` · `POST /places` · `GET/PATCH/DELETE /places/:id` · `PUT/DELETE /places/:id/save` · `GET /places/:id/reviews` · `PUT/DELETE /places/:id/review` · `GET /me/saved-places` · `GET /users/:id/places` |
+| **Home** | `GET /home?category=&lat=&lng=` (featured ride, next 6 rides, 2 posts, recommended riders, places to explore, banners, badges) · `GET /me/badges` · `GET /banners` · `GET /meta` (public: enum options and labels) |
 | **Uploads** | `POST /uploads` (multipart `file` plus optional `purpose`; returns `url`) · `DELETE /uploads/:id` · files are served at `GET /uploads/*` |
-| **Admin** | `GET /admin/stats` · `GET /admin/users` · `PATCH /admin/users/:id/role` · `DELETE /admin/users/:id` · `GET /admin/rides` · `DELETE /admin/rides/:id` · `GET /admin/ride-requests` · `GET /admin/posts` · `DELETE /admin/posts/:id` · `GET /admin/groups` · `DELETE /admin/groups/:id` · `GET/POST /admin/banners` · `PATCH/DELETE /admin/banners/:id` · `GET /admin/audit-log` |
+| **Admin** | `GET /admin/stats` · `GET /admin/users` · `PATCH /admin/users/:id/role` · `DELETE /admin/users/:id` · `GET /admin/rides` · `DELETE /admin/rides/:id` · `GET /admin/ride-requests` · `GET /admin/posts` · `DELETE /admin/posts/:id` · `GET /admin/groups` · `DELETE /admin/groups/:id` · `GET /admin/places` · `DELETE /admin/places/:id` · `GET/POST /admin/banners` · `PATCH/DELETE /admin/banners/:id` · `GET /admin/audit-log` |
 | **Realtime** | `GET /ws` (WebSocket) |
 
 ### Ride rules
@@ -167,6 +168,13 @@ Full request and response details are at `/docs`. All paths are under `/api/v1`.
 - Only the organizer or an admin can approve or decline a request. The request must still be pending and the ride must not have started. Approving checks capacity under a row lock. A decline can include a reason, which the rider sees in `myRequest.declineReason` and in the `requestDeclined` notification.
 - A declined rider can ask again, which puts the request back to pending. `DELETE /rides/:id/join` withdraws a pending request or leaves a ride you were approved for.
 - Editing a ride sends approved riders and pending requesters a `rideUpdated` notification that says what changed. Cancelling a ride notifies them too. A `rideReminder` goes out 2 hours before the start (set with `RIDE_REMINDER_LEAD_MINUTES`).
+
+### Explore rules
+
+- Anyone can share a place: a name, its story, a category (viewpoint, waterfall, lake, trail, heritage, temple, café, campsite and so on), the exact map location, the area name, up to 10 photos, the activities it suits, and optional best time, entry fee and local tips.
+- `GET /places/nearby` searches around the coordinates you send, nearest first, within `radiusKm` (25 km by default, up to 300). It needs no PostGIS: an indexed bounding box narrows the candidates, then the exact distance is computed. Each place carries `distanceKm`.
+- Each rider gets one review per place: 1–5 stars, "worth it?" yes or no, text, visit date and up to 5 photos. Writing again updates it. Authors can't review their own place. The place shows `averageRating`, `reviewCount` and `worthItPercent`, all kept current by database triggers, and the author gets a `placeReview` notification.
+- Saving a place adds it to your "want to go" list (`GET /me/saved-places`). The author or an admin can edit or delete a place.
 
 ### Realtime
 
@@ -200,6 +208,7 @@ All settings live in `.env`; `.env.example` explains each one. Production requir
 
 - **Docker:** run `docker build -t ride-sangai-api .`. The image applies migrations when it starts (`npm run start:prod`). `docker compose up --build` runs it together with Postgres.
 - **Bare metal or PM2:** run `npm ci && npm run build`, then `npm run start:prod`. If you run several instances, set `REALTIME_PG_FANOUT=true`. Background jobs are safe to run on every instance because each claims its work atomically.
+- **Timezones:** every database session runs in UTC, so the server's own timezone setting (for example Asia/Kathmandu) never shifts stored times.
 - **Shutdown:** on `SIGTERM` or `SIGINT`, the server stops accepting connections, finishes in-flight requests, then closes the database pool.
 - **Uploads:** files are stored on local disk in `UPLOAD_DIR`. With several servers, mount shared storage, or swap in an object-storage implementation of `FileStorage` (`src/utils/storage.ts`).
 - **Email:** password-reset emails go through the `Mailer` interface (`src/utils/mailer.ts`). The default `LogMailer` only writes the reset link to the log, so plug in SMTP, SES or Resend for production.
@@ -211,7 +220,7 @@ The API mirrors the app's entities, so each `*LocalDataSource` can be replaced b
 - Keep the access and refresh tokens in secure storage. Refresh on `TOKEN_EXPIRED`, and never send two refreshes at once, because each refresh token works only once.
 - Replace `AppConstants.currentUserId` with the id from `GET /auth/me` (or use `isMe` on profiles).
 - New passwords need **8 or more characters**; the app's validator currently allows 6.
-- `NotificationType` gains **`newRideRequest`** (alerts for organizers). Notifications also carry `entityType` and `entityId`, so tapping one can open the right screen.
+- `NotificationType` gains **`newRideRequest`** (alerts for organizers) and **`placeReview`**; the app already has `placeReview`. Notifications also carry `entityType` and `entityId`, so tapping one can open the right screen.
 - Lists are paginated: `{ items, nextCursor }`, 20 items by default, up to 100.
 - `GET /conversations/:id/messages` marks the chat as read, so its `unreadCount` drops to 0.
 - The image pickers can use real uploads (`POST /uploads`) instead of the demo URLs.

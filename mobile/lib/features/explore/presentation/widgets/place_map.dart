@@ -93,7 +93,23 @@ class PlaceMap extends StatelessWidget {
               ),
           ],
         ),
-        const SimpleAttributionWidget(source: Text('OpenStreetMap contributors')),
+        // Required OpenStreetMap credit; collapses to an info button so it fits small previews.
+        if (interactive)
+          const RichAttributionWidget(
+            showFlutterMapAttribution: false,
+            attributions: [TextSourceAttribution('OpenStreetMap contributors')],
+          )
+        else
+          const Align(
+            alignment: Alignment.bottomRight,
+            child: ColoredBox(
+              color: Color(0xB3FFFFFF),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                child: Text('© OpenStreetMap', style: TextStyle(fontSize: 9, color: Colors.black87)),
+              ),
+            ),
+          ),
       ],
     );
   }
