@@ -1,0 +1,694 @@
+// =============================================================================
+// Ride Sangai — data model
+//
+// Conventions
+//   * Models/fields are camelCase in code and snake_case in Postgres (@map).
+//   * Ids are UUIDv7 (time-ordered → compact, append-only indexes).
+//   * Timestamps are timestamptz(3): millisecond precision, so a JS Date
+//     round-trips exactly through pagination cursors.
+//   * Enum values match the Dart enum names in the mobile app.
+//   * Counters (followersCount, likeCount, memberCount, participantCount, …)
+//     are maintained by database triggers (see migrations/*_triggers), so they
+//     stay correct for every write path, including cascading deletes.
+//     Never write them from application code.
+//   * CHECK constraints and triggers live in the hand-written migration
+//     `20261002000100_constraints_and_triggers` (Prisma does not model them).
+// =============================================================================
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- Enums -------------------------------------------------------------------
+
+enum UserRole {
+  user
+  admin
+
+  @@map("user_role")
+}
+
+enum ExperienceLevel {
+  beginner
+  intermediate
+  advanced
+  pro
+
+  @@map("experience_level")
+}
+
+enum ActivityCategory {
+  cycling
+  trekking
+  hiking
+  riding
+
+  @@map("activity_category")
+}
+
+enum RideType {
+  road
+  mountain
+  gravel
+  touring
+  social
+  hillClimb
+  nightRide
+  multiDayTrek
+  dayTrek
+  summitTrek
+  dayHike
+  natureWalk
+  familyHike
+  touringRide
+  offRoadRide
+  trackDay
+
+  @@map("ride_type")
+}
+
+enum RideDifficulty {
+  easy
+  moderate
+  hard
+
+  @@map("ride_difficulty")
+}
+
+enum RideRequestStatus {
+  pending
+  approved
+  declined
+
+  @@map("ride_request_status")
+}
+
+enum NotificationType {
+  requestApproved
+  requestDeclined
+  newMessage
+  rideReminder
+  rideUpdated
+  newFollower
+  comment
+  like
+  newRideRequest
+  placeReview
+
+  @@map("notification_type")
+}
+
+enum NotificationEntityType {
+  ride
+  rideRequest
+  post
+  comment
+  user
+  conversation
+  group
+  place
+
+  @@map("notification_entity_type")
+}
+
+enum GroupMemberRole {
+  owner
+  member
+
+  @@map("group_member_role")
+}
+
+enum DevicePlatform {
+  android
+  ios
+  web
+
+  @@map("device_platform")
+}
+
+enum UploadPurpose {
+  avatar
+  rideCover
+  post
+  groupCover
+  place
+  other
+
+  @@map("upload_purpose")
+}
+
+enum PlaceCategory {
+  viewpoint
+  waterfall
+  lake
+  river
+  trail
+  heritage
+  temple
+  cafe
+  food
+  campsite
+  village
+  cave
+  other
+
+  @@map("place_category")
+}
+
+// --- Users & auth --------------------------------------------------------------
+
+model User {
+  id                String          @id @default(uuid(7)) @db.Uuid
+  /// Stored lower-cased; uniqueness is therefore case-insensitive.
+  email             String          @unique @db.VarChar(254)
+  passwordHash      String          @map("password_hash")
+  name              String          @db.VarChar(80)
+  /// '' when unset (the app shows initials).
+  avatarUrl         String          @default("") @map("avatar_url") @db.VarChar(2048)
+  bio               String          @default("") @db.VarChar(500)
+  location          String          @default("") @db.VarChar(120)
+  experienceLevel   ExperienceLevel @default(beginner) @map("experience_level")
+  preferredRideType RideType        @default(road) @map("preferred_ride_type")
+  interests         String[]        @default([])
+  role              UserRole        @default(user)
+  followersCount    Int             @default(0) @map("followers_count")
+  followingCount    Int             @default(0) @map("following_count")
+  lastLoginAt       DateTime?       @map("last_login_at") @db.Timestamptz(3)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  preferences         UserPreferences?
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+  deviceTokens        DeviceToken[]
+  followers           Follow[]                  @relation("Following")
+  following           Follow[]                  @relation("Follower")
+  organizedRides      Ride[]                    @relation("RideOrganizer")
+  rideRequests        RideRequest[]             @relation("RideRequestUser")
+  decidedRideRequests RideRequest[]             @relation("RideRequestDecider")
+  posts               Post[]
+  postLikes           PostLike[]
+  comments            Comment[]
+  commentLikes        CommentLike[]
+  conversationsAsA    Conversation[]            @relation("ConversationUserA")
+  conversationsAsB    Conversation[]            @relation("ConversationUserB")
+  conversationMembers ConversationParticipant[]
+  messages            Message[]
+  ownedGroups         Group[]
+  groupMemberships    GroupMember[]
+  groupMessages       GroupMessage[]
+  notifications       Notification[]            @relation("NotificationRecipient")
+  actedNotifications  Notification[]            @relation("NotificationActor")
+  uploads             Upload[]
+  auditEntries        AdminAuditLog[]
+  places              Place[]
+  placeReviews        PlaceReview[]
+  placeSaves          PlaceSave[]
+
+  @@index([role, name, id])
+  @@index([followersCount(sort: Desc), id])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "users_name_trgm_idx")
+  @@map("users")
+}
+
+model UserPreferences {
+  userId                String   @id @map("user_id") @db.Uuid
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pushRideReminders     Boolean  @default(true) @map("push_ride_reminders")
+  pushMessages          Boolean  @default(true) @map("push_messages")
+  pushCommunityActivity Boolean  @default(true) @map("push_community_activity")
+  darkModeEnabled       Boolean  @default(false) @map("dark_mode_enabled")
+  publicProfile         Boolean  @default(true) @map("public_profile")
+  showRidingStats       Boolean  @default(true) @map("show_riding_stats")
+  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("user_preferences")
+}
+
+/// One row per signed-in device. Access tokens carry the session id, so
+/// revoking a session takes effect on the next request.
+model Session {
+  id            String         @id @default(uuid(7)) @db.Uuid
+  userId        String         @map("user_id") @db.Uuid
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent     String?        @map("user_agent") @db.VarChar(255)
+  ip            String?        @db.VarChar(64)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastUsedAt    DateTime       @default(now()) @map("last_used_at") @db.Timestamptz(3)
+  expiresAt     DateTime       @map("expires_at") @db.Timestamptz(3)
+  revokedAt     DateTime?      @map("revoked_at") @db.Timestamptz(3)
+  revokedReason String?        @map("revoked_reason") @db.VarChar(64)
+  refreshTokens RefreshToken[]
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+/// Single-use refresh tokens, stored as SHA-256 hashes. Replaying a used token
+/// revokes its session.
+model RefreshToken {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  sessionId String    @map("session_id") @db.Uuid
+  session   Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique @map("token_hash") @db.Char(64)
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(3)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([sessionId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique @map("token_hash") @db.Char(64)
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(3)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model Follow {
+  followerId  String   @map("follower_id") @db.Uuid
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String   @map("following_id") @db.Uuid
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@id([followerId, followingId])
+  @@index([followingId, createdAt(sort: Desc)])
+  @@index([followerId, createdAt(sort: Desc)])
+  @@map("follows")
+}
+
+/// Push notification device tokens (FCM/APNs).
+model DeviceToken {
+  token      String         @id @db.VarChar(4096)
+  userId     String         @map("user_id") @db.Uuid
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform   DevicePlatform
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastSeenAt DateTime       @default(now()) @map("last_seen_at") @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("device_tokens")
+}
+
+// --- Rides ---------------------------------------------------------------------
+
+model Ride {
+  id               String           @id @default(uuid(7)) @db.Uuid
+  organizerId      String           @map("organizer_id") @db.Uuid
+  organizer        User             @relation("RideOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+  title            String           @db.VarChar(120)
+  description      String           @db.VarChar(5000)
+  rideType         RideType         @map("ride_type")
+  /// Always the dashboard category of rideType (enforced by a CHECK constraint).
+  category         ActivityCategory
+  difficulty       RideDifficulty
+  startsAt         DateTime         @map("starts_at") @db.Timestamptz(3)
+  meetingPoint     String           @map("meeting_point") @db.VarChar(200)
+  distanceKm       Float            @map("distance_km")
+  durationMinutes  Int              @map("duration_minutes")
+  /// Includes the organizer.
+  maxParticipants  Int              @map("max_participants")
+  /// The organizer (1) plus approved riders. Trigger-maintained.
+  participantCount Int              @default(1) @map("participant_count")
+  imageUrl         String           @default("") @map("image_url") @db.VarChar(2048)
+  requirements     String[]         @default([])
+  reminderSentAt   DateTime?        @map("reminder_sent_at") @db.Timestamptz(3)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  requests         RideRequest[]
+
+  @@index([startsAt, id])
+  @@index([category, startsAt, id])
+  @@index([organizerId, startsAt, id])
+  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "rides_title_trgm_idx")
+  @@index([meetingPoint(ops: raw("gin_trgm_ops"))], type: Gin, map: "rides_meeting_point_trgm_idx")
+  @@map("rides")
+}
+
+/// One row per (ride, rider); approved rows are the ride's participants.
+/// Withdrawing or leaving deletes the row; a declined rider may request again,
+/// which resets the row to pending.
+model RideRequest {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  rideId         String            @map("ride_id") @db.Uuid
+  ride           Ride              @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  userId         String            @map("user_id") @db.Uuid
+  user           User              @relation("RideRequestUser", fields: [userId], references: [id], onDelete: Cascade)
+  status         RideRequestStatus @default(pending)
+  message        String?           @db.VarChar(500)
+  declineReason  String?           @map("decline_reason") @db.VarChar(500)
+  requestedAt    DateTime          @default(now()) @map("requested_at") @db.Timestamptz(3)
+  decidedAt      DateTime?         @map("decided_at") @db.Timestamptz(3)
+  decidedById    String?           @map("decided_by") @db.Uuid
+  decidedBy      User?             @relation("RideRequestDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+  reminderSentAt DateTime?         @map("reminder_sent_at") @db.Timestamptz(3)
+
+  @@unique([rideId, userId])
+  @@index([rideId, status, requestedAt(sort: Desc), id(sort: Desc)])
+  @@index([userId, status])
+  @@index([status, requestedAt(sort: Desc), id(sort: Desc)])
+  @@index([requestedAt(sort: Desc), id(sort: Desc)])
+  @@index([rideId, decidedAt, id])
+  @@index([decidedById])
+  @@map("ride_requests")
+}
+
+// --- Community -------------------------------------------------------------------
+
+model Post {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  authorId     String     @map("author_id") @db.Uuid
+  author       User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  text         String     @db.VarChar(2000)
+  /// null when the post has no image (the app hides the image block).
+  imageUrl     String?    @map("image_url") @db.VarChar(2048)
+  likeCount    Int        @default(0) @map("like_count")
+  commentCount Int        @default(0) @map("comment_count")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  likes        PostLike[]
+  comments     Comment[]
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("posts")
+}
+
+model PostLike {
+  postId    String   @map("post_id") @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@id([postId, userId])
+  @@index([userId])
+  @@map("post_likes")
+}
+
+model Comment {
+  id        String        @id @default(uuid(7)) @db.Uuid
+  postId    String        @map("post_id") @db.Uuid
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String        @map("author_id") @db.Uuid
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  text      String        @db.VarChar(1000)
+  likeCount Int           @default(0) @map("like_count")
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  likes     CommentLike[]
+
+  @@index([postId, createdAt, id])
+  @@index([authorId])
+  @@map("comments")
+}
+
+model CommentLike {
+  commentId String   @map("comment_id") @db.Uuid
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@id([commentId, userId])
+  @@index([userId])
+  @@map("comment_likes")
+}
+
+// --- Direct messages ---------------------------------------------------------------
+
+/// A 1:1 conversation. The pair is stored in canonical order (userAId <
+/// userBId), so each pair has exactly one conversation.
+model Conversation {
+  id            String                    @id @default(uuid(7)) @db.Uuid
+  userAId       String                    @map("user_a_id") @db.Uuid
+  userA         User                      @relation("ConversationUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userBId       String                    @map("user_b_id") @db.Uuid
+  userB         User                      @relation("ConversationUserB", fields: [userBId], references: [id], onDelete: Cascade)
+  lastMessageId String?                   @unique @map("last_message_id") @db.Uuid
+  lastMessage   Message?                  @relation("ConversationLastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
+  /// Creation time until the first message arrives; drives inbox order. Trigger-maintained.
+  lastMessageAt DateTime                  @default(now()) @map("last_message_at") @db.Timestamptz(3)
+  createdAt     DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  participants  ConversationParticipant[]
+  messages      Message[]                 @relation("ConversationMessages")
+
+  @@unique([userAId, userBId])
+  @@index([userBId])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId String       @map("conversation_id") @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String       @map("user_id") @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Messages from the other participant after this are unread.
+  lastReadAt     DateTime     @default(now()) @map("last_read_at") @db.Timestamptz(3)
+  joinedAt       DateTime     @default(now()) @map("joined_at") @db.Timestamptz(3)
+
+  @@id([conversationId, userId])
+  @@index([userId, conversationId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String        @id @default(uuid(7)) @db.Uuid
+  conversationId String        @map("conversation_id") @db.Uuid
+  conversation   Conversation  @relation("ConversationMessages", fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String        @map("sender_id") @db.Uuid
+  sender         User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text           String        @db.VarChar(2000)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastOf         Conversation? @relation("ConversationLastMessage")
+
+  @@index([conversationId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([senderId])
+  @@map("messages")
+}
+
+// --- Groups --------------------------------------------------------------------------
+
+model Group {
+  id            String         @id @default(uuid(7)) @db.Uuid
+  ownerId       String         @map("owner_id") @db.Uuid
+  owner         User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name          String         @db.VarChar(80)
+  description   String         @db.VarChar(1000)
+  coverImageUrl String?        @map("cover_image_url") @db.VarChar(2048)
+  /// Trigger-maintained.
+  memberCount   Int            @default(0) @map("member_count")
+  lastMessageAt DateTime?      @map("last_message_at") @db.Timestamptz(3)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  members       GroupMember[]
+  messages      GroupMessage[]
+
+  @@index([memberCount(sort: Desc), createdAt(sort: Desc), id(sort: Desc)])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([ownerId])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "groups_name_trgm_idx")
+  @@map("groups")
+}
+
+model GroupMember {
+  groupId    String          @map("group_id") @db.Uuid
+  group      Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId     String          @map("user_id") @db.Uuid
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       GroupMemberRole @default(member)
+  joinedAt   DateTime        @default(now()) @map("joined_at") @db.Timestamptz(3)
+  lastReadAt DateTime        @default(now()) @map("last_read_at") @db.Timestamptz(3)
+
+  @@id([groupId, userId])
+  @@index([userId, joinedAt(sort: Desc)])
+  @@index([groupId, joinedAt, userId])
+  @@map("group_members")
+}
+
+model GroupMessage {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  groupId   String   @map("group_id") @db.Uuid
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  senderId  String   @map("sender_id") @db.Uuid
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text      String   @db.VarChar(2000)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([groupId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([senderId])
+  @@map("group_messages")
+}
+
+// --- Notifications -----------------------------------------------------------------------
+
+model Notification {
+  id          String                  @id @default(uuid(7)) @db.Uuid
+  recipientId String                  @map("recipient_id") @db.Uuid
+  recipient   User                    @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  title       String                  @db.VarChar(200)
+  /// Shown as `description` in the app.
+  body        String                  @db.VarChar(1000)
+  actorId     String?                 @map("actor_id") @db.Uuid
+  actor       User?                   @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  /// What the notification points at (no FK: the target may be deleted later).
+  entityType  NotificationEntityType? @map("entity_type")
+  entityId    String?                 @map("entity_id") @db.Uuid
+  /// Unread notifications sharing a key collapse into one row; cleared when read.
+  collapseKey String?                 @map("collapse_key") @db.VarChar(200)
+  readAt      DateTime?               @map("read_at") @db.Timestamptz(3)
+  createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@unique([recipientId, collapseKey])
+  @@index([recipientId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([recipientId, readAt])
+  @@index([actorId])
+  @@map("notifications")
+}
+
+// --- Uploads, banners, audit log ---------------------------------------------------------
+
+model Upload {
+  id          String         @id @default(uuid(7)) @db.Uuid
+  ownerId     String         @map("owner_id") @db.Uuid
+  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  storageKey  String         @unique @map("storage_key") @db.VarChar(255)
+  contentType String         @map("content_type") @db.VarChar(64)
+  sizeBytes   Int            @map("size_bytes")
+  purpose     UploadPurpose?
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@map("uploads")
+}
+
+/// Home screen carousel cards, optionally scoped to one dashboard category.
+model Banner {
+  id        String            @id @default(uuid(7)) @db.Uuid
+  category  ActivityCategory?
+  title     String            @db.VarChar(80)
+  subtitle  String            @default("") @db.VarChar(240)
+  ctaLabel  String            @default("") @map("cta_label") @db.VarChar(40)
+  ctaUrl    String?           @map("cta_url") @db.VarChar(2048)
+  imageUrl  String?           @map("image_url") @db.VarChar(2048)
+  /// Material icon name hint, e.g. "group_add".
+  icon      String?           @db.VarChar(64)
+  /// Colour theme hint, e.g. "primary".
+  theme     String?           @db.VarChar(32)
+  sortOrder Int               @default(0) @map("sort_order")
+  isActive  Boolean           @default(true) @map("is_active")
+  startsAt  DateTime?         @map("starts_at") @db.Timestamptz(3)
+  endsAt    DateTime?         @map("ends_at") @db.Timestamptz(3)
+  createdAt DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([isActive, sortOrder, createdAt])
+  @@map("banners")
+}
+
+model AdminAuditLog {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  actorId    String?  @map("actor_id") @db.Uuid
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String   @db.VarChar(64)
+  targetType String   @map("target_type") @db.VarChar(32)
+  targetId   String?  @map("target_id") @db.Uuid
+  details    Json     @default("{}")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([actorId])
+  @@map("admin_audit_log")
+}
+
+// --- Explore: places shared by locals ---------------------------------------------------
+
+/// A spot worth visiting (often a hidden gem), shared by someone who knows it.
+model Place {
+  id           String             @id @default(uuid(7)) @db.Uuid
+  authorId     String             @map("author_id") @db.Uuid
+  author       User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  name         String             @db.VarChar(120)
+  description  String             @db.VarChar(3000)
+  category     PlaceCategory
+  latitude     Float
+  longitude    Float
+  /// Human-readable place, e.g. "Near Nagarkot, Bhaktapur".
+  locationName String             @map("location_name") @db.VarChar(200)
+  photos       String[]           @default([])
+  /// Which dashboards the place suits (cycling, trekking, hiking, riding).
+  activities   ActivityCategory[] @default([])
+  bestTime     String?            @map("best_time") @db.VarChar(200)
+  tips         String?            @db.VarChar(2000)
+  entryFee     String?            @map("entry_fee") @db.VarChar(120)
+  /// Review aggregates, trigger-maintained.
+  reviewCount  Int                @default(0) @map("review_count")
+  ratingTotal  Int                @default(0) @map("rating_total")
+  ratingAvg    Float              @default(0) @map("rating_avg")
+  worthItCount Int                @default(0) @map("worth_it_count")
+  /// Trigger-maintained.
+  saveCount    Int                @default(0) @map("save_count")
+  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  reviews      PlaceReview[]
+  saves        PlaceSave[]
+
+  @@index([latitude, longitude])
+  @@index([ratingAvg(sort: Desc), reviewCount(sort: Desc), id(sort: Desc)])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc)])
+  @@index([category])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "places_name_trgm_idx")
+  @@map("places")
+}
+
+/// One review per rider per place ("was it worth it?"); editing replaces it.
+model PlaceReview {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  placeId   String    @map("place_id") @db.Uuid
+  place     Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  authorId  String    @map("author_id") @db.Uuid
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  rating    Int
+  worthIt   Boolean   @map("worth_it")
+  text      String    @default("") @db.VarChar(2000)
+  visitedOn DateTime? @map("visited_on") @db.Date
+  photos    String[]  @default([])
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([placeId, authorId])
+  @@index([placeId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId])
+  @@map("place_reviews")
+}
+
+/// "Want to go" bookmarks.
+model PlaceSave {
+  placeId   String   @map("place_id") @db.Uuid
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@id([placeId, userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("place_saves")
+}
