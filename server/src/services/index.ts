@@ -8,6 +8,7 @@ import { BannerRepository } from '../repositories/banner.repository.js';
 import { ConversationRepository } from '../repositories/conversation.repository.js';
 import { GroupRepository } from '../repositories/group.repository.js';
 import { NotificationRepository } from '../repositories/notification.repository.js';
+import { PlaceRepository } from '../repositories/place.repository.js';
 import { PostRepository } from '../repositories/post.repository.js';
 import { RideRepository } from '../repositories/ride.repository.js';
 import { UploadRepository } from '../repositories/upload.repository.js';
@@ -20,6 +21,7 @@ import { ConversationService } from './conversation.service.js';
 import { GroupService } from './group.service.js';
 import { HomeService } from './home.service.js';
 import { NotificationService, type PushSender } from './notification.service.js';
+import { PlaceService } from './place.service.js';
 import { PostService } from './post.service.js';
 import { RideService } from './ride.service.js';
 import { TokenService } from './token.service.js';
@@ -56,6 +58,7 @@ export function createServices(deps: ServiceDependencies) {
     banner: new BannerRepository(prisma),
     admin: new AdminRepository(prisma),
     upload: new UploadRepository(prisma),
+    place: new PlaceRepository(prisma),
   };
 
   const passwords = new PasswordHasher(config.auth.hash);
@@ -67,6 +70,7 @@ export function createServices(deps: ServiceDependencies) {
 
   const ride = new RideService(uow, repositories.ride, notification);
   const post = new PostService(uow, repositories.post, notification);
+  const place = new PlaceService(uow, repositories.place, notification);
   const conversation = new ConversationService(
     uow,
     repositories.conversation,
@@ -87,6 +91,7 @@ export function createServices(deps: ServiceDependencies) {
     notification,
     conversation,
     repositories.banner,
+    place,
     config.uploads.maxBytes,
   );
 
@@ -105,6 +110,7 @@ export function createServices(deps: ServiceDependencies) {
     home,
     admin,
     upload,
+    place,
   };
 }
 

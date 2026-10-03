@@ -161,3 +161,18 @@ export type Banner = Prisma.BannerModel
  * 
  */
 export type AdminAuditLog = Prisma.AdminAuditLogModel
+/**
+ * Model Place
+ * A spot worth visiting (often a hidden gem), shared by someone who knows it.
+ */
+export type Place = Prisma.PlaceModel
+/**
+ * Model PlaceReview
+ * One review per rider per place ("was it worth it?"); editing replaces it.
+ */
+export type PlaceReview = Prisma.PlaceReviewModel
+/**
+ * Model PlaceSave
+ * "Want to go" bookmarks.
+ */
+export type PlaceSave = Prisma.PlaceSaveModel

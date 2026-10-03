@@ -2,6 +2,7 @@ import {
   ACTIVITY_CATEGORIES,
   EXPERIENCE_LEVELS,
   NOTIFICATION_TYPES,
+  PLACE_CATEGORIES,
   RIDE_DIFFICULTIES,
   rideTypesFor,
   type ActivityCategory,
@@ -10,12 +11,14 @@ import {
   CATEGORY_LABELS,
   DIFFICULTY_LABELS,
   EXPERIENCE_LABELS,
+  PLACE_CATEGORY_LABELS,
   RIDE_TYPE_LABELS,
 } from '../constants/labels.js';
 import type { BannerRepository } from '../repositories/banner.repository.js';
 import type { Banner } from '../generated/prisma/client.js';
 import type { ConversationService } from './conversation.service.js';
 import type { NotificationService } from './notification.service.js';
+import type { PlaceService, Point } from './place.service.js';
 import type { PostService } from './post.service.js';
 import type { RideService } from './ride.service.js';
 import type { UserService, Viewer } from './user.service.js';
@@ -48,6 +51,7 @@ export class HomeService {
     private readonly notifications: NotificationService,
     private readonly conversations: ConversationService,
     private readonly banners: BannerRepository,
+    private readonly places: PlaceService,
     private readonly uploadMaxBytes: number,
   ) {}
 
@@ -67,16 +71,20 @@ export class HomeService {
   /**
    * Everything the Home screen shows, fetched in parallel: the featured (soonest)
    * ride plus the next six in the category, the two newest posts, recommended
-   * riders, banners and badge counts.
+   * riders, banners, badge counts, and places to explore (nearby when the app
+   * sends its location, otherwise the best rated).
    */
-  async home(viewer: Viewer & { id: string }, category: ActivityCategory) {
-    const [upcoming, posts, recommendedRiders, banners, badges, me] = await Promise.all([
+  async home(viewer: Viewer & { id: string }, category: ActivityCategory, location: Point | null = null) {
+    const [upcoming, posts, recommendedRiders, banners, badges, me, explore] = await Promise.all([
       this.rides.discover(viewer.id, { category, limit: 7 }),
       this.posts.feed(viewer.id, { limit: 2 }),
       this.users.recommended(viewer, { category, limit: 10 }),
       this.banners.active(category),
       this.badges(viewer.id),
       this.users.getProfile(viewer.id, viewer),
+      location
+        ? this.places.nearby(viewer.id, { ...location, radiusKm: 50, activity: category, limit: 5 })
+        : this.places.list(viewer.id, { sort: 'top', activity: category, limit: 5 }),
     ]);
     const [featuredRide, ...upcomingRides] = upcoming.items;
     return {
@@ -86,6 +94,7 @@ export class HomeService {
       upcomingRides,
       communityPreview: posts.items,
       recommendedRiders,
+      explorePlaces: explore.items,
       banners: banners.map(toBannerDto),
       badges,
     };
@@ -101,6 +110,7 @@ export class HomeService {
       })),
       difficulties: RIDE_DIFFICULTIES.map((value) => ({ value, label: DIFFICULTY_LABELS[value] })),
       experienceLevels: EXPERIENCE_LEVELS.map((value) => ({ value, label: EXPERIENCE_LABELS[value] })),
+      placeCategories: PLACE_CATEGORIES.map((value) => ({ value, label: PLACE_CATEGORY_LABELS[value] })),
       notificationTypes: [...NOTIFICATION_TYPES],
       limits: {
         rideTitle: 120,

@@ -75,6 +75,8 @@ export const NOTIFICATION_TYPES = [
   'like',
   /** Sent to an organizer when someone asks to join their ride (new; not in the app's enum yet). */
   'newRideRequest',
+  /** Sent to a place's author when someone reviews it (new; not in the app's enum yet). */
+  'placeReview',
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
@@ -97,5 +99,24 @@ export const NOTIFICATION_ENTITY_TYPES = [
   'user',
   'conversation',
   'group',
+  'place',
 ] as const;
 export type NotificationEntityType = (typeof NOTIFICATION_ENTITY_TYPES)[number];
+
+/** Kinds of places riders share in Explore. */
+export const PLACE_CATEGORIES = [
+  'viewpoint',
+  'waterfall',
+  'lake',
+  'river',
+  'trail',
+  'heritage',
+  'temple',
+  'cafe',
+  'food',
+  'campsite',
+  'village',
+  'cave',
+  'other',
+] as const;
+export type PlaceCategory = (typeof PLACE_CATEGORIES)[number];

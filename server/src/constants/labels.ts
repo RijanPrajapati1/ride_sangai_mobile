@@ -1,4 +1,4 @@
-import type { ActivityCategory, ExperienceLevel, RideDifficulty, RideType } from './enums.js';
+import type { ActivityCategory, ExperienceLevel, PlaceCategory, RideDifficulty, RideType } from './enums.js';
 
 /** Display labels, mirroring the Dart enum extensions, served by GET /meta. */
 export const CATEGORY_LABELS: Record<
@@ -61,4 +61,20 @@ export const EXPERIENCE_LABELS: Record<ExperienceLevel, string> = {
   intermediate: 'Intermediate',
   advanced: 'Advanced',
   pro: 'Pro',
+};
+
+export const PLACE_CATEGORY_LABELS: Record<PlaceCategory, string> = {
+  viewpoint: 'Viewpoint',
+  waterfall: 'Waterfall',
+  lake: 'Lake',
+  river: 'River',
+  trail: 'Trail',
+  heritage: 'Heritage',
+  temple: 'Temple',
+  cafe: 'Café',
+  food: 'Local food',
+  campsite: 'Campsite',
+  village: 'Village',
+  cave: 'Cave',
+  other: 'Other',
 };

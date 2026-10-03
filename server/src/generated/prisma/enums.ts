@@ -86,7 +86,8 @@ export const NotificationType = {
   newFollower: 'newFollower',
   comment: 'comment',
   like: 'like',
-  newRideRequest: 'newRideRequest'
+  newRideRequest: 'newRideRequest',
+  placeReview: 'placeReview'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -99,7 +100,8 @@ export const NotificationEntityType = {
   comment: 'comment',
   user: 'user',
   conversation: 'conversation',
-  group: 'group'
+  group: 'group',
+  place: 'place'
 } as const
 
 export type NotificationEntityType = (typeof NotificationEntityType)[keyof typeof NotificationEntityType]
@@ -127,7 +129,27 @@ export const UploadPurpose = {
   rideCover: 'rideCover',
   post: 'post',
   groupCover: 'groupCover',
+  place: 'place',
   other: 'other'
 } as const
 
 export type UploadPurpose = (typeof UploadPurpose)[keyof typeof UploadPurpose]
+
+
+export const PlaceCategory = {
+  viewpoint: 'viewpoint',
+  waterfall: 'waterfall',
+  lake: 'lake',
+  river: 'river',
+  trail: 'trail',
+  heritage: 'heritage',
+  temple: 'temple',
+  cafe: 'cafe',
+  food: 'food',
+  campsite: 'campsite',
+  village: 'village',
+  cave: 'cave',
+  other: 'other'
+} as const
+
+export type PlaceCategory = (typeof PlaceCategory)[keyof typeof PlaceCategory]

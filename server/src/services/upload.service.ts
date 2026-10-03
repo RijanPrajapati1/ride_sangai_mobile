@@ -3,7 +3,7 @@ import type { UploadRepository } from '../repositories/upload.repository.js';
 import { AppError, notFound } from '../utils/errors.js';
 import { sniffImage, type FileStorage } from '../utils/storage.js';
 
-export type UploadPurpose = 'avatar' | 'rideCover' | 'post' | 'groupCover' | 'other';
+export type UploadPurpose = 'avatar' | 'rideCover' | 'post' | 'groupCover' | 'place' | 'other';
 
 /** Image uploads (avatars, ride covers, post images, group covers). */
 export class UploadService {

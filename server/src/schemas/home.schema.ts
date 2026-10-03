@@ -1,5 +1,6 @@
 import { Type } from 'typebox';
 import { ActivityCategorySchema, Nullable, Timestamp, Uuid, errorResponses } from './common.schema.js';
+import { Place } from './place.schema.js';
 import { CommunityPost } from './post.schema.js';
 import { Ride } from './ride.schema.js';
 import { UserProfile } from './user.schema.js';
@@ -41,6 +42,7 @@ export const Meta = Type.Object({
   ),
   difficulties: Type.Array(Option),
   experienceLevels: Type.Array(Option),
+  placeCategories: Type.Array(Option),
   notificationTypes: Type.Array(Type.String()),
   limits: Type.Record(Type.String(), Type.Unknown()),
 });
@@ -54,7 +56,11 @@ export const homeSchemas = {
     tags,
     summary: 'Everything the Home screen shows, in one request',
     description: 'featuredRide is the soonest upcoming ride in the category, upcomingRides the next six.',
-    querystring: Type.Object({ category: Type.Optional(ActivityCategorySchema) }),
+    querystring: Type.Object({
+      category: Type.Optional(ActivityCategorySchema),
+      lat: Type.Optional(Type.Number({ minimum: -90, maximum: 90 })),
+      lng: Type.Optional(Type.Number({ minimum: -180, maximum: 180 })),
+    }),
     response: {
       200: Type.Object({
         category: ActivityCategorySchema,
@@ -63,6 +69,7 @@ export const homeSchemas = {
         upcomingRides: Type.Array(Ride),
         communityPreview: Type.Array(CommunityPost),
         recommendedRiders: Type.Array(UserProfile),
+        explorePlaces: Type.Array(Place, { description: 'Nearby places (if lat/lng sent) or the best rated.' }),
         banners: Type.Array(Banner),
         badges: Badges,
       }),

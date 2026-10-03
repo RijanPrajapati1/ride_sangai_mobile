@@ -31,10 +31,16 @@ class RouteNames {
 
   static const settings = '/settings';
 
+  static const explore = '/explore';
+  static const savedPlaces = '/explore/saved';
+  static const sharePlace = '/explore/share';
+  static const placeDetails = '/places/:id';
+
   static String rideDetailsPath(String id) => '/rides/$id';
   static String rideParticipantsPath(String id) => '/rides/$id/participants';
   static String rideRequestsPath(String id) => '/rides/$id/requests';
   static String conversationPath(String id) => '/messages/$id';
   static String communityPostPath(String id) => '/community/$id';
   static String userProfilePath(String id) => '/profile/$id';
+  static String placeDetailsPath(String id) => '/places/$id';
 }

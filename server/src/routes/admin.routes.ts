@@ -8,8 +8,8 @@ const adminRoutes: FastifyPluginAsyncTypebox = async (app) => {
     route.config = { ...(route.config ?? {}), auth: 'required', roles: ['admin'] } as typeof route.config;
   });
 
-  const { admin, ride, post, group } = app.services;
-  const c = new AdminController(admin, ride, post, group);
+  const { admin, ride, post, group, place } = app.services;
+  const c = new AdminController(admin, ride, post, group, place);
 
   app.get('/stats', { schema: s.stats }, c.stats);
   app.get('/users', { schema: s.users }, c.users);
@@ -22,6 +22,8 @@ const adminRoutes: FastifyPluginAsyncTypebox = async (app) => {
   app.delete('/posts/:id', { schema: s.removePost }, c.removePost);
   app.get('/groups', { schema: s.groups }, c.groups);
   app.delete('/groups/:id', { schema: s.removeGroup }, c.removeGroup);
+  app.get('/places', { schema: s.places }, c.places);
+  app.delete('/places/:id', { schema: s.removePlace }, c.removePlace);
   app.get('/banners', { schema: s.banners }, c.banners);
   app.post('/banners', { schema: s.createBanner }, c.createBanner);
   app.patch('/banners/:id', { schema: s.updateBanner }, c.updateBanner);

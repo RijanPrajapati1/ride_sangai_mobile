@@ -1,6 +1,6 @@
 import type { PrismaClient } from '../db/prisma.js';
 
-type Purpose = 'avatar' | 'rideCover' | 'post' | 'groupCover' | 'other';
+type Purpose = 'avatar' | 'rideCover' | 'post' | 'groupCover' | 'place' | 'other';
 
 /** Data access for uploaded file records. */
 export class UploadRepository {

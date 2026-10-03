@@ -10,6 +10,10 @@ import '../../features/authentication/presentation/screens/register_screen.dart'
 import '../../features/community/presentation/screens/community_screen.dart';
 import '../../features/community/presentation/screens/post_detail_screen.dart';
 import '../../features/create_ride/presentation/screens/create_ride_screen.dart';
+import '../../features/explore/presentation/screens/explore_screen.dart';
+import '../../features/explore/presentation/screens/place_details_screen.dart';
+import '../../features/explore/presentation/screens/saved_places_screen.dart';
+import '../../features/explore/presentation/screens/share_place_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/messages/presentation/screens/chat_screen.dart';
 import '../../features/messages/presentation/screens/conversations_screen.dart';
@@ -116,6 +120,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => ProfileScreen(userId: state.pathParameters['userId']!),
       ),
       GoRoute(path: RouteNames.settings, builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: RouteNames.explore, builder: (context, state) => const ExploreScreen()),
+      GoRoute(path: RouteNames.savedPlaces, builder: (context, state) => const SavedPlacesScreen()),
+      GoRoute(path: RouteNames.sharePlace, builder: (context, state) => const SharePlaceScreen()),
+      GoRoute(
+        path: RouteNames.placeDetails,
+        builder: (context, state) => PlaceDetailsScreen(placeId: state.pathParameters['id']!),
+      ),
       GoRoute(path: RouteNames.messages, builder: (context, state) => const ConversationsScreen()),
       GoRoute(
         path: RouteNames.conversation,

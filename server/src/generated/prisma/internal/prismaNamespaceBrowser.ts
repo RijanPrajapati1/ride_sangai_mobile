@@ -73,7 +73,10 @@ export const ModelName = {
   Notification: 'Notification',
   Upload: 'Upload',
   Banner: 'Banner',
-  AdminAuditLog: 'AdminAuditLog'
+  AdminAuditLog: 'AdminAuditLog',
+  Place: 'Place',
+  PlaceReview: 'PlaceReview',
+  PlaceSave: 'PlaceSave'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,6 +406,57 @@ export const AdminAuditLogScalarFieldEnum = {
 } as const
 
 export type AdminAuditLogScalarFieldEnum = (typeof AdminAuditLogScalarFieldEnum)[keyof typeof AdminAuditLogScalarFieldEnum]
+
+
+export const PlaceScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  locationName: 'locationName',
+  photos: 'photos',
+  activities: 'activities',
+  bestTime: 'bestTime',
+  tips: 'tips',
+  entryFee: 'entryFee',
+  reviewCount: 'reviewCount',
+  ratingTotal: 'ratingTotal',
+  ratingAvg: 'ratingAvg',
+  worthItCount: 'worthItCount',
+  saveCount: 'saveCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceScalarFieldEnum = (typeof PlaceScalarFieldEnum)[keyof typeof PlaceScalarFieldEnum]
+
+
+export const PlaceReviewScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  authorId: 'authorId',
+  rating: 'rating',
+  worthIt: 'worthIt',
+  text: 'text',
+  visitedOn: 'visitedOn',
+  photos: 'photos',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceReviewScalarFieldEnum = (typeof PlaceReviewScalarFieldEnum)[keyof typeof PlaceReviewScalarFieldEnum]
+
+
+export const PlaceSaveScalarFieldEnum = {
+  placeId: 'placeId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PlaceSaveScalarFieldEnum = (typeof PlaceSaveScalarFieldEnum)[keyof typeof PlaceSaveScalarFieldEnum]
 
 
 export const SortOrder = {

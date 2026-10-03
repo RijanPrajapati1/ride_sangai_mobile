@@ -100,6 +100,7 @@ enum NotificationType {
   comment
   like
   newRideRequest
+  placeReview
 
   @@map("notification_type")
 }
@@ -112,6 +113,7 @@ enum NotificationEntityType {
   user
   conversation
   group
+  place
 
   @@map("notification_entity_type")
 }
@@ -136,9 +138,28 @@ enum UploadPurpose {
   rideCover
   post
   groupCover
+  place
   other
 
   @@map("upload_purpose")
+}
+
+enum PlaceCategory {
+  viewpoint
+  waterfall
+  lake
+  river
+  trail
+  heritage
+  temple
+  cafe
+  food
+  campsite
+  village
+  cave
+  other
+
+  @@map("place_category")
 }
 
 // --- Users & auth --------------------------------------------------------------
@@ -187,6 +208,9 @@ model User {
   actedNotifications  Notification[]            @relation("NotificationActor")
   uploads             Upload[]
   auditEntries        AdminAuditLog[]
+  places              Place[]
+  placeReviews        PlaceReview[]
+  placeSaves          PlaceSave[]
 
   @@index([role, name, id])
   @@index([followersCount(sort: Desc), id])
@@ -592,4 +616,79 @@ model AdminAuditLog {
   @@index([createdAt(sort: Desc), id(sort: Desc)])
   @@index([actorId])
   @@map("admin_audit_log")
+}
+
+// --- Explore: places shared by locals ---------------------------------------------------
+
+/// A spot worth visiting (often a hidden gem), shared by someone who knows it.
+model Place {
+  id           String             @id @default(uuid(7)) @db.Uuid
+  authorId     String             @map("author_id") @db.Uuid
+  author       User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  name         String             @db.VarChar(120)
+  description  String             @db.VarChar(3000)
+  category     PlaceCategory
+  latitude     Float
+  longitude    Float
+  /// Human-readable place, e.g. "Near Nagarkot, Bhaktapur".
+  locationName String             @map("location_name") @db.VarChar(200)
+  photos       String[]           @default([])
+  /// Which dashboards the place suits (cycling, trekking, hiking, riding).
+  activities   ActivityCategory[] @default([])
+  bestTime     String?            @map("best_time") @db.VarChar(200)
+  tips         String?            @db.VarChar(2000)
+  entryFee     String?            @map("entry_fee") @db.VarChar(120)
+  /// Review aggregates, trigger-maintained.
+  reviewCount  Int                @default(0) @map("review_count")
+  ratingTotal  Int                @default(0) @map("rating_total")
+  ratingAvg    Float              @default(0) @map("rating_avg")
+  worthItCount Int                @default(0) @map("worth_it_count")
+  /// Trigger-maintained.
+  saveCount    Int                @default(0) @map("save_count")
+  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  reviews      PlaceReview[]
+  saves        PlaceSave[]
+
+  @@index([latitude, longitude])
+  @@index([ratingAvg(sort: Desc), reviewCount(sort: Desc), id(sort: Desc)])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc)])
+  @@index([category])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "places_name_trgm_idx")
+  @@map("places")
+}
+
+/// One review per rider per place ("was it worth it?"); editing replaces it.
+model PlaceReview {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  placeId   String    @map("place_id") @db.Uuid
+  place     Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  authorId  String    @map("author_id") @db.Uuid
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  rating    Int
+  worthIt   Boolean   @map("worth_it")
+  text      String    @default("") @db.VarChar(2000)
+  visitedOn DateTime? @map("visited_on") @db.Date
+  photos    String[]  @default([])
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([placeId, authorId])
+  @@index([placeId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId])
+  @@map("place_reviews")
+}
+
+/// "Want to go" bookmarks.
+model PlaceSave {
+  placeId   String   @map("place_id") @db.Uuid
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@id([placeId, userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("place_saves")
 }

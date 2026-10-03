@@ -13,6 +13,8 @@ import '../../../../shared/widgets/loading_widget.dart';
 import '../../../../shared/widgets/ride_card.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../../../community/presentation/providers/community_providers.dart';
+import '../../../explore/presentation/providers/explore_providers.dart';
+import '../../../explore/presentation/widgets/place_card.dart';
 import '../../../notifications/presentation/providers/notification_providers.dart';
 import '../../../profile/presentation/providers/profile_providers.dart';
 import '../../../rides/presentation/providers/ride_providers.dart';
@@ -35,6 +37,7 @@ class HomeScreen extends ConsumerWidget {
     final ridesAsync = ref.watch(dashboardUpcomingRidesProvider);
     final postsAsync = ref.watch(communityPostsProvider);
     final ridersAsync = ref.watch(recommendedRidersProvider);
+    final placesAsync = ref.watch(homeExplorePlacesProvider);
 
     return AppScaffold(
       safeArea: false,
@@ -65,6 +68,7 @@ class HomeScreen extends ConsumerWidget {
                 ref.invalidate(communityPostsProvider);
                 ref.invalidate(recommendedRidersProvider);
                 ref.invalidate(notificationsProvider);
+                ref.invalidate(homeExplorePlacesProvider);
               },
               child: ListView(
                 padding: const EdgeInsets.only(bottom: AppDimensions.spaceXl),
@@ -107,9 +111,9 @@ class HomeScreen extends ConsumerWidget {
                         onTap: () => context.push(RouteNames.myRides),
                       ),
                       QuickAction(
-                        icon: Icons.person_search_outlined,
-                        label: 'Find Riders',
-                        onTap: () => context.go(RouteNames.community),
+                        icon: Icons.travel_explore,
+                        label: 'Explore',
+                        onTap: () => context.push(RouteNames.explore),
                       ),
                       QuickAction(
                         icon: Icons.chat_bubble_outline,
@@ -192,6 +196,61 @@ class HomeScreen extends ConsumerWidget {
                             ),
                           ],
                         ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  SectionHeader(
+                    title: 'Explore Nearby',
+                    actionLabel: 'See all',
+                    onAction: () => context.push(RouteNames.explore),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  placesAsync.when(
+                    loading: () =>
+                        const SizedBox(height: 230, child: LoadingWidget()),
+                    error: (e, st) => AppErrorWidget(message: e.toString()),
+                    data: (places) {
+                      if (places.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.spaceMd,
+                          ),
+                          child: EmptyState(
+                            icon: Icons.travel_explore,
+                            title: 'No places nearby yet',
+                            message:
+                                'Know a hidden gem around here? Share it with other riders.',
+                            actionLabel: 'Share a place',
+                            onAction: () =>
+                                context.push(RouteNames.sharePlace),
+                          ),
+                        );
+                      }
+                      return SizedBox(
+                        height: 230,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.spaceMd,
+                          ),
+                          itemCount: places.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(width: AppDimensions.spaceSm),
+                          itemBuilder: (context, index) {
+                            final place = places[index];
+                            return SizedBox(
+                              width: 240,
+                              child: PlaceCard(
+                                place: place,
+                                compact: true,
+                                onTap: () => context.push(
+                                  RouteNames.placeDetailsPath(place.id),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

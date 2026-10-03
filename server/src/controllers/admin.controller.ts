@@ -2,6 +2,7 @@ import { currentUser } from '../middlewares/authenticate.js';
 import type { adminSchemas } from '../schemas/admin.schema.js';
 import type { AdminService } from '../services/admin.service.js';
 import type { GroupService } from '../services/group.service.js';
+import type { PlaceService } from '../services/place.service.js';
 import type { PostService } from '../services/post.service.js';
 import type { RideService } from '../services/ride.service.js';
 import type { Rep, Req } from '../types/http.js';
@@ -14,6 +15,7 @@ export class AdminController {
     private readonly rideService: RideService,
     private readonly postService: PostService,
     private readonly groupService: GroupService,
+    private readonly placeService: PlaceService,
   ) {}
 
   stats = async () => this.admin.stats();
@@ -56,6 +58,14 @@ export class AdminController {
 
   removeGroup = async (request: Req<S['removeGroup']>, reply: Rep<S['removeGroup']>) => {
     await this.groupService.remove(currentUser(request), request.params.id);
+    return reply.status(204).send();
+  };
+
+  places = async (request: Req<S['places']>) =>
+    this.placeService.list(currentUser(request).id, { ...request.query, sort: 'newest' });
+
+  removePlace = async (request: Req<S['removePlace']>, reply: Rep<S['removePlace']>) => {
+    await this.placeService.remove(currentUser(request), request.params.id);
     return reply.status(204).send();
   };
 

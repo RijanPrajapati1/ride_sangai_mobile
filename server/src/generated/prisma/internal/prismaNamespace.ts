@@ -419,7 +419,10 @@ export const ModelName = {
   Notification: 'Notification',
   Upload: 'Upload',
   Banner: 'Banner',
-  AdminAuditLog: 'AdminAuditLog'
+  AdminAuditLog: 'AdminAuditLog',
+  Place: 'Place',
+  PlaceReview: 'PlaceReview',
+  PlaceSave: 'PlaceSave'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userPreferences" | "session" | "refreshToken" | "passwordResetToken" | "follow" | "deviceToken" | "ride" | "rideRequest" | "post" | "postLike" | "comment" | "commentLike" | "conversation" | "conversationParticipant" | "message" | "group" | "groupMember" | "groupMessage" | "notification" | "upload" | "banner" | "adminAuditLog"
+    modelProps: "user" | "userPreferences" | "session" | "refreshToken" | "passwordResetToken" | "follow" | "deviceToken" | "ride" | "rideRequest" | "post" | "postLike" | "comment" | "commentLike" | "conversation" | "conversationParticipant" | "message" | "group" | "groupMember" | "groupMessage" | "notification" | "upload" | "banner" | "adminAuditLog" | "place" | "placeReview" | "placeSave"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2141,6 +2144,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Place: {
+      payload: Prisma.$PlacePayload<ExtArgs>
+      fields: Prisma.PlaceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlaceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlaceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        findFirst: {
+          args: Prisma.PlaceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlaceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        findMany: {
+          args: Prisma.PlaceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>[]
+        }
+        create: {
+          args: Prisma.PlaceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        createMany: {
+          args: Prisma.PlaceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlaceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>[]
+        }
+        delete: {
+          args: Prisma.PlaceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        update: {
+          args: Prisma.PlaceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlaceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlaceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlaceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlaceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlacePayload>
+        }
+        aggregate: {
+          args: Prisma.PlaceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlace>
+        }
+        groupBy: {
+          args: Prisma.PlaceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlaceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlaceReview: {
+      payload: Prisma.$PlaceReviewPayload<ExtArgs>
+      fields: Prisma.PlaceReviewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlaceReviewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlaceReviewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        findFirst: {
+          args: Prisma.PlaceReviewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlaceReviewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        findMany: {
+          args: Prisma.PlaceReviewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>[]
+        }
+        create: {
+          args: Prisma.PlaceReviewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        createMany: {
+          args: Prisma.PlaceReviewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlaceReviewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>[]
+        }
+        delete: {
+          args: Prisma.PlaceReviewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        update: {
+          args: Prisma.PlaceReviewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlaceReviewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlaceReviewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlaceReviewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlaceReviewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceReviewPayload>
+        }
+        aggregate: {
+          args: Prisma.PlaceReviewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlaceReview>
+        }
+        groupBy: {
+          args: Prisma.PlaceReviewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceReviewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlaceReviewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceReviewCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlaceSave: {
+      payload: Prisma.$PlaceSavePayload<ExtArgs>
+      fields: Prisma.PlaceSaveFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlaceSaveFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlaceSaveFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        findFirst: {
+          args: Prisma.PlaceSaveFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlaceSaveFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        findMany: {
+          args: Prisma.PlaceSaveFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>[]
+        }
+        create: {
+          args: Prisma.PlaceSaveCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        createMany: {
+          args: Prisma.PlaceSaveCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlaceSaveCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>[]
+        }
+        delete: {
+          args: Prisma.PlaceSaveDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        update: {
+          args: Prisma.PlaceSaveUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlaceSaveDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlaceSaveUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlaceSaveUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlaceSaveUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlaceSavePayload>
+        }
+        aggregate: {
+          args: Prisma.PlaceSaveAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlaceSave>
+        }
+        groupBy: {
+          args: Prisma.PlaceSaveGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceSaveGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlaceSaveCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlaceSaveCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2493,6 +2718,57 @@ export const AdminAuditLogScalarFieldEnum = {
 export type AdminAuditLogScalarFieldEnum = (typeof AdminAuditLogScalarFieldEnum)[keyof typeof AdminAuditLogScalarFieldEnum]
 
 
+export const PlaceScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  locationName: 'locationName',
+  photos: 'photos',
+  activities: 'activities',
+  bestTime: 'bestTime',
+  tips: 'tips',
+  entryFee: 'entryFee',
+  reviewCount: 'reviewCount',
+  ratingTotal: 'ratingTotal',
+  ratingAvg: 'ratingAvg',
+  worthItCount: 'worthItCount',
+  saveCount: 'saveCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceScalarFieldEnum = (typeof PlaceScalarFieldEnum)[keyof typeof PlaceScalarFieldEnum]
+
+
+export const PlaceReviewScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  authorId: 'authorId',
+  rating: 'rating',
+  worthIt: 'worthIt',
+  text: 'text',
+  visitedOn: 'visitedOn',
+  photos: 'photos',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlaceReviewScalarFieldEnum = (typeof PlaceReviewScalarFieldEnum)[keyof typeof PlaceReviewScalarFieldEnum]
+
+
+export const PlaceSaveScalarFieldEnum = {
+  placeId: 'placeId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PlaceSaveScalarFieldEnum = (typeof PlaceSaveScalarFieldEnum)[keyof typeof PlaceSaveScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2769,6 +3045,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
+
+/**
+ * Reference to a field of type 'PlaceCategory'
+ */
+export type EnumPlaceCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlaceCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'PlaceCategory[]'
+ */
+export type ListEnumPlaceCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlaceCategory[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2943,6 +3233,9 @@ export type GlobalOmitConfig = {
   upload?: Prisma.UploadOmit
   banner?: Prisma.BannerOmit
   adminAuditLog?: Prisma.AdminAuditLogOmit
+  place?: Prisma.PlaceOmit
+  placeReview?: Prisma.PlaceReviewOmit
+  placeSave?: Prisma.PlaceSaveOmit
 }
 
 /* Types for Logging */

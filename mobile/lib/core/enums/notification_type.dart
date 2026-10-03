@@ -10,6 +10,7 @@ enum NotificationType {
   newFollower,
   comment,
   like,
+  placeReview,
 }
 
 extension NotificationTypeX on NotificationType {
@@ -22,6 +23,7 @@ extension NotificationTypeX on NotificationType {
         NotificationType.newFollower => Icons.person_add_alt_1,
         NotificationType.comment => Icons.mode_comment,
         NotificationType.like => Icons.favorite,
+        NotificationType.placeReview => Icons.rate_review,
       };
 
   Color get color => switch (this) {
@@ -33,5 +35,6 @@ extension NotificationTypeX on NotificationType {
         NotificationType.newFollower => AppColors.primary,
         NotificationType.comment => AppColors.info,
         NotificationType.like => AppColors.error,
+        NotificationType.placeReview => AppColors.warning,
       };
 }

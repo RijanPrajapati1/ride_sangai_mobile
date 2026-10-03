@@ -23,6 +23,10 @@ export function createPrisma(config: AppConfig['db'], applicationName = 'ride-sa
     ssl: config.ssl ? { rejectUnauthorized: false } : undefined,
     ...(config.statementTimeoutMs > 0 ? { statement_timeout: config.statementTimeoutMs } : {}),
     idle_in_transaction_session_timeout: 60_000,
+    // Every session runs in UTC. The Prisma pg adapter reads/writes timestamps
+    // without their offset, so a non-UTC server timezone (e.g. Asia/Kathmandu)
+    // would otherwise shift times written by Prisma against SQL now().
+    options: '-c TimeZone=UTC',
   });
   // An idle client erroring (e.g. the server restarted) must not crash the process.
   pool.on('error', (err) => console.error('Unexpected error on idle Postgres client', err));

@@ -15,6 +15,7 @@
  *     future, so the organizer flow (approve/decline) can be tried.
  *   - Counters (likes, followers, members) come from real rows, so they are
  *     smaller than the dummy's hard-coded numbers.
+ *   - Explore places around the Kathmandu valley are added (a new feature).
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -869,6 +870,172 @@ const NOTIFICATIONS = [
   },
 ] as const;
 
+// --- Explore: places shared by locals (new feature; not in the app's dummy data yet) ---
+
+const PLACES = [
+  {
+    key: 'pl_001',
+    author: 'u_011',
+    name: 'Taudaha Lake',
+    category: 'lake',
+    lat: 27.6476,
+    lng: 85.2813,
+    locationName: 'Taudaha, Kirtipur',
+    activities: ['cycling', 'hiking'],
+    bestTime: 'November to February (migratory birds)',
+    entryFee: 'Free',
+    image: 'taudaha-lake',
+    daysAgo: 60,
+    description:
+      'A quiet lake just past Chobhar where migratory birds stop in winter. Locals say it is where Manjushree drained the valley lake. Easy flat loop around the water.',
+    tips: 'Come before 8am for the birds and soft light. Tea shops on the Dakshinkali road.',
+  },
+  {
+    key: 'pl_002',
+    author: 'u_007',
+    name: 'Champadevi Viewpoint',
+    category: 'viewpoint',
+    lat: 27.6243,
+    lng: 85.2512,
+    locationName: 'Champadevi, Pharping',
+    activities: ['hiking'],
+    bestTime: 'October to December for clear Himalayan views',
+    entryFee: 'Free',
+    image: 'champadevi',
+    daysAgo: 45,
+    description:
+      'A ridge-top shrine with one of the widest Himalayan panoramas from the valley — Ganesh Himal to Langtang on a clear day. The forest trail from Pharping is shady most of the way.',
+    tips: 'Start from Hattiban Resort road; carry water, there is nothing at the top.',
+  },
+  {
+    key: 'pl_003',
+    author: 'u_005',
+    name: 'Sundarijal Waterfall',
+    category: 'waterfall',
+    lat: 27.7631,
+    lng: 85.4256,
+    locationName: 'Sundarijal, Shivapuri National Park',
+    activities: ['hiking', 'trekking'],
+    bestTime: 'July to September (monsoon flow)',
+    entryFee: 'Park entry fee',
+    image: 'sundarijal-fall',
+    daysAgo: 40,
+    description:
+      'Stone stairs beside the old water pipeline lead to a series of cascades inside the national park. Great first stop on the Chisapani trek.',
+    tips: 'Steps get slippery in monsoon — wear proper shoes.',
+  },
+  {
+    key: 'pl_004',
+    author: 'u_008',
+    name: 'Kakani Viewpoint',
+    category: 'viewpoint',
+    lat: 27.804,
+    lng: 85.2546,
+    locationName: 'Kakani, Nuwakot',
+    activities: ['riding', 'cycling'],
+    bestTime: 'Clear winter mornings',
+    entryFee: 'Free',
+    image: 'kakani',
+    daysAgo: 30,
+    description:
+      'Strawberry farms, a British-era bungalow and a front-row view of the Ganesh Himal range, an easy hour out of Kathmandu on a twisty road bikers love.',
+    tips: 'Try the fresh strawberries in spring. The road is narrow after Kaulethana — ride carefully.',
+  },
+  {
+    key: 'pl_005',
+    author: 'u_009',
+    name: 'Namobuddha Monastery',
+    category: 'temple',
+    lat: 27.5714,
+    lng: 85.585,
+    locationName: 'Namobuddha, Kavre',
+    activities: ['cycling', 'riding', 'hiking'],
+    bestTime: 'Year round; sunrise is magical',
+    entryFee: 'Free',
+    image: 'namobuddha',
+    daysAgo: 25,
+    description:
+      'A golden hilltop monastery with a stupa where, legend says, the prince gave his body to a starving tigress. Prayer flags everywhere and a peaceful vibe.',
+    tips: 'Dress modestly and walk clockwise around the stupa. The monastery restaurant serves a great dal bhat.',
+  },
+  {
+    key: 'pl_006',
+    author: 'u_003',
+    name: 'Panauti Old Town',
+    category: 'heritage',
+    lat: 27.5847,
+    lng: 85.5208,
+    locationName: 'Panauti, Kavre',
+    activities: ['cycling', 'riding'],
+    bestTime: 'During Jatra in June, or any quiet weekday',
+    entryFee: 'Small heritage fee for foreigners',
+    image: 'panauti',
+    daysAgo: 20,
+    description:
+      'A Newar town at the meeting of two rivers with Indreshwar Mahadev, one of the oldest pagoda temples in Nepal, and brick lanes that feel untouched.',
+    tips: 'Stay for a homestay dinner; locals will show you the hidden courtyards.',
+  },
+  {
+    key: 'pl_007',
+    author: 'u_010',
+    name: 'Bagdwar — Source of the Bagmati',
+    category: 'trail',
+    lat: 27.818,
+    lng: 85.392,
+    locationName: 'Shivapuri National Park',
+    activities: ['trekking', 'hiking'],
+    bestTime: 'October to April',
+    entryFee: 'Park entry fee',
+    image: 'bagdwar',
+    daysAgo: 12,
+    description:
+      'A steep forest trail to the spring where the holy Bagmati river begins, flowing out of a stone tiger mouth. Most people never know it is this close to the city.',
+    tips: 'Go with a group — the upper forest is quiet. Budhanilkantha gate is the easiest start.',
+  },
+  {
+    key: 'pl_008',
+    author: 'u_006',
+    name: 'Lakuri Bhanjyang Tea Stop',
+    category: 'cafe',
+    lat: 27.6045,
+    lng: 85.4268,
+    locationName: 'Lakuri Bhanjyang, Lalitpur',
+    activities: ['cycling', 'riding'],
+    bestTime: 'Sunrise or sunset',
+    entryFee: null,
+    image: 'lakuri',
+    daysAgo: 6,
+    description:
+      'The classic climb out of Lubhu ends at a ridge with a few tea shops and views over the whole valley. Every road cyclist in Kathmandu stops here.',
+    tips: 'Order the milk tea and sel roti. Descent to Panauti side is fast and fun.',
+  },
+] as const;
+
+// [place, reviewer, rating, worthIt, text, daysAgo]
+const PLACE_REVIEWS: Array<[string, string, number, boolean, string, number]> = [
+  ['pl_001', 'u_001', 5, true, 'Perfect short ride from Kathmandu. Saw so many ducks!', 20],
+  ['pl_001', 'u_003', 4, true, 'Lovely in the morning, gets busy on Saturdays.', 15],
+  ['pl_002', 'u_011', 5, true, 'Best mountain view near the city. Worth every step.', 10],
+  ['pl_002', 'u_004', 3, true, 'Long climb for a beginner, but the view paid off.', 8],
+  ['pl_003', 'u_002', 4, true, 'Go in monsoon, the falls are huge.', 12],
+  ['pl_003', 'u_009', 2, false, 'Not much water in spring, honestly skip it then.', 5],
+  ['pl_004', 'u_010', 5, true, 'Amazing ride, amazing view, amazing strawberries.', 9],
+  ['pl_004', 'u_001', 4, true, 'Great Sunday ride. Roads are a bit broken near the top.', 4],
+  ['pl_005', 'u_006', 5, true, 'Sunrise here is unreal. Stay overnight if you can.', 7],
+  ['pl_006', 'u_007', 5, true, 'Felt like going back in time. Very friendly locals.', 3],
+  ['pl_008', 'u_008', 4, true, 'Tough climb, best tea.', 2],
+];
+
+// [place, user]
+const PLACE_SAVES: Array<[string, string]> = [
+  ['pl_002', 'u_001'],
+  ['pl_005', 'u_001'],
+  ['pl_007', 'u_001'],
+  ['pl_004', 'u_002'],
+  ['pl_001', 'u_004'],
+  ['pl_003', 'u_011'],
+];
+
 const SAFETY_TIPS = {
   cycling: 'Always wear a certified helmet and run lights after dark.',
   trekking: 'Check the weather and share your route before high-altitude treks.',
@@ -1124,6 +1291,45 @@ async function main(): Promise<void> {
         });
       }
 
+      // Explore places, reviews and saves
+      for (const pl of PLACES) {
+        const place = await tx.place.create({
+          data: {
+            authorId: id(pl.author),
+            name: pl.name,
+            description: pl.description,
+            category: pl.category,
+            latitude: pl.lat,
+            longitude: pl.lng,
+            locationName: pl.locationName,
+            photos: [picsum(pl.image), picsum(`${pl.image}-2`)],
+            activities: [...pl.activities],
+            bestTime: pl.bestTime,
+            tips: pl.tips,
+            entryFee: pl.entryFee,
+            createdAt: ago(pl.daysAgo * DAY),
+          },
+          select: { id: true },
+        });
+        ids.set(pl.key, place.id);
+      }
+      for (const [place, reviewer, rating, worthIt, text, daysAgo] of PLACE_REVIEWS) {
+        await tx.placeReview.create({
+          data: {
+            placeId: id(place),
+            authorId: id(reviewer),
+            rating,
+            worthIt,
+            text,
+            visitedOn: ago((daysAgo + 1) * DAY),
+            createdAt: ago(daysAgo * DAY),
+          },
+        });
+      }
+      await tx.placeSave.createMany({
+        data: PLACE_SAVES.map(([place, user]) => ({ placeId: id(place), userId: id(user) })),
+      });
+
       // Home carousel (home_banner_carousel.dart)
       let order = 0;
       for (const category of ['cycling', 'trekking', 'hiking', 'riding'] as const) {
@@ -1173,6 +1379,8 @@ async function main(): Promise<void> {
     groups: await prisma.group.count(),
     notifications: await prisma.notification.count(),
     banners: await prisma.banner.count(),
+    places: await prisma.place.count(),
+    placeReviews: await prisma.placeReview.count(),
   };
   console.log('Seeded demo data:', counts);
   console.log('Log in as demo@bikersync.app / biker123 (rider) or admin@gmail.com / Test@1234 (admin).');

@@ -328,6 +328,9 @@ export type UserWhereInput = {
   actedNotifications?: Prisma.NotificationListRelationFilter
   uploads?: Prisma.UploadListRelationFilter
   auditEntries?: Prisma.AdminAuditLogListRelationFilter
+  places?: Prisma.PlaceListRelationFilter
+  placeReviews?: Prisma.PlaceReviewListRelationFilter
+  placeSaves?: Prisma.PlaceSaveListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -371,6 +374,9 @@ export type UserOrderByWithRelationInput = {
   actedNotifications?: Prisma.NotificationOrderByRelationAggregateInput
   uploads?: Prisma.UploadOrderByRelationAggregateInput
   auditEntries?: Prisma.AdminAuditLogOrderByRelationAggregateInput
+  places?: Prisma.PlaceOrderByRelationAggregateInput
+  placeReviews?: Prisma.PlaceReviewOrderByRelationAggregateInput
+  placeSaves?: Prisma.PlaceSaveOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -417,6 +423,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   actedNotifications?: Prisma.NotificationListRelationFilter
   uploads?: Prisma.UploadListRelationFilter
   auditEntries?: Prisma.AdminAuditLogListRelationFilter
+  places?: Prisma.PlaceListRelationFilter
+  placeReviews?: Prisma.PlaceReviewListRelationFilter
+  placeSaves?: Prisma.PlaceSaveListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -506,6 +515,9 @@ export type UserCreateInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -549,6 +561,9 @@ export type UserUncheckedCreateInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -592,6 +607,9 @@ export type UserUpdateInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -635,6 +653,9 @@ export type UserUncheckedUpdateInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1160,6 +1181,48 @@ export type UserUpdateOneWithoutAuditEntriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditEntriesInput, Prisma.UserUpdateWithoutAuditEntriesInput>, Prisma.UserUncheckedUpdateWithoutAuditEntriesInput>
 }
 
+export type UserCreateNestedOneWithoutPlacesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlacesInput, Prisma.UserUncheckedCreateWithoutPlacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlacesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPlacesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlacesInput, Prisma.UserUncheckedCreateWithoutPlacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlacesInput
+  upsert?: Prisma.UserUpsertWithoutPlacesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlacesInput, Prisma.UserUpdateWithoutPlacesInput>, Prisma.UserUncheckedUpdateWithoutPlacesInput>
+}
+
+export type UserCreateNestedOneWithoutPlaceReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlaceReviewsInput, Prisma.UserUncheckedCreateWithoutPlaceReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlaceReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPlaceReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlaceReviewsInput, Prisma.UserUncheckedCreateWithoutPlaceReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlaceReviewsInput
+  upsert?: Prisma.UserUpsertWithoutPlaceReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlaceReviewsInput, Prisma.UserUpdateWithoutPlaceReviewsInput>, Prisma.UserUncheckedUpdateWithoutPlaceReviewsInput>
+}
+
+export type UserCreateNestedOneWithoutPlaceSavesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlaceSavesInput, Prisma.UserUncheckedCreateWithoutPlaceSavesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlaceSavesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPlaceSavesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlaceSavesInput, Prisma.UserUncheckedCreateWithoutPlaceSavesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlaceSavesInput
+  upsert?: Prisma.UserUpsertWithoutPlaceSavesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlaceSavesInput, Prisma.UserUpdateWithoutPlaceSavesInput>, Prisma.UserUncheckedUpdateWithoutPlaceSavesInput>
+}
+
 export type UserCreateWithoutPreferencesInput = {
   id?: string
   email: string
@@ -1200,6 +1263,9 @@ export type UserCreateWithoutPreferencesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPreferencesInput = {
@@ -1242,6 +1308,9 @@ export type UserUncheckedCreateWithoutPreferencesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPreferencesInput = {
@@ -1300,6 +1369,9 @@ export type UserUpdateWithoutPreferencesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPreferencesInput = {
@@ -1342,6 +1414,9 @@ export type UserUncheckedUpdateWithoutPreferencesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1384,6 +1459,9 @@ export type UserCreateWithoutSessionsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1426,6 +1504,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1484,6 +1565,9 @@ export type UserUpdateWithoutSessionsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1526,6 +1610,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -1568,6 +1655,9 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -1610,6 +1700,9 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -1668,6 +1761,9 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -1710,6 +1806,9 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
@@ -1752,6 +1851,9 @@ export type UserCreateWithoutFollowingInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
@@ -1794,6 +1896,9 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -1841,6 +1946,9 @@ export type UserCreateWithoutFollowersInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
@@ -1883,6 +1991,9 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -1941,6 +2052,9 @@ export type UserUpdateWithoutFollowingInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -1983,6 +2097,9 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -2036,6 +2153,9 @@ export type UserUpdateWithoutFollowersInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -2078,6 +2198,9 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeviceTokensInput = {
@@ -2120,6 +2243,9 @@ export type UserCreateWithoutDeviceTokensInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeviceTokensInput = {
@@ -2162,6 +2288,9 @@ export type UserUncheckedCreateWithoutDeviceTokensInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeviceTokensInput = {
@@ -2220,6 +2349,9 @@ export type UserUpdateWithoutDeviceTokensInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeviceTokensInput = {
@@ -2262,6 +2394,9 @@ export type UserUncheckedUpdateWithoutDeviceTokensInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizedRidesInput = {
@@ -2304,6 +2439,9 @@ export type UserCreateWithoutOrganizedRidesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizedRidesInput = {
@@ -2346,6 +2484,9 @@ export type UserUncheckedCreateWithoutOrganizedRidesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizedRidesInput = {
@@ -2404,6 +2545,9 @@ export type UserUpdateWithoutOrganizedRidesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizedRidesInput = {
@@ -2446,6 +2590,9 @@ export type UserUncheckedUpdateWithoutOrganizedRidesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRideRequestsInput = {
@@ -2488,6 +2635,9 @@ export type UserCreateWithoutRideRequestsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRideRequestsInput = {
@@ -2530,6 +2680,9 @@ export type UserUncheckedCreateWithoutRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRideRequestsInput = {
@@ -2577,6 +2730,9 @@ export type UserCreateWithoutDecidedRideRequestsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDecidedRideRequestsInput = {
@@ -2619,6 +2775,9 @@ export type UserUncheckedCreateWithoutDecidedRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDecidedRideRequestsInput = {
@@ -2677,6 +2836,9 @@ export type UserUpdateWithoutRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRideRequestsInput = {
@@ -2719,6 +2881,9 @@ export type UserUncheckedUpdateWithoutRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDecidedRideRequestsInput = {
@@ -2772,6 +2937,9 @@ export type UserUpdateWithoutDecidedRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDecidedRideRequestsInput = {
@@ -2814,6 +2982,9 @@ export type UserUncheckedUpdateWithoutDecidedRideRequestsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -2856,6 +3027,9 @@ export type UserCreateWithoutPostsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -2898,6 +3072,9 @@ export type UserUncheckedCreateWithoutPostsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -2956,6 +3133,9 @@ export type UserUpdateWithoutPostsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -2998,6 +3178,9 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostLikesInput = {
@@ -3040,6 +3223,9 @@ export type UserCreateWithoutPostLikesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostLikesInput = {
@@ -3082,6 +3268,9 @@ export type UserUncheckedCreateWithoutPostLikesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostLikesInput = {
@@ -3140,6 +3329,9 @@ export type UserUpdateWithoutPostLikesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostLikesInput = {
@@ -3182,6 +3374,9 @@ export type UserUncheckedUpdateWithoutPostLikesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -3224,6 +3419,9 @@ export type UserCreateWithoutCommentsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -3266,6 +3464,9 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -3324,6 +3525,9 @@ export type UserUpdateWithoutCommentsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -3366,6 +3570,9 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentLikesInput = {
@@ -3408,6 +3615,9 @@ export type UserCreateWithoutCommentLikesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentLikesInput = {
@@ -3450,6 +3660,9 @@ export type UserUncheckedCreateWithoutCommentLikesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentLikesInput = {
@@ -3508,6 +3721,9 @@ export type UserUpdateWithoutCommentLikesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentLikesInput = {
@@ -3550,6 +3766,9 @@ export type UserUncheckedUpdateWithoutCommentLikesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsAsAInput = {
@@ -3592,6 +3811,9 @@ export type UserCreateWithoutConversationsAsAInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsAInput = {
@@ -3634,6 +3856,9 @@ export type UserUncheckedCreateWithoutConversationsAsAInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsAInput = {
@@ -3681,6 +3906,9 @@ export type UserCreateWithoutConversationsAsBInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsBInput = {
@@ -3723,6 +3951,9 @@ export type UserUncheckedCreateWithoutConversationsAsBInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsBInput = {
@@ -3781,6 +4012,9 @@ export type UserUpdateWithoutConversationsAsAInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsAInput = {
@@ -3823,6 +4057,9 @@ export type UserUncheckedUpdateWithoutConversationsAsAInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutConversationsAsBInput = {
@@ -3876,6 +4113,9 @@ export type UserUpdateWithoutConversationsAsBInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsBInput = {
@@ -3918,6 +4158,9 @@ export type UserUncheckedUpdateWithoutConversationsAsBInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationMembersInput = {
@@ -3960,6 +4203,9 @@ export type UserCreateWithoutConversationMembersInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationMembersInput = {
@@ -4002,6 +4248,9 @@ export type UserUncheckedCreateWithoutConversationMembersInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationMembersInput = {
@@ -4060,6 +4309,9 @@ export type UserUpdateWithoutConversationMembersInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationMembersInput = {
@@ -4102,6 +4354,9 @@ export type UserUncheckedUpdateWithoutConversationMembersInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -4144,6 +4399,9 @@ export type UserCreateWithoutMessagesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -4186,6 +4444,9 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -4244,6 +4505,9 @@ export type UserUpdateWithoutMessagesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -4286,6 +4550,9 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOwnedGroupsInput = {
@@ -4328,6 +4595,9 @@ export type UserCreateWithoutOwnedGroupsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedGroupsInput = {
@@ -4370,6 +4640,9 @@ export type UserUncheckedCreateWithoutOwnedGroupsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedGroupsInput = {
@@ -4428,6 +4701,9 @@ export type UserUpdateWithoutOwnedGroupsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
@@ -4470,6 +4746,9 @@ export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGroupMembershipsInput = {
@@ -4512,6 +4791,9 @@ export type UserCreateWithoutGroupMembershipsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -4554,6 +4836,9 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -4612,6 +4897,9 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -4654,6 +4942,9 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGroupMessagesInput = {
@@ -4696,6 +4987,9 @@ export type UserCreateWithoutGroupMessagesInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGroupMessagesInput = {
@@ -4738,6 +5032,9 @@ export type UserUncheckedCreateWithoutGroupMessagesInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGroupMessagesInput = {
@@ -4796,6 +5093,9 @@ export type UserUpdateWithoutGroupMessagesInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupMessagesInput = {
@@ -4838,6 +5138,9 @@ export type UserUncheckedUpdateWithoutGroupMessagesInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -4880,6 +5183,9 @@ export type UserCreateWithoutNotificationsInput = {
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -4922,6 +5228,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -4969,6 +5278,9 @@ export type UserCreateWithoutActedNotificationsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActedNotificationsInput = {
@@ -5011,6 +5323,9 @@ export type UserUncheckedCreateWithoutActedNotificationsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActedNotificationsInput = {
@@ -5069,6 +5384,9 @@ export type UserUpdateWithoutNotificationsInput = {
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -5111,6 +5429,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutActedNotificationsInput = {
@@ -5164,6 +5485,9 @@ export type UserUpdateWithoutActedNotificationsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActedNotificationsInput = {
@@ -5206,6 +5530,9 @@ export type UserUncheckedUpdateWithoutActedNotificationsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadsInput = {
@@ -5248,6 +5575,9 @@ export type UserCreateWithoutUploadsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadsInput = {
@@ -5290,6 +5620,9 @@ export type UserUncheckedCreateWithoutUploadsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadsInput = {
@@ -5348,6 +5681,9 @@ export type UserUpdateWithoutUploadsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadsInput = {
@@ -5390,6 +5726,9 @@ export type UserUncheckedUpdateWithoutUploadsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditEntriesInput = {
@@ -5432,6 +5771,9 @@ export type UserCreateWithoutAuditEntriesInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
   actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditEntriesInput = {
@@ -5474,6 +5816,9 @@ export type UserUncheckedCreateWithoutAuditEntriesInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
   actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
   uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditEntriesInput = {
@@ -5532,6 +5877,9 @@ export type UserUpdateWithoutAuditEntriesInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
   actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditEntriesInput = {
@@ -5574,6 +5922,597 @@ export type UserUncheckedUpdateWithoutAuditEntriesInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
   actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
   uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlacesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlacesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideUncheckedCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlacesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlacesInput, Prisma.UserUncheckedCreateWithoutPlacesInput>
+}
+
+export type UserUpsertWithoutPlacesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlacesInput, Prisma.UserUncheckedUpdateWithoutPlacesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlacesInput, Prisma.UserUncheckedCreateWithoutPlacesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlacesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlacesInput, Prisma.UserUncheckedUpdateWithoutPlacesInput>
+}
+
+export type UserUpdateWithoutPlacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUncheckedUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUncheckedUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUncheckedUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUncheckedUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlaceReviewsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlaceReviewsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideUncheckedCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlaceReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlaceReviewsInput, Prisma.UserUncheckedCreateWithoutPlaceReviewsInput>
+}
+
+export type UserUpsertWithoutPlaceReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlaceReviewsInput, Prisma.UserUncheckedUpdateWithoutPlaceReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlaceReviewsInput, Prisma.UserUncheckedCreateWithoutPlaceReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlaceReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlaceReviewsInput, Prisma.UserUncheckedUpdateWithoutPlaceReviewsInput>
+}
+
+export type UserUpdateWithoutPlaceReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlaceReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUncheckedUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUncheckedUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUncheckedUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUncheckedUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlaceSavesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+}
+
+export type UserUncheckedCreateWithoutPlaceSavesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideUncheckedCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type UserCreateOrConnectWithoutPlaceSavesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlaceSavesInput, Prisma.UserUncheckedCreateWithoutPlaceSavesInput>
+}
+
+export type UserUpsertWithoutPlaceSavesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlaceSavesInput, Prisma.UserUncheckedUpdateWithoutPlaceSavesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlaceSavesInput, Prisma.UserUncheckedCreateWithoutPlaceSavesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlaceSavesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlaceSavesInput, Prisma.UserUncheckedUpdateWithoutPlaceSavesInput>
+}
+
+export type UserUpdateWithoutPlaceSavesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlaceSavesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUncheckedUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUncheckedUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUncheckedUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUncheckedUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -5605,6 +6544,9 @@ export type UserCountOutputType = {
   actedNotifications: number
   uploads: number
   auditEntries: number
+  places: number
+  placeReviews: number
+  placeSaves: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5631,6 +6573,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   actedNotifications?: boolean | UserCountOutputTypeCountActedNotificationsArgs
   uploads?: boolean | UserCountOutputTypeCountUploadsArgs
   auditEntries?: boolean | UserCountOutputTypeCountAuditEntriesArgs
+  places?: boolean | UserCountOutputTypeCountPlacesArgs
+  placeReviews?: boolean | UserCountOutputTypeCountPlaceReviewsArgs
+  placeSaves?: boolean | UserCountOutputTypeCountPlaceSavesArgs
 }
 
 /**
@@ -5804,6 +6749,27 @@ export type UserCountOutputTypeCountAuditEntriesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.AdminAuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPlacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlaceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPlaceReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlaceReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPlaceSavesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlaceSaveWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5846,6 +6812,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   actedNotifications?: boolean | Prisma.User$actedNotificationsArgs<ExtArgs>
   uploads?: boolean | Prisma.User$uploadsArgs<ExtArgs>
   auditEntries?: boolean | Prisma.User$auditEntriesArgs<ExtArgs>
+  places?: boolean | Prisma.User$placesArgs<ExtArgs>
+  placeReviews?: boolean | Prisma.User$placeReviewsArgs<ExtArgs>
+  placeSaves?: boolean | Prisma.User$placeSavesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -5932,6 +6901,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   actedNotifications?: boolean | Prisma.User$actedNotificationsArgs<ExtArgs>
   uploads?: boolean | Prisma.User$uploadsArgs<ExtArgs>
   auditEntries?: boolean | Prisma.User$auditEntriesArgs<ExtArgs>
+  places?: boolean | Prisma.User$placesArgs<ExtArgs>
+  placeReviews?: boolean | Prisma.User$placeReviewsArgs<ExtArgs>
+  placeSaves?: boolean | Prisma.User$placeSavesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -5964,6 +6936,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     actedNotifications: Prisma.$NotificationPayload<ExtArgs>[]
     uploads: Prisma.$UploadPayload<ExtArgs>[]
     auditEntries: Prisma.$AdminAuditLogPayload<ExtArgs>[]
+    places: Prisma.$PlacePayload<ExtArgs>[]
+    placeReviews: Prisma.$PlaceReviewPayload<ExtArgs>[]
+    placeSaves: Prisma.$PlaceSavePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6406,6 +7381,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   actedNotifications<T extends Prisma.User$actedNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actedNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   uploads<T extends Prisma.User$uploadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UploadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditEntries<T extends Prisma.User$auditEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  places<T extends Prisma.User$placesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  placeReviews<T extends Prisma.User$placeReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placeReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  placeSaves<T extends Prisma.User$placeSavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placeSavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceSavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7412,6 +8390,78 @@ export type User$auditEntriesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.AdminAuditLogScalarFieldEnum | Prisma.AdminAuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.places
+ */
+export type User$placesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Place
+   */
+  select?: Prisma.PlaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Place
+   */
+  omit?: Prisma.PlaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlaceInclude<ExtArgs> | null
+  where?: Prisma.PlaceWhereInput
+  orderBy?: Prisma.PlaceOrderByWithRelationInput | Prisma.PlaceOrderByWithRelationInput[]
+  cursor?: Prisma.PlaceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlaceScalarFieldEnum | Prisma.PlaceScalarFieldEnum[]
+}
+
+/**
+ * User.placeReviews
+ */
+export type User$placeReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlaceReview
+   */
+  select?: Prisma.PlaceReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlaceReview
+   */
+  omit?: Prisma.PlaceReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlaceReviewInclude<ExtArgs> | null
+  where?: Prisma.PlaceReviewWhereInput
+  orderBy?: Prisma.PlaceReviewOrderByWithRelationInput | Prisma.PlaceReviewOrderByWithRelationInput[]
+  cursor?: Prisma.PlaceReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlaceReviewScalarFieldEnum | Prisma.PlaceReviewScalarFieldEnum[]
+}
+
+/**
+ * User.placeSaves
+ */
+export type User$placeSavesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlaceSave
+   */
+  select?: Prisma.PlaceSaveSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlaceSave
+   */
+  omit?: Prisma.PlaceSaveOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlaceSaveInclude<ExtArgs> | null
+  where?: Prisma.PlaceSaveWhereInput
+  orderBy?: Prisma.PlaceSaveOrderByWithRelationInput | Prisma.PlaceSaveOrderByWithRelationInput[]
+  cursor?: Prisma.PlaceSaveWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlaceSaveScalarFieldEnum | Prisma.PlaceSaveScalarFieldEnum[]
 }
 
 /**

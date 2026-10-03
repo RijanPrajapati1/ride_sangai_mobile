@@ -8,8 +8,11 @@ type S = typeof homeSchemas;
 export class HomeController {
   constructor(private readonly home: HomeService) {}
 
-  get = async (request: Req<S['home']>) =>
-    this.home.home(currentUser(request), request.query.category ?? 'cycling');
+  get = async (request: Req<S['home']>) => {
+    const { category, lat, lng } = request.query;
+    const location = lat !== undefined && lng !== undefined ? { lat, lng } : null;
+    return this.home.home(currentUser(request), category ?? 'cycling', location);
+  };
 
   badges = async (request: Req<S['badges']>) => this.home.badges(currentUser(request).id);
 

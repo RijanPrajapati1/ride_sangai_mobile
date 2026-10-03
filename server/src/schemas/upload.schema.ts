@@ -1,7 +1,7 @@
 import { Type } from 'typebox';
 import { IdParams, NoContent, Nullable, Uuid, errorResponses } from './common.schema.js';
 
-export const UPLOAD_PURPOSES = ['avatar', 'rideCover', 'post', 'groupCover', 'other'] as const;
+export const UPLOAD_PURPOSES = ['avatar', 'rideCover', 'post', 'groupCover', 'place', 'other'] as const;
 
 export const UploadResult = Type.Object({
   id: Uuid,

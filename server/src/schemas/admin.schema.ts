@@ -17,6 +17,7 @@ import {
 import { Banner } from './home.schema.js';
 import { CommunityPost } from './post.schema.js';
 import { Group } from './group.schema.js';
+import { Place } from './place.schema.js';
 import { Ride, RideListQuery, RideRequestPage } from './ride.schema.js';
 import { UserProfile } from './user.schema.js';
 
@@ -29,6 +30,7 @@ export const AdminStats = Type.Object({
   posts: Type.Integer(),
   comments: Type.Integer(),
   groups: Type.Integer(),
+  places: Type.Integer(),
   newRidersLast7Days: Type.Integer(),
 });
 
@@ -145,6 +147,18 @@ export const adminSchemas = {
   removeGroup: {
     tags,
     summary: 'Remove a group and its chat',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  places: {
+    tags,
+    summary: 'All shared places, newest first',
+    querystring: PageQuery,
+    response: { 200: Paginated(Place), ...errorResponses(400, 401, 403) },
+  },
+  removePlace: {
+    tags,
+    summary: 'Remove a place and its reviews',
     params: IdParams,
     response: { 204: NoContent, ...errorResponses(401, 403, 404) },
   },

@@ -16,6 +16,7 @@ export class AdminRepository {
       posts,
       comments,
       groups,
+      places,
       newRidersLast7Days,
     ] = await this.prisma.$transaction([
       this.prisma.user.count({ where: { role: 'user' } }),
@@ -26,6 +27,7 @@ export class AdminRepository {
       this.prisma.post.count(),
       this.prisma.comment.count(),
       this.prisma.group.count(),
+      this.prisma.place.count(),
       this.prisma.user.count({ where: { role: 'user', createdAt: { gte: weekAgo } } }),
     ]);
     return {
@@ -37,6 +39,7 @@ export class AdminRepository {
       posts,
       comments,
       groups,
+      places,
       newRidersLast7Days,
     };
   }
