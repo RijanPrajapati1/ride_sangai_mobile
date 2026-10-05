@@ -11,7 +11,7 @@
 
 export const UserRole = {
   user: 'user',
-  admin: 'admin'
+  superadmin: 'superadmin'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -153,3 +153,22 @@ export const PlaceCategory = {
 } as const
 
 export type PlaceCategory = (typeof PlaceCategory)[keyof typeof PlaceCategory]
+
+
+export const FeedbackCategory = {
+  bug: 'bug',
+  idea: 'idea',
+  praise: 'praise',
+  other: 'other'
+} as const
+
+export type FeedbackCategory = (typeof FeedbackCategory)[keyof typeof FeedbackCategory]
+
+
+export const FeedbackStatus = {
+  open: 'open',
+  inProgress: 'inProgress',
+  resolved: 'resolved'
+} as const
+
+export type FeedbackStatus = (typeof FeedbackStatus)[keyof typeof FeedbackStatus]

@@ -10,7 +10,7 @@ import type { AuthContext } from '../services/token.service.js';
  *   - 'required' (default) — a valid access token is needed; `request.user` is set.
  *   - 'optional' — `request.user` is set when a valid token is sent, else null.
  *   - 'none'     — public; no token is read.
- * `roles` additionally restricts the route (e.g. `['admin']`).
+ * `roles` additionally restricts the route (e.g. `['superadmin']`).
  * Secure by default: a route that forgets `config.auth` requires a login.
  */
 export type AuthMode = 'required' | 'optional' | 'none';

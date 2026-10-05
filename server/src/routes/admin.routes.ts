@@ -2,10 +2,10 @@ import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { AdminController } from '../controllers/admin.controller.js';
 import { adminSchemas as s } from '../schemas/admin.schema.js';
 
-/** /api/v1/admin… — every route here requires the admin role. */
+/** /api/v1/superadmin… (the web dashboard) — every route here requires the superadmin role. */
 const adminRoutes: FastifyPluginAsyncTypebox = async (app) => {
   app.addHook('onRoute', (route) => {
-    route.config = { ...(route.config ?? {}), auth: 'required', roles: ['admin'] } as typeof route.config;
+    route.config = { ...(route.config ?? {}), auth: 'required', roles: ['superadmin'] } as typeof route.config;
   });
 
   const { admin, ride, post, group, place } = app.services;

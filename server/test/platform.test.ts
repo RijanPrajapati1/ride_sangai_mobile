@@ -95,16 +95,16 @@ describe('admin', () => {
     const admin = await registerAdmin(ctx.app, ctx.prisma);
     const rider = await registerUser(ctx.app);
     expect(
-      (await inject({ method: 'GET', url: '/api/v1/admin/stats', headers: rider.headers })).statusCode,
+      (await inject({ method: 'GET', url: '/api/v1/superadmin/stats', headers: rider.headers })).statusCode,
     ).toBe(403);
 
     const stats = (
-      await inject({ method: 'GET', url: '/api/v1/admin/stats', headers: admin.headers })
+      await inject({ method: 'GET', url: '/api/v1/superadmin/stats', headers: admin.headers })
     ).json();
-    expect(stats).toMatchObject({ riders: 1, admins: 1, rides: 0, posts: 0 });
+    expect(stats).toMatchObject({ riders: 1, superadmins: 1, rides: 0, posts: 0 });
 
     const users = (
-      await inject({ method: 'GET', url: '/api/v1/admin/users', headers: admin.headers })
+      await inject({ method: 'GET', url: '/api/v1/superadmin/users', headers: admin.headers })
     ).json();
     expect(users.items.map((u: { id: string; email: string }) => [u.id, u.email])).toEqual([
       [rider.id, rider.email],
@@ -112,7 +112,7 @@ describe('admin', () => {
 
     const banner = await inject({
       method: 'POST',
-      url: '/api/v1/admin/banners',
+      url: '/api/v1/superadmin/banners',
       headers: admin.headers,
       payload: { title: 'Safety first', category: 'cycling', ctaLabel: 'Read safety tips' },
     });
@@ -128,18 +128,18 @@ describe('admin', () => {
 
     const self = await inject({
       method: 'DELETE',
-      url: `/api/v1/admin/users/${admin.id}`,
+      url: `/api/v1/superadmin/users/${admin.id}`,
       headers: admin.headers,
     });
     expect(self.json().error.code).toBe('CANNOT_REMOVE_SELF');
     expect(
-      (await inject({ method: 'DELETE', url: `/api/v1/admin/users/${rider.id}`, headers: admin.headers }))
+      (await inject({ method: 'DELETE', url: `/api/v1/superadmin/users/${rider.id}`, headers: admin.headers }))
         .statusCode,
     ).toBe(204);
     // The removed rider's token stops working immediately.
     expect((await inject({ method: 'GET', url: '/api/v1/me', headers: rider.headers })).statusCode).toBe(401);
     const log = (
-      await inject({ method: 'GET', url: '/api/v1/admin/audit-log', headers: admin.headers })
+      await inject({ method: 'GET', url: '/api/v1/superadmin/audit-log', headers: admin.headers })
     ).json();
     expect(log.items[0]).toMatchObject({ action: 'user.remove', targetId: rider.id });
   });

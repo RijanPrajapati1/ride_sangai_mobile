@@ -152,3 +152,9 @@ export type PlaceReview = Prisma.PlaceReviewModel
  * "Want to go" bookmarks.
  */
 export type PlaceSave = Prisma.PlaceSaveModel
+/**
+ * Model Feedback
+ * Feedback riders send from the app (Settings → Send feedback); triaged in
+ * the admin dashboard.
+ */
+export type Feedback = Prisma.FeedbackModel

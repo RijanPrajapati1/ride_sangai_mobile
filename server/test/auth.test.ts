@@ -18,7 +18,8 @@ describe('auth', () => {
       name: 'Alex Shrestha',
       email: 'alex@example.com',
       avatarUrl: '',
-      isAdmin: false,
+      role: 'user',
+      isSuperadmin: false,
     });
     expect(body.tokenType).toBe('Bearer');
     expect(body.refreshToken).toEqual(expect.any(String));

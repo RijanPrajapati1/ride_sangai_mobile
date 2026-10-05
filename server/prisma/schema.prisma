@@ -28,9 +28,11 @@ datasource db {
 
 // --- Enums -------------------------------------------------------------------
 
+/// `superadmin` runs the platform from the web dashboard. Everyone else is a
+/// `user`, who is the admin of what they create (posts, rides, places, groups).
 enum UserRole {
   user
-  admin
+  superadmin
 
   @@map("user_role")
 }
@@ -162,6 +164,23 @@ enum PlaceCategory {
   @@map("place_category")
 }
 
+enum FeedbackCategory {
+  bug
+  idea
+  praise
+  other
+
+  @@map("feedback_category")
+}
+
+enum FeedbackStatus {
+  open
+  inProgress @map("in_progress")
+  resolved
+
+  @@map("feedback_status")
+}
+
 // --- Users & auth --------------------------------------------------------------
 
 model User {
@@ -211,6 +230,7 @@ model User {
   places              Place[]
   placeReviews        PlaceReview[]
   placeSaves          PlaceSave[]
+  feedback            Feedback[]
 
   @@index([role, name, id])
   @@index([followersCount(sort: Desc), id])
@@ -691,4 +711,29 @@ model PlaceSave {
   @@id([placeId, userId])
   @@index([userId, createdAt(sort: Desc)])
   @@map("place_saves")
+}
+
+/// Feedback riders send from the app (Settings → Send feedback); triaged in
+/// the admin dashboard.
+model Feedback {
+  id         String           @id @default(uuid(7)) @db.Uuid
+  /// Kept when the account is deleted, so the feedback stays readable.
+  userId     String?          @map("user_id") @db.Uuid
+  user       User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category   FeedbackCategory @default(other)
+  /// 1–5 stars, optional.
+  rating     Int?             @db.SmallInt
+  message    String           @db.VarChar(2000)
+  platform   String?          @db.VarChar(20)
+  appVersion String?          @map("app_version") @db.VarChar(40)
+  status     FeedbackStatus   @default(open)
+  adminNote  String           @default("") @map("admin_note") @db.VarChar(1000)
+  resolvedAt DateTime?        @map("resolved_at") @db.Timestamptz(3)
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([status, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([userId])
+  @@map("feedback")
 }

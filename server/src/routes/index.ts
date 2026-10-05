@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import adminRoutes from './admin.routes.js';
 import authRoutes from './auth.routes.js';
 import conversationRoutes from './conversation.routes.js';
+import feedbackRoutes from './feedback.routes.js';
 import groupRoutes from './group.routes.js';
 import healthRoutes from './health.routes.js';
 import homeRoutes from './home.routes.js';
@@ -27,7 +28,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   await app.register(placeRoutes, { prefix: API_PREFIX });
   await app.register(notificationRoutes, { prefix: API_PREFIX });
   await app.register(homeRoutes, { prefix: API_PREFIX });
-  await app.register(adminRoutes, { prefix: `${API_PREFIX}/admin` });
+  await app.register(feedbackRoutes, { prefix: API_PREFIX });
+  await app.register(adminRoutes, { prefix: `${API_PREFIX}/superadmin` });
   await app.register(uploadRoutes);
   await app.register(realtimeRoutes, { prefix: API_PREFIX });
 }

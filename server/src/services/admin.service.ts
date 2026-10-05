@@ -102,8 +102,8 @@ export class AdminService {
     if (userId === admin.id) throw conflict('You cannot remove your own account here.', 'CANNOT_REMOVE_SELF');
     const target = await this.users.repo.findCredentials(userId);
     if (!target) throw notFound('This rider could not be found.', 'USER_NOT_FOUND');
-    if (target.role === 'admin')
-      throw forbidden('Demote this admin before removing them.', 'CANNOT_REMOVE_ADMIN');
+    if (target.role === 'superadmin')
+      throw forbidden('Demote this superadmin before removing them.', 'CANNOT_REMOVE_SUPERADMIN');
     await audit(this.uow.prisma, {
       actorId: admin.id,
       action: 'user.remove',

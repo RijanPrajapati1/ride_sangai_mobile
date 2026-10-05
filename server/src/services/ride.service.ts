@@ -284,7 +284,7 @@ export class RideService {
   }
 
   private assertCanManage(ride: { organizerId: string }, actor: Actor): void {
-    if (ride.organizerId !== actor.id && actor.role !== 'admin') {
+    if (ride.organizerId !== actor.id && actor.role !== 'superadmin') {
       throw forbidden('Only the organizer can manage this ride.', 'NOT_RIDE_ORGANIZER');
     }
   }
@@ -296,7 +296,7 @@ export class RideService {
       const current = await this.repo.findById(rideId, ctx.db);
       if (!current) throw RIDE_NOT_FOUND();
       this.assertCanManage(current, actor);
-      if (current.startsAt <= new Date() && actor.role !== 'admin') {
+      if (current.startsAt <= new Date() && actor.role !== 'superadmin') {
         throw conflict('This ride has already started and can no longer be edited.', 'RIDE_ALREADY_STARTED');
       }
 
@@ -575,7 +575,7 @@ export class RideService {
           entityType: 'ride',
           entityId: decided.rideId,
         });
-        if (actor.role === 'admin' && request.ride.organizerId !== actor.id) {
+        if (actor.role === 'superadmin' && request.ride.organizerId !== actor.id) {
           await audit(ctx.db, {
             actorId: actor.id,
             action: `rideRequest.${status}`,

@@ -1,5 +1,14 @@
 import { Type } from 'typebox';
-import { IdParams, NoContent, Nullable, Text, Timestamp, Uuid, errorResponses } from './common.schema.js';
+import {
+  IdParams,
+  NoContent,
+  Nullable,
+  Text,
+  Timestamp,
+  UserRoleSchema,
+  Uuid,
+  errorResponses,
+} from './common.schema.js';
 
 export const Email = Type.String({ format: 'email', maxLength: 254, description: 'Case-insensitive.' });
 
@@ -19,7 +28,8 @@ export const AuthUser = Type.Object({
   name: Type.String(),
   email: Type.String(),
   avatarUrl: Type.String({ description: "'' when unset." }),
-  isAdmin: Type.Boolean(),
+  role: UserRoleSchema,
+  isSuperadmin: Type.Boolean({ description: 'Can use the superadmin web dashboard.' }),
 });
 
 export const AuthResponse = Type.Object({

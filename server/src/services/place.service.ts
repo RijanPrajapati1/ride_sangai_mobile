@@ -216,7 +216,7 @@ export class PlaceService {
   private async assertCanManage(placeId: string, actor: Actor) {
     const place = await this.repo.findOwner(placeId);
     if (!place) throw PLACE_NOT_FOUND();
-    if (place.authorId !== actor.id && actor.role !== 'admin') {
+    if (place.authorId !== actor.id && actor.role !== 'superadmin') {
       throw forbidden('Only the person who shared this place can change it.', 'NOT_PLACE_AUTHOR');
     }
     return place;

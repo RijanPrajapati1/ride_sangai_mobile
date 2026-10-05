@@ -227,10 +227,10 @@ describe('explore places', () => {
     expect(coords.statusCode).toBe(400);
 
     expect(
-      (await inject({ method: 'GET', url: '/api/v1/admin/stats', headers: admin.headers })).json().places,
+      (await inject({ method: 'GET', url: '/api/v1/superadmin/stats', headers: admin.headers })).json().places,
     ).toBe(1);
     expect(
-      (await inject({ method: 'DELETE', url: `/api/v1/admin/places/${place.id}`, headers: admin.headers }))
+      (await inject({ method: 'DELETE', url: `/api/v1/superadmin/places/${place.id}`, headers: admin.headers }))
         .statusCode,
     ).toBe(204);
     const gone = await inject({ method: 'GET', url: `/api/v1/places/${place.id}`, headers: visitor.headers });

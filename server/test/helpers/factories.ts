@@ -46,7 +46,7 @@ export async function registerAdmin(
   overrides: Parameters<typeof registerUser>[1] = {},
 ) {
   const user = await registerUser(app, { name: 'Admin', ...overrides });
-  await prisma.user.update({ where: { id: user.id }, data: { role: 'admin' } });
+  await prisma.user.update({ where: { id: user.id }, data: { role: 'superadmin' } });
   return user;
 }
 

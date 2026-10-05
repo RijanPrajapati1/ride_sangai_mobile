@@ -23,7 +23,7 @@ import { UserProfile } from './user.schema.js';
 
 export const AdminStats = Type.Object({
   riders: Type.Integer(),
-  admins: Type.Integer(),
+  superadmins: Type.Integer(),
   rides: Type.Integer(),
   upcomingRides: Type.Integer(),
   pendingRequests: Type.Integer(),

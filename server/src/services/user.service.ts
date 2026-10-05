@@ -60,7 +60,7 @@ export function toPreferences(row: Preferences): Preferences {
  */
 export function toUserProfile(row: ProfileRecord, viewer: Viewer) {
   const isMe = viewer.id === row.id;
-  const privileged = isMe || viewer.role === 'admin';
+  const privileged = isMe || viewer.role === 'superadmin';
   const isPrivate = !row.publicProfile;
   const hidePrivate = isPrivate && !privileged;
   const hideStats = (!row.showRidingStats || isPrivate) && !privileged;
