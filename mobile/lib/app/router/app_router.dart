@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/constants/app_constants.dart';
 import '../../features/admin/presentation/screens/admin_dashboard_screen.dart';
 import '../../features/authentication/presentation/providers/auth_providers.dart';
 import '../../features/authentication/presentation/screens/forgot_password_screen.dart';
@@ -32,13 +32,25 @@ import '../app_shell.dart';
 import '../splash_screen.dart';
 import 'route_names.dart';
 
+/// Created once for the app's lifetime. Rebuilding the router on every auth
+/// change would recreate the current screen and wipe what the user typed
+/// (for example after a failed login). Instead, [refresh] re-runs `redirect`
+/// only when something that affects navigation changes.
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authControllerProvider);
-  final onboardingAsync = ref.watch(onboardingCompleteProvider);
+  final refresh = ValueNotifier<int>(0);
+  ref.listen(
+    authControllerProvider.select((auth) => (auth.status, auth.user?.isAdmin)),
+    (_, _) => refresh.value++,
+  );
+  ref.listen(onboardingCompleteProvider, (_, _) => refresh.value++);
+  ref.onDispose(refresh.dispose);
 
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: RouteNames.splash,
+    refreshListenable: refresh,
     redirect: (context, state) {
+      final authState = ref.read(authControllerProvider);
+      final onboardingAsync = ref.read(onboardingCompleteProvider);
       final location = state.matchedLocation;
       final isAuthRoute = location == RouteNames.login ||
           location == RouteNames.register ||
@@ -147,11 +159,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: RouteNames.profile,
-              builder: (context, state) => const ProfileScreen(userId: AppConstants.currentUserId),
+              builder: (context, state) => ProfileScreen(userId: ref.read(currentUserIdProvider)),
             ),
           ]),
         ],
       ),
     ],
   );
+  ref.onDispose(router.dispose);
+  return router;
 });

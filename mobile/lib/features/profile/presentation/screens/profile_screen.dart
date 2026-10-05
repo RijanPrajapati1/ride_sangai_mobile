@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -19,23 +18,23 @@ import '../../../messages/presentation/providers/message_providers.dart';
 import '../../../rides/presentation/providers/ride_providers.dart';
 import '../../domain/entities/user_profile.dart';
 import '../providers/profile_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final String userId;
 
   const ProfileScreen({super.key, required this.userId});
 
-  bool get _isOwnProfile => userId == AppConstants.currentUserId;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isOwnProfile = userId == ref.watch(currentUserIdProvider);
     final profileAsync = ref.watch(profileProvider(userId));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isOwnProfile ? 'My Profile' : 'Profile'),
-        automaticallyImplyLeading: !_isOwnProfile,
-        actions: _isOwnProfile
+        title: Text(isOwnProfile ? 'My Profile' : 'Profile'),
+        automaticallyImplyLeading: !isOwnProfile,
+        actions: isOwnProfile
             ? [
                 IconButton(
                   icon: const Icon(Icons.settings_outlined),
@@ -47,7 +46,7 @@ class ProfileScreen extends ConsumerWidget {
       body: profileAsync.when(
         loading: () => const LoadingWidget(),
         error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(profileProvider(userId))),
-        data: (profile) => _ProfileBody(profile: profile, isOwnProfile: _isOwnProfile),
+        data: (profile) => _ProfileBody(profile: profile, isOwnProfile: isOwnProfile),
       ),
     );
   }

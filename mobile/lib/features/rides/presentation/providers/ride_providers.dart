@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/dashboard_category_provider.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../data/datasources/ride_local_datasource.dart';
 import '../../data/repositories/ride_repository_impl.dart';
@@ -10,6 +9,7 @@ import '../../domain/entities/ride_participant.dart';
 import '../../domain/repositories/ride_repository.dart';
 import '../../domain/usecases/cancel_ride_request.dart';
 import '../../domain/usecases/request_to_join_ride.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 
 final rideLocalDataSourceProvider = Provider<RideLocalDataSource>((ref) {
   return RideLocalDataSource();
@@ -40,7 +40,7 @@ final rideParticipantsProvider = FutureProvider.family<List<RideParticipant>, St
 });
 
 final organizedRidesProvider = FutureProvider<List<Ride>>((ref) {
-  return ref.watch(rideRepositoryProvider).getOrganizedRides(AppConstants.currentUserId);
+  return ref.watch(rideRepositoryProvider).getOrganizedRides(ref.watch(currentUserIdProvider));
 });
 
 final userOrganizedRidesProvider = FutureProvider.family<List<Ride>, String>((ref, userId) {
@@ -48,11 +48,11 @@ final userOrganizedRidesProvider = FutureProvider.family<List<Ride>, String>((re
 });
 
 final joinedRidesProvider = FutureProvider<List<Ride>>((ref) {
-  return ref.watch(rideRepositoryProvider).getJoinedRides(AppConstants.currentUserId);
+  return ref.watch(rideRepositoryProvider).getJoinedRides(ref.watch(currentUserIdProvider));
 });
 
 final pastRidesProvider = FutureProvider<List<Ride>>((ref) {
-  return ref.watch(rideRepositoryProvider).getPastRides(AppConstants.currentUserId);
+  return ref.watch(rideRepositoryProvider).getPastRides(ref.watch(currentUserIdProvider));
 });
 
 /// Search + filter state for the ride discovery screen.

@@ -21,6 +21,18 @@ class AppConfig {
     return isAndroid ? 'http://10.0.2.2:4000/api/v1' : 'http://localhost:4000/api/v1';
   }
 
+  /// Image URLs from the API are built from the server's `PUBLIC_URL`. In
+  /// development that is often `http://localhost:4000`, which a phone or the
+  /// Android emulator can't reach. Such URLs are pointed at the host the app
+  /// already uses for the API. Every other URL is returned unchanged.
+  static String mediaUrl(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !const {'localhost', '127.0.0.1'}.contains(uri.host)) return url;
+    final api = Uri.parse(apiBaseUrl);
+    if (api.host == uri.host) return url;
+    return uri.replace(scheme: api.scheme, host: api.host, port: api.port).toString();
+  }
+
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 30);
   static const Duration sendTimeout = Duration(seconds: 30);

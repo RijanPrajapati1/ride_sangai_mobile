@@ -9,6 +9,7 @@ import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../utils/error_message.dart';
 import '../providers/message_providers.dart';
 import '../widgets/message_bubble.dart';
 
@@ -25,6 +26,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
   bool _sending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Loading the messages already marks the chat read on the server; this
+    // makes sure the inbox badges refresh once we're in.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await ref.read(messageActionsControllerProvider).markRead(widget.conversationId);
+      } catch (_) {
+        // Not worth bothering the rider about; the next inbox refresh catches up.
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -49,18 +64,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (text.isEmpty || _sending) return;
     setState(() => _sending = true);
     _textController.clear();
-    await ref.read(messageActionsControllerProvider).sendMessage(conversationId: widget.conversationId, text: text);
-    if (mounted) {
-      setState(() => _sending = false);
+    try {
+      await ref.read(messageActionsControllerProvider).sendMessage(conversationId: widget.conversationId, text: text);
       _scrollToBottom();
+    } catch (e) {
+      if (!mounted) return;
+      // Give the text back so the rider can retry.
+      if (_textController.text.isEmpty) _textController.text = text;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(e))));
+    } finally {
+      if (mounted) setState(() => _sending = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final messagesAsync = ref.watch(conversationMessagesProvider(widget.conversationId));
-    final conversationsAsync = ref.watch(conversationsProvider);
-    final conversation = conversationsAsync.value?.where((c) => c.id == widget.conversationId).firstOrNull;
+    final conversation = ref.watch(conversationProvider(widget.conversationId)).value;
 
     return Scaffold(
       appBar: AppBar(
@@ -75,6 +95,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ],
           ),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Refresh',
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.read(messageActionsControllerProvider).refreshConversation(widget.conversationId),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -82,7 +109,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: messagesAsync.when(
               loading: () => const LoadingWidget(),
               error: (e, st) => AppErrorWidget(
-                message: e.toString(),
+                message: errorMessage(e),
                 onRetry: () => ref.invalidate(conversationMessagesProvider(widget.conversationId)),
               ),
               data: (messages) {
@@ -151,8 +178,4 @@ class _Composer extends StatelessWidget {
       ),
     );
   }
-}
-
-extension _FirstOrNull<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }

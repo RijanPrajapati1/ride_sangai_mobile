@@ -1,5 +1,6 @@
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/place_category.dart';
+import '../../../../core/utils/json_parsing.dart';
 import '../../domain/entities/place.dart';
 
 /// Data-layer shape of a place. `fromJson`/`toJson` match the API's
@@ -62,25 +63,28 @@ class PlaceDto {
     return PlaceDto(
       id: json['id'] as String,
       name: json['name'] as String,
-      description: json['description'] as String,
-      category: PlaceCategory.values.byName(json['category'] as String),
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-      locationName: json['locationName'] as String,
-      photos: List<String>.from(json['photos'] as List? ?? const []),
+      description: json['description'] as String? ?? '',
+      category: enumByName(PlaceCategory.values, json['category'], PlaceCategory.other),
+      latitude: toDouble(json['latitude']),
+      longitude: toDouble(json['longitude']),
+      locationName: json['locationName'] as String? ?? '',
+      photos: stringList(json['photos']),
+      // Unknown activities (a newer server) are skipped rather than guessed.
       activities: [
-        for (final value in json['activities'] as List? ?? const []) DashboardCategory.values.byName(value as String),
+        for (final value in json['activities'] as List? ?? const [])
+          for (final activity in DashboardCategory.values)
+            if (activity.name == value) activity,
       ],
       bestTime: json['bestTime'] as String?,
       tips: json['tips'] as String?,
       entryFee: json['entryFee'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
+      averageRating: toDoubleOrNull(json['averageRating']),
       reviewCount: json['reviewCount'] as int? ?? 0,
       worthItPercent: json['worthItPercent'] as int?,
       saveCount: json['saveCount'] as int? ?? 0,
-      distanceKm: (json['distanceKm'] as num?)?.toDouble(),
+      distanceKm: toDoubleOrNull(json['distanceKm']),
       authorId: json['authorId'] as String,
-      authorName: json['authorName'] as String,
+      authorName: json['authorName'] as String? ?? '',
       authorAvatarUrl: json['authorAvatarUrl'] as String? ?? '',
       isMine: json['isMine'] as bool? ?? false,
       isSaved: json['isSaved'] as bool? ?? false,
@@ -91,11 +95,42 @@ class PlaceDto {
               rating: myReview['rating'] as int,
               worthIt: myReview['worthIt'] as bool,
             ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: parseDate(json['createdAt']),
     );
   }
 
-  /// Request body for POST /places.
+  /// The full API `Place` shape.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'category': category.name,
+        'latitude': latitude,
+        'longitude': longitude,
+        'locationName': locationName,
+        'photos': photos,
+        'coverImageUrl': photos.isEmpty ? null : photos.first,
+        'activities': [for (final a in activities) a.name],
+        'bestTime': bestTime,
+        'tips': tips,
+        'entryFee': entryFee,
+        'averageRating': averageRating,
+        'reviewCount': reviewCount,
+        'worthItPercent': worthItPercent,
+        'saveCount': saveCount,
+        'distanceKm': distanceKm,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatarUrl': authorAvatarUrl,
+        'isMine': isMine,
+        'isSaved': isSaved,
+        'myReview': myReview == null
+            ? null
+            : {'id': myReview!.id, 'rating': myReview!.rating, 'worthIt': myReview!.worthIt},
+        'createdAt': toApiDate(createdAt),
+      };
+
+  /// Request body for POST /places (and, field by field, PATCH /places/:id).
   Map<String, dynamic> toCreateJson() => {
         'name': name,
         'description': description,

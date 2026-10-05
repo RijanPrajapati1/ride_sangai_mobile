@@ -5,5 +5,5 @@ class RequestToJoinRide {
 
   const RequestToJoinRide(this._repository);
 
-  Future<void> call(String rideId) => _repository.requestToJoin(rideId);
+  Future<void> call(String rideId, {String? message}) => _repository.requestToJoin(rideId, message: message);
 }

@@ -150,6 +150,20 @@ describe('auth', () => {
     expect(docs.json().paths['/api/v1/auth/login']).toBeDefined();
   });
 
+  it('answers CORS preflights for protected routes without a token', async () => {
+    const res = await ctx.app.inject({
+      method: 'OPTIONS',
+      url: '/api/v1/auth/me',
+      headers: {
+        origin: 'http://localhost:5555',
+        'access-control-request-method': 'GET',
+        'access-control-request-headers': 'authorization',
+      },
+    });
+    expect(res.statusCode).toBe(204);
+    expect(res.headers['access-control-allow-origin']).toBe('http://localhost:5555');
+  });
+
   it('returns a consistent 404 envelope for unknown routes', async () => {
     const res = await ctx.app.inject({ method: 'GET', url: '/api/v1/nope' });
     expect(res.statusCode).toBe(404);

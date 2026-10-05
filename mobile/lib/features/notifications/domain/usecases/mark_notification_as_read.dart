@@ -5,5 +5,6 @@ class MarkNotificationAsRead {
 
   const MarkNotificationAsRead(this._repository);
 
-  Future<void> call(String id) => _repository.markAsRead(id);
+  /// Returns the new unread count.
+  Future<int> call(String id) => _repository.markAsRead(id);
 }

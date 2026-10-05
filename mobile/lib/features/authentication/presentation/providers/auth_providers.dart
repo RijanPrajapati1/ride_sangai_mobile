@@ -137,3 +137,9 @@ class AuthController extends StateNotifier<AuthState> {
 final authControllerProvider = StateNotifierProvider<AuthController, AuthState>((ref) {
   return AuthController(ref.watch(authRepositoryProvider), ref.watch(sessionEventsProvider));
 });
+
+/// Id of the signed-in user ('' while signed out). Use this instead of a
+/// hard-coded id when asking for "my" profile, rides or requests.
+final currentUserIdProvider = Provider<String>((ref) {
+  return ref.watch(authControllerProvider.select((auth) => auth.user?.id ?? ''));
+});

@@ -6,5 +6,5 @@ class GetNotifications {
 
   const GetNotifications(this._repository);
 
-  Future<List<NotificationItem>> call() => _repository.getNotifications();
+  Future<NotificationFeed> call() => _repository.getNotifications();
 }

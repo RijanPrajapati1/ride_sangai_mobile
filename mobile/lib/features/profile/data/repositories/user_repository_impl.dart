@@ -1,81 +1,109 @@
+import '../../../../core/enums/dashboard_category.dart';
+import '../../../../core/network/paginated.dart';
+import '../../domain/entities/follow_connection.dart';
 import '../../domain/entities/user_preferences.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../datasources/user_local_datasource.dart';
+import '../datasources/user_remote_datasource.dart';
+import '../dto/user_preferences_dto.dart';
 import '../dto/user_profile_dto.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  final UserLocalDataSource _dataSource;
+  /// Page size used when the admin list is loaded in full.
+  static const _adminPageSize = 100;
 
-  UserRepositoryImpl(this._dataSource);
+  final UserRemoteDataSource _remote;
+
+  UserRepositoryImpl(this._remote);
 
   @override
-  Future<UserProfile> getProfile(String userId) async {
-    final dto = await _dataSource.getProfile(userId);
-    return dto.toEntity();
-  }
+  Future<UserProfile> getMyProfile() async => (await _remote.getMe()).toEntity();
+
+  @override
+  Future<UserProfile> getProfile(String userId) async => (await _remote.getUser(userId)).toEntity();
 
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
-    final dto = UserProfileDto(
-      id: profile.id,
-      name: profile.name,
-      email: profile.email,
-      avatarUrl: profile.avatarUrl,
-      bio: profile.bio,
-      location: profile.location,
-      experienceLevel: profile.experienceLevel,
-      preferredRideType: profile.preferredRideType,
-      cyclingInterests: profile.cyclingInterests,
-      totalRides: profile.totalRides,
-      completedRides: profile.completedRides,
-      followersCount: profile.followersCount,
-      followingCount: profile.followingCount,
-      isFollowing: profile.isFollowing,
-    );
-    final updated = await _dataSource.updateProfile(dto);
+    final updated = await _remote.updateMe(UserProfileDto.toUpdateJson(profile));
     return updated.toEntity();
   }
 
   @override
-  Future<void> followUser(String userId) => _dataSource.setFollowing(userId, true);
+  Future<void> deleteAccount(String password) => _remote.deleteMe(password);
 
   @override
-  Future<void> unfollowUser(String userId) => _dataSource.setFollowing(userId, false);
+  Future<void> followUser(String userId) => _remote.followUser(userId);
 
   @override
-  Future<List<UserProfile>> getRecommendedRiders() async {
-    final dtos = await _dataSource.getRecommendedRiders();
+  Future<void> unfollowUser(String userId) => _remote.unfollowUser(userId);
+
+  @override
+  Future<List<UserProfile>> getRecommendedRiders({DashboardCategory? category}) async {
+    final dtos = await _remote.getRecommended(category: category?.name);
     return dtos.map((d) => d.toEntity()).toList();
   }
 
   @override
-  Future<UserPreferences> getPreferences() async {
-    final dto = await _dataSource.getPreferences();
-    return dto.toEntity();
+  Future<Paginated<UserProfile>> searchUsers(String query, {String? cursor}) async {
+    final page = await _remote.searchUsers(query: query.trim().isEmpty ? null : query.trim(), cursor: cursor);
+    return Paginated(items: page.items.map((d) => d.toEntity()).toList(), nextCursor: page.nextCursor);
   }
 
   @override
+  Future<Paginated<FollowConnection>> getFollowers(String userId, {String? cursor}) async {
+    final page = await _remote.getFollowers(userId, cursor: cursor);
+    return Paginated(items: page.items.map((d) => d.toEntity()).toList(), nextCursor: page.nextCursor);
+  }
+
+  @override
+  Future<Paginated<FollowConnection>> getFollowing(String userId, {String? cursor}) async {
+    final page = await _remote.getFollowing(userId, cursor: cursor);
+    return Paginated(items: page.items.map((d) => d.toEntity()).toList(), nextCursor: page.nextCursor);
+  }
+
+  @override
+  Future<UserPreferences> getPreferences() async => (await _remote.getPreferences()).toEntity();
+
+  @override
   Future<UserPreferences> updatePreferences(UserPreferences preferences) async {
-    final dto = await _dataSource.getPreferences();
-    final updatedDto = dto.copyWith(
-      pushRideReminders: preferences.pushRideReminders,
-      pushMessages: preferences.pushMessages,
-      pushCommunityActivity: preferences.pushCommunityActivity,
-      darkModeEnabled: preferences.darkModeEnabled,
-      publicProfile: preferences.publicProfile,
-      showRidingStats: preferences.showRidingStats,
-    );
-    final saved = await _dataSource.updatePreferences(updatedDto);
+    final saved = await _remote.replacePreferences(UserPreferencesDto.fromEntity(preferences));
     return saved.toEntity();
   }
 
   @override
+  Future<UserPreferences> patchPreferences({
+    bool? pushRideReminders,
+    bool? pushMessages,
+    bool? pushCommunityActivity,
+    bool? darkModeEnabled,
+    bool? publicProfile,
+    bool? showRidingStats,
+  }) async {
+    final changes = <String, bool>{
+      'pushRideReminders': ?pushRideReminders,
+      'pushMessages': ?pushMessages,
+      'pushCommunityActivity': ?pushCommunityActivity,
+      'darkModeEnabled': ?darkModeEnabled,
+      'publicProfile': ?publicProfile,
+      'showRidingStats': ?showRidingStats,
+    };
+    if (changes.isEmpty) return getPreferences();
+    return (await _remote.patchPreferences(changes)).toEntity();
+  }
+
+  /// Loads every page of `GET /admin/users` (alphabetical).
+  @override
   Future<List<UserProfile>> getAllUsers() async {
-    final dtos = await _dataSource.getAllUsers();
-    return dtos.map((d) => d.toEntity()).toList();
+    final users = <UserProfile>[];
+    String? cursor;
+    do {
+      final page = await _remote.getAdminUsers(cursor: cursor, limit: _adminPageSize);
+      users.addAll(page.items.map((d) => d.toEntity()));
+      cursor = page.nextCursor;
+    } while (cursor != null);
+    return users;
   }
 
   @override
-  Future<void> removeUser(String userId) => _dataSource.removeUser(userId);
+  Future<void> removeUser(String userId) => _remote.removeUser(userId);
 }

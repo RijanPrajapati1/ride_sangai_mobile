@@ -5,6 +5,9 @@ class Conversation {
   final String userAvatarUrl;
   final String lastMessage;
   final DateTime lastMessageTime;
+
+  /// Who sent the last message; null until the first message.
+  final String? lastMessageSenderId;
   final int unreadCount;
 
   const Conversation({
@@ -14,12 +17,14 @@ class Conversation {
     required this.userAvatarUrl,
     required this.lastMessage,
     required this.lastMessageTime,
+    this.lastMessageSenderId,
     this.unreadCount = 0,
   });
 
   Conversation copyWith({
     String? lastMessage,
     DateTime? lastMessageTime,
+    String? lastMessageSenderId,
     int? unreadCount,
   }) {
     return Conversation(
@@ -29,6 +34,7 @@ class Conversation {
       userAvatarUrl: userAvatarUrl,
       lastMessage: lastMessage ?? this.lastMessage,
       lastMessageTime: lastMessageTime ?? this.lastMessageTime,
+      lastMessageSenderId: lastMessageSenderId ?? this.lastMessageSenderId,
       unreadCount: unreadCount ?? this.unreadCount,
     );
   }

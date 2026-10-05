@@ -14,7 +14,4 @@ class AppConstants {
   /// the "Try Demo Login" button.
   static const String demoEmail = 'demo@bikersync.app';
   static const String demoPassword = 'biker123';
-
-  static const String currentUserId = 'u_001';
-  static const String adminUserId = 'admin_001';
 }
