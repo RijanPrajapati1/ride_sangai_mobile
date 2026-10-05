@@ -9,7 +9,9 @@ import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../providers/community_providers.dart';
+import '../widgets/community_action_helpers.dart';
 import '../widgets/community_post_card.dart';
+import '../widgets/post_composer_sheet.dart';
 
 class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key});
@@ -22,6 +24,12 @@ class CommunityScreen extends ConsumerWidget {
     return AppScaffold(
       safeArea: false,
       appBar: AppBar(title: const Text('Community')),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'community_new_post',
+        tooltip: 'New post',
+        onPressed: () => showPostComposerSheet(context),
+        child: const Icon(Icons.edit_outlined),
+      ),
       body: postsAsync.when(
         loading: () => const LoadingWidget(),
         error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(communityPostsProvider)),
@@ -46,11 +54,21 @@ class CommunityScreen extends ConsumerWidget {
                     post: post,
                     onTap: () => context.push(RouteNames.communityPostPath(post.id)),
                     onComment: () => context.push(RouteNames.communityPostPath(post.id)),
-                    onLike: () => actions.toggleLike(post.id, isCurrentlyLiked: post.isLiked),
+                    onLike: () => runCommunityAction(
+                      context,
+                      () => actions.toggleLike(post.id, isCurrentlyLiked: post.isLiked),
+                    ),
                     onAuthorTap: () => context.push(RouteNames.userProfilePath(post.userId)),
                     onShare: () => ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Link copied to clipboard')),
                     ),
+                    onEdit: post.isMine ? () => showPostComposerSheet(context, post: post) : null,
+                    onDelete: post.isMine
+                        ? () async {
+                            if (!await confirmCommunityDelete(context, what: 'post')) return;
+                            if (context.mounted) await runCommunityAction(context, () => actions.deletePost(post.id));
+                          }
+                        : null,
                   );
                 },
               ),

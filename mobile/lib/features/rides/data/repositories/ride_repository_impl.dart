@@ -19,8 +19,7 @@ class RideRepositoryImpl implements RideRepository {
   /// endpoints for the rider's own lists.
   final String Function() _currentUserId;
 
-  RideRepositoryImpl(this._dataSource, {required String Function() currentUserId})
-      : _currentUserId = currentUserId;
+  RideRepositoryImpl(this._dataSource, this._currentUserId);
 
   /// Follows `nextCursor` until the last page (or [_maxPages]).
   Future<List<T>> _all<T>(Future<Paginated<T>> Function(String? cursor) load) async {

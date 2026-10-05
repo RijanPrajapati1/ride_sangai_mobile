@@ -6,6 +6,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/ride_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
@@ -14,6 +15,7 @@ import '../../../../shared/widgets/loading_widget.dart';
 import '../../../../shared/widgets/ride_card.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../../../../shared/widgets/stat_card.dart';
+import '../widgets/follow_list_sheet.dart';
 import '../../../messages/presentation/providers/message_providers.dart';
 import '../../../rides/presentation/providers/ride_providers.dart';
 import '../../domain/entities/user_profile.dart';
@@ -45,12 +47,19 @@ class ProfileScreen extends ConsumerWidget {
       ),
       body: profileAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(profileProvider(userId))),
-        data: (profile) => _ProfileBody(profile: profile, isOwnProfile: isOwnProfile),
+        error: (e, st) => AppErrorWidget(
+          message: _errorMessage(e),
+          onRetry: () => ref.invalidate(profileProvider(userId)),
+        ),
+        data: (profile) => _ProfileBody(profile: profile, isOwnProfile: isOwnProfile || profile.isMe),
       ),
     );
   }
 }
+
+/// The message to show for a failed request.
+String _errorMessage(Object error) =>
+    error is AppException ? error.message : 'Something went wrong. Please try again.';
 
 class _ProfileBody extends ConsumerWidget {
   final UserProfile profile;
@@ -58,12 +67,40 @@ class _ProfileBody extends ConsumerWidget {
 
   const _ProfileBody({required this.profile, required this.isOwnProfile});
 
+  Future<void> _toggleFollow(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(profileControllerProvider).toggleFollow(profile.id, isCurrentlyFollowing: profile.isFollowing);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_errorMessage(e))));
+      }
+    }
+  }
+
+  Future<void> _message(BuildContext context, WidgetRef ref) async {
+    try {
+      final conversation = await ref.read(messageActionsControllerProvider).openConversationWith(
+            userId: profile.id,
+            userName: profile.name,
+            userAvatarUrl: profile.avatarUrl,
+          );
+      if (context.mounted) context.push(RouteNames.conversationPath(conversation.id));
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_errorMessage(e))));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final organizedRidesAsync = ref.watch(userOrganizedRidesProvider(profile.id));
 
     return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(profileProvider(profile.id)),
+      onRefresh: () async {
+        ref.invalidate(profileProvider(profile.id));
+        ref.invalidate(userOrganizedRidesProvider(profile.id));
+      },
       child: ListView(
         padding: const EdgeInsets.all(AppDimensions.spaceMd),
         children: [
@@ -71,16 +108,30 @@ class _ProfileBody extends ConsumerWidget {
           const SizedBox(height: AppDimensions.spaceSm),
           Text(profile.name, textAlign: TextAlign.center, style: Theme.of(context).textTheme.displayLarge),
           const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.location_on_outlined, size: 16, color: context.appColors.textMuted),
-              const SizedBox(width: 4),
-              Text(profile.location, style: Theme.of(context).textTheme.bodyMedium),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.spaceSm),
-          Text(profile.bio, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+          if (profile.location.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.location_on_outlined, size: 16, color: context.appColors.textMuted),
+                const SizedBox(width: 4),
+                Flexible(child: Text(profile.location, style: Theme.of(context).textTheme.bodyMedium)),
+              ],
+            ),
+          if (profile.isPrivate && !isOwnProfile) ...[
+            const SizedBox(height: AppDimensions.spaceSm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.lock_outline, size: 16, color: context.appColors.textMuted),
+                const SizedBox(width: 4),
+                Text('This profile is private', style: Theme.of(context).textTheme.bodyMedium),
+              ],
+            ),
+          ],
+          if (profile.bio.isNotEmpty) ...[
+            const SizedBox(height: AppDimensions.spaceSm),
+            Text(profile.bio, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+          ],
           const SizedBox(height: AppDimensions.spaceMd),
           Wrap(
             alignment: WrapAlignment.center,
@@ -99,7 +150,20 @@ class _ProfileBody extends ConsumerWidget {
               StatCard(value: '${profile.followingCount}', label: 'Following'),
             ],
           ),
-          const SizedBox(height: AppDimensions.spaceLg),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => showFollowListSheet(context, userId: profile.id, type: FollowListType.followers),
+                child: const Text('View followers'),
+              ),
+              TextButton(
+                onPressed: () => showFollowListSheet(context, userId: profile.id, type: FollowListType.following),
+                child: const Text('View following'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.spaceSm),
           if (isOwnProfile)
             AppOutlinedButton(
               label: 'Edit Profile',
@@ -113,9 +177,7 @@ class _ProfileBody extends ConsumerWidget {
                   child: AppButton(
                     label: profile.isFollowing ? 'Following' : 'Follow',
                     icon: profile.isFollowing ? Icons.check : Icons.person_add_alt_1_outlined,
-                    onPressed: () => ref
-                        .read(profileControllerProvider)
-                        .toggleFollow(profile.id, isCurrentlyFollowing: profile.isFollowing),
+                    onPressed: () => _toggleFollow(context, ref),
                   ),
                 ),
                 const SizedBox(width: AppDimensions.spaceSm),
@@ -123,14 +185,7 @@ class _ProfileBody extends ConsumerWidget {
                   child: AppOutlinedButton(
                     label: 'Message',
                     icon: Icons.chat_bubble_outline,
-                    onPressed: () async {
-                      final conversation = await ref.read(messageActionsControllerProvider).openConversationWith(
-                            userId: profile.id,
-                            userName: profile.name,
-                            userAvatarUrl: profile.avatarUrl,
-                          );
-                      if (context.mounted) context.push(RouteNames.conversationPath(conversation.id));
-                    },
+                    onPressed: () => _message(context, ref),
                   ),
                 ),
               ],
@@ -150,7 +205,7 @@ class _ProfileBody extends ConsumerWidget {
           const SizedBox(height: AppDimensions.spaceSm),
           organizedRidesAsync.when(
             loading: () => const SizedBox(height: 100, child: LoadingWidget()),
-            error: (e, st) => AppErrorWidget(message: e.toString()),
+            error: (e, st) => AppErrorWidget(message: _errorMessage(e)),
             data: (rides) {
               if (rides.isEmpty) {
                 return Padding(

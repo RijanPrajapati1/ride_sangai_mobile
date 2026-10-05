@@ -11,6 +11,9 @@ class PlaceQuery {
   final double? radiusKm;
   final PlaceCategory? category;
   final DashboardCategory? activity;
+
+  /// Only places rated at least this (1–5).
+  final double? minRating;
   final String query;
   final PlaceSort sort;
 
@@ -19,6 +22,7 @@ class PlaceQuery {
     this.radiusKm,
     this.category,
     this.activity,
+    this.minRating,
     this.query = '',
     this.sort = PlaceSort.nearest,
   });
@@ -30,6 +34,9 @@ abstract class PlaceRepository {
   Future<Place> getPlaceById(String id, {GeoPoint? from});
   Future<List<PlaceReview>> getReviews(String placeId);
   Future<List<Place>> getSavedPlaces({GeoPoint? from});
+
+  /// Places a rider has shared, newest first.
+  Future<List<Place>> getPlacesByUser(String userId, {GeoPoint? from});
 
   Future<Place> sharePlace({
     required String name,
@@ -45,6 +52,23 @@ abstract class PlaceRepository {
     String? entryFee,
   });
 
+  /// Author or admin. Only the non-null fields change; pass '' to clear
+  /// [bestTime], [tips] or [entryFee].
+  Future<Place> updatePlace(
+    String placeId, {
+    String? name,
+    String? description,
+    PlaceCategory? category,
+    double? latitude,
+    double? longitude,
+    String? locationName,
+    List<String>? photos,
+    List<DashboardCategory>? activities,
+    String? bestTime,
+    String? tips,
+    String? entryFee,
+  });
+
   Future<void> savePlace(String placeId);
   Future<void> unsavePlace(String placeId);
 
@@ -55,6 +79,7 @@ abstract class PlaceRepository {
     required bool worthIt,
     required String text,
     DateTime? visitedOn,
+    List<String> photos = const [],
   });
   Future<void> deleteReview(String placeId);
 

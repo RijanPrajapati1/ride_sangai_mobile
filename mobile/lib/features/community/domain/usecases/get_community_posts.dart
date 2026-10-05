@@ -6,5 +6,5 @@ class GetCommunityPosts {
 
   const GetCommunityPosts(this._repository);
 
-  Future<List<CommunityPost>> call() => _repository.getPosts();
+  Future<List<CommunityPost>> call({String? authorId}) => _repository.getPosts(authorId: authorId);
 }

@@ -1,3 +1,4 @@
+import '../entities/like_state.dart';
 import '../repositories/community_repository.dart';
 
 class LikePost {
@@ -5,7 +6,7 @@ class LikePost {
 
   const LikePost(this._repository);
 
-  Future<void> call(String postId, {required bool isCurrentlyLiked}) {
+  Future<LikeState> call(String postId, {required bool isCurrentlyLiked}) {
     return isCurrentlyLiked ? _repository.unlikePost(postId) : _repository.likePost(postId);
   }
 }

@@ -7,6 +7,10 @@ class Comment {
   final String text;
   final DateTime time;
   final int likeCount;
+  final bool isLiked;
+
+  /// Whether the signed-in user wrote this comment.
+  final bool isMine;
 
   const Comment({
     required this.id,
@@ -17,5 +21,7 @@ class Comment {
     required this.text,
     required this.time,
     this.likeCount = 0,
+    this.isLiked = false,
+    this.isMine = false,
   });
 }

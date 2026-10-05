@@ -68,7 +68,10 @@ class RidesScreen extends ConsumerWidget {
           Expanded(
             child: ridesAsync.when(
               loading: () => const LoadingWidget(),
-              error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(upcomingRidesProvider)),
+              error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () {
+                ref.invalidate(upcomingRidesProvider);
+                ref.invalidate(filteredRidesProvider);
+              }),
               data: (rides) {
                 if (rides.isEmpty) {
                   return EmptyState(
@@ -80,7 +83,10 @@ class RidesScreen extends ConsumerWidget {
                   );
                 }
                 return RefreshIndicator(
-                  onRefresh: () async => ref.invalidate(upcomingRidesProvider),
+                  onRefresh: () async {
+                    ref.invalidate(upcomingRidesProvider);
+                    await ref.read(filteredRidesProvider.future);
+                  },
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(
                       AppDimensions.spaceMd,

@@ -4,7 +4,8 @@ import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/place_category.dart';
 import '../../../../core/location/location_service.dart';
-import '../../data/datasources/place_local_datasource.dart';
+import '../../../../core/network/network_providers.dart';
+import '../../data/datasources/place_remote_datasource.dart';
 import '../../data/repositories/place_repository_impl.dart';
 import '../../domain/entities/place.dart';
 import '../../domain/entities/place_review.dart';
@@ -13,13 +14,15 @@ import '../../domain/usecases/get_places.dart';
 import '../../domain/usecases/submit_place_review.dart';
 import '../../domain/usecases/toggle_save_place.dart';
 
-final placeLocalDataSourceProvider = Provider<PlaceLocalDataSource>((ref) => PlaceLocalDataSource());
-
-final placeRepositoryProvider = Provider<PlaceRepository>((ref) {
-  return PlaceRepositoryImpl(ref.watch(placeLocalDataSourceProvider));
+final placeRemoteDataSourceProvider = Provider<PlaceRemoteDataSource>((ref) {
+  return PlaceRemoteDataSource(ref.watch(apiClientProvider));
 });
 
-/// Explore screen filter state (client-side; maps 1:1 onto the API's query params).
+final placeRepositoryProvider = Provider<PlaceRepository>((ref) {
+  return PlaceRepositoryImpl(ref.watch(placeRemoteDataSourceProvider));
+});
+
+/// Explore screen filter state; maps 1:1 onto the API's query params.
 class ExploreFilters {
   final PlaceCategory? category;
   final String query;
@@ -107,6 +110,12 @@ final savedPlacesProvider = FutureProvider<List<Place>>((ref) async {
   return ref.watch(placeRepositoryProvider).getSavedPlaces(from: location.point);
 });
 
+/// Places a rider has shared (`GET /users/:id/places`), newest first.
+final userPlacesProvider = FutureProvider.family<List<Place>, String>((ref, userId) async {
+  final location = await ref.watch(currentLocationProvider.future);
+  return ref.watch(placeRepositoryProvider).getPlacesByUser(userId, from: location.point);
+});
+
 final exploreActionsControllerProvider = Provider((ref) => ExploreActionsController(ref));
 
 class ExploreActionsController {
@@ -121,6 +130,7 @@ class ExploreActionsController {
     _ref.invalidate(explorePlacesProvider);
     _ref.invalidate(homeExplorePlacesProvider);
     _ref.invalidate(savedPlacesProvider);
+    _ref.invalidate(userPlacesProvider);
   }
 
   Future<void> toggleSave(String placeId, {required bool isCurrentlySaved}) async {
@@ -134,6 +144,7 @@ class ExploreActionsController {
     required bool worthIt,
     required String text,
     DateTime? visitedOn,
+    List<String> photos = const [],
   }) async {
     await SubmitPlaceReview(_repository)(
       placeId: placeId,
@@ -141,6 +152,7 @@ class ExploreActionsController {
       worthIt: worthIt,
       text: text,
       visitedOn: visitedOn,
+      photos: photos,
     );
     _ref.invalidate(placeReviewsProvider(placeId));
     _refreshPlace(placeId);
@@ -180,6 +192,40 @@ class ExploreActionsController {
     );
     _ref.invalidate(explorePlacesProvider);
     _ref.invalidate(homeExplorePlacesProvider);
+    _ref.invalidate(userPlacesProvider);
+    return place;
+  }
+
+  /// Author or admin; only the given fields change.
+  Future<Place> updatePlace(
+    String placeId, {
+    String? name,
+    String? description,
+    PlaceCategory? category,
+    double? latitude,
+    double? longitude,
+    String? locationName,
+    List<String>? photos,
+    List<DashboardCategory>? activities,
+    String? bestTime,
+    String? tips,
+    String? entryFee,
+  }) async {
+    final place = await _repository.updatePlace(
+      placeId,
+      name: name,
+      description: description,
+      category: category,
+      latitude: latitude,
+      longitude: longitude,
+      locationName: locationName,
+      photos: photos,
+      activities: activities,
+      bestTime: bestTime,
+      tips: tips,
+      entryFee: entryFee,
+    );
+    _refreshPlace(placeId);
     return place;
   }
 

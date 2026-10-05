@@ -17,6 +17,7 @@ import '../../../../shared/widgets/loading_widget.dart';
 import '../../domain/entities/place.dart';
 import '../../domain/repositories/place_repository.dart';
 import '../providers/explore_providers.dart';
+import '../utils/error_message.dart';
 import '../widgets/place_card.dart';
 import '../widgets/place_map.dart';
 
@@ -55,11 +56,16 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   }
 
   Future<void> _toggleSave(Place place) async {
-    await ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(place.isSaved ? 'Removed from saved places' : 'Saved "${place.name}" for later')),
-    );
+    try {
+      await ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(place.isSaved ? 'Removed from saved places' : 'Saved "${place.name}" for later')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(e))));
+    }
   }
 
   @override
@@ -174,7 +180,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           Expanded(
             child: placesAsync.when(
               loading: () => const LoadingWidget(),
-              error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(explorePlacesProvider)),
+              error: (e, st) => AppErrorWidget(message: errorMessage(e), onRetry: () => ref.invalidate(explorePlacesProvider)),
               data: (places) {
                 if (places.isEmpty) {
                   return EmptyState(

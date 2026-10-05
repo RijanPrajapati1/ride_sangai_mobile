@@ -16,6 +16,10 @@ class CommunityPostCard extends StatelessWidget {
   final VoidCallback onShare;
   final VoidCallback? onAuthorTap;
 
+  /// Shown in the post's menu when set (the author's own posts).
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+
   const CommunityPostCard({
     super.key,
     required this.post,
@@ -24,6 +28,8 @@ class CommunityPostCard extends StatelessWidget {
     required this.onComment,
     required this.onShare,
     this.onAuthorTap,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -52,6 +58,15 @@ class CommunityPostCard extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (onEdit != null || onDelete != null)
+                      PopupMenuButton<VoidCallback>(
+                        icon: const Icon(Icons.more_vert),
+                        onSelected: (action) => action(),
+                        itemBuilder: (_) => [
+                          if (onEdit != null) PopupMenuItem(value: onEdit, child: const Text('Edit')),
+                          if (onDelete != null) PopupMenuItem(value: onDelete, child: const Text('Delete')),
+                        ],
+                      ),
                   ],
                 ),
               ),

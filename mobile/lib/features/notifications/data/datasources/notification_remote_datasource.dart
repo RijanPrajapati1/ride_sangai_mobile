@@ -34,7 +34,8 @@ class NotificationRemoteDataSource {
 
   /// Returns how many notifications were marked read.
   Future<int> markAllAsRead() async {
-    final json = await _api.post<Map<String, dynamic>>(readAll);
+    // The server validates the (optional) body as an object, so send `{}`.
+    final json = await _api.post<Map<String, dynamic>>(readAll, data: const <String, dynamic>{});
     return json['updated'] as int;
   }
 

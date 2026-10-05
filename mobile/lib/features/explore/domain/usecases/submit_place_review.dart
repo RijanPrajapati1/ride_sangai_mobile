@@ -13,6 +13,7 @@ class SubmitPlaceReview {
     required bool worthIt,
     required String text,
     DateTime? visitedOn,
+    List<String> photos = const [],
   }) {
     if (rating < 1 || rating > 5) {
       throw const ValidationException('Pick a rating from 1 to 5 stars.');
@@ -23,6 +24,7 @@ class SubmitPlaceReview {
       worthIt: worthIt,
       text: text.trim(),
       visitedOn: visitedOn,
+      photos: photos,
     );
   }
 }

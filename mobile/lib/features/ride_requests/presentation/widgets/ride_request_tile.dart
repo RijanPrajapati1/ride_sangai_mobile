@@ -63,6 +63,12 @@ class RideRequestTile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
+              if (request.status == RideRequestStatus.declined &&
+                  request.declineReason != null &&
+                  request.declineReason!.trim().isNotEmpty) ...[
+                Text('Reason: ${request.declineReason}', style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 2),
+              ],
               Text('Requested ${request.requestedAt.timeAgo}', style: Theme.of(context).textTheme.bodySmall),
               if (request.status == RideRequestStatus.pending && (onApprove != null || onDecline != null)) ...[
                 const SizedBox(height: AppDimensions.spaceSm),

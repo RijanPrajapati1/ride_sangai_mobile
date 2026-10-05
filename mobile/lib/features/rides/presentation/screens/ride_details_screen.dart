@@ -7,6 +7,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/ride_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/extensions/date_time_extensions.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_chip.dart';
@@ -31,11 +32,29 @@ class RideDetailsScreen extends ConsumerStatefulWidget {
 class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
   bool _actionLoading = false;
 
-  Future<void> _requestToJoin() async {
+  void _showError(Object error) {
+    if (!mounted) return;
+    final message = error is AppException ? error.message : 'Something went wrong. Please try again.';
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// Runs a join/leave action with the loading state and error SnackBar.
+  Future<bool> _runAction(Future<void> Function() action) async {
     setState(() => _actionLoading = true);
-    await ref.read(rideActionsControllerProvider).requestToJoin(widget.rideId);
-    if (mounted) {
-      setState(() => _actionLoading = false);
+    try {
+      await action();
+      return true;
+    } catch (error) {
+      _showError(error);
+      return false;
+    } finally {
+      if (mounted) setState(() => _actionLoading = false);
+    }
+  }
+
+  Future<void> _requestToJoin() async {
+    final ok = await _runAction(() => ref.read(rideActionsControllerProvider).requestToJoin(widget.rideId));
+    if (ok && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Request sent to the organizer!')),
       );
@@ -43,18 +62,40 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
   }
 
   Future<void> _cancelRequest() async {
-    setState(() => _actionLoading = true);
-    await ref.read(rideActionsControllerProvider).cancelRequest(widget.rideId);
-    if (mounted) setState(() => _actionLoading = false);
+    await _runAction(() => ref.read(rideActionsControllerProvider).cancelRequest(widget.rideId));
+  }
+
+  Future<void> _cancelRide(Ride ride) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cancel this ride?'),
+        content: const Text('Everyone who joined or asked to join will be notified.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Keep ride')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Cancel ride')),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    final ok = await _runAction(() => ref.read(rideActionsControllerProvider).cancelRide(ride.id));
+    if (ok && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('"${ride.title}" was cancelled.')));
+      context.pop();
+    }
   }
 
   Future<void> _messageOrganizer(Ride ride) async {
-    final conversation = await ref.read(messageActionsControllerProvider).openConversationWith(
-          userId: ride.organizerId,
-          userName: ride.organizerName,
-          userAvatarUrl: ride.organizerAvatarUrl,
-        );
-    if (mounted) context.push(RouteNames.conversationPath(conversation.id));
+    try {
+      final conversation = await ref.read(messageActionsControllerProvider).openConversationWith(
+            userId: ride.organizerId,
+            userName: ride.organizerName,
+            userAvatarUrl: ride.organizerAvatarUrl,
+          );
+      if (mounted) context.push(RouteNames.conversationPath(conversation.id));
+    } catch (error) {
+      _showError(error);
+    }
   }
 
   @override
@@ -68,7 +109,10 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
           message: e.toString(),
           onRetry: () => ref.invalidate(rideDetailsProvider(widget.rideId)),
         ),
-        data: (ride) => _RideDetailsContent(ride: ride),
+        data: (ride) => _RideDetailsContent(
+          ride: ride,
+          onCancelRide: ride.isOrganizer && !ride.hasStarted ? () => _cancelRide(ride) : null,
+        ),
       ),
       bottomNavigationBar: rideAsync.maybeWhen(
         data: (ride) => RideJoinActionBar(
@@ -87,8 +131,9 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
 
 class _RideDetailsContent extends StatelessWidget {
   final Ride ride;
+  final VoidCallback? onCancelRide;
 
-  const _RideDetailsContent({required this.ride});
+  const _RideDetailsContent({required this.ride, this.onCancelRide});
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +144,14 @@ class _RideDetailsContent extends StatelessWidget {
           expandedHeight: 240,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           iconTheme: const IconThemeData(color: Colors.white),
+          actions: [
+            if (onCancelRide != null)
+              PopupMenuButton<String>(
+                iconColor: Colors.white,
+                onSelected: (_) => onCancelRide!(),
+                itemBuilder: (context) => const [PopupMenuItem(value: 'cancel', child: Text('Cancel ride'))],
+              ),
+          ],
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(
               fit: StackFit.expand,
@@ -149,6 +202,10 @@ class _RideDetailsContent extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (ride.joinStatus == RideJoinStatus.declined) ...[
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  _DeclinedNotice(reason: ride.myRequest?.declineReason),
+                ],
                 const SizedBox(height: AppDimensions.spaceLg),
                 _InfoRow(icon: Icons.calendar_today_outlined, label: ride.date.toFullDate),
                 _InfoRow(icon: Icons.access_time, label: ride.date.toTime),
@@ -210,6 +267,32 @@ class _RideDetailsContent extends StatelessWidget {
     if (hours == 0) return '${mins}m';
     if (mins == 0) return '${hours}h';
     return '${hours}h ${mins}m';
+  }
+}
+
+class _DeclinedNotice extends StatelessWidget {
+  final String? reason;
+
+  const _DeclinedNotice({this.reason});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasReason = reason != null && reason!.trim().isNotEmpty;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppDimensions.spaceSm),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+      ),
+      child: Text(
+        hasReason
+            ? 'The organizer declined your request: "${reason!.trim()}". You can ask again.'
+            : 'The organizer declined your request. You can ask again.',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+    );
   }
 }
 

@@ -4,6 +4,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
+import 'place_photo_picker.dart';
 import 'rating_stars.dart';
 
 /// What the rider entered in the review sheet.
@@ -12,7 +13,10 @@ class ReviewDraft {
   final bool worthIt;
   final String text;
 
-  const ReviewDraft({required this.rating, required this.worthIt, required this.text});
+  /// Uploaded photo URLs (up to 5).
+  final List<String> photos;
+
+  const ReviewDraft({required this.rating, required this.worthIt, required this.text, this.photos = const []});
 }
 
 /// Bottom sheet for "How was it?": stars, worth it or not, and a few words.
@@ -49,6 +53,7 @@ class _WriteReviewSheetState extends State<_WriteReviewSheet> {
   late int _rating = widget.initialRating;
   late bool? _worthIt = widget.initialWorthIt;
   final _textController = TextEditingController();
+  List<String> _photos = [];
 
   @override
   void dispose() {
@@ -103,12 +108,21 @@ class _WriteReviewSheetState extends State<_WriteReviewSheet> {
                 controller: _textController,
                 maxLines: 4,
               ),
+              const SizedBox(height: AppDimensions.spaceSm),
+              Text('Photos (optional)', style: theme.textTheme.titleSmall),
+              const SizedBox(height: AppDimensions.spaceXs),
+              PlacePhotoPicker(photos: _photos, max: 5, onChanged: (photos) => setState(() => _photos = photos)),
               const SizedBox(height: AppDimensions.spaceMd),
               AppButton(
                 label: 'Post review',
                 onPressed: _canSubmit
                     ? () => Navigator.of(context).pop(
-                          ReviewDraft(rating: _rating, worthIt: _worthIt!, text: _textController.text.trim()),
+                          ReviewDraft(
+                            rating: _rating,
+                            worthIt: _worthIt!,
+                            text: _textController.text.trim(),
+                            photos: _photos,
+                          ),
                         )
                     : null,
               ),

@@ -10,6 +10,9 @@ class CommunityPost {
   final int commentCount;
   final bool isLiked;
 
+  /// Whether the signed-in user wrote this post (can edit/delete it).
+  final bool isMine;
+
   const CommunityPost({
     required this.id,
     required this.userId,
@@ -21,6 +24,7 @@ class CommunityPost {
     this.likeCount = 0,
     this.commentCount = 0,
     this.isLiked = false,
+    this.isMine = false,
   });
 
   CommunityPost copyWith({
@@ -39,6 +43,7 @@ class CommunityPost {
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
       isLiked: isLiked ?? this.isLiked,
+      isMine: isMine,
     );
   }
 }
