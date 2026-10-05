@@ -45,16 +45,22 @@ All of it lives in `lib/core`:
 - Release builds refuse a non-HTTPS `API_BASE_URL` at startup. Plain HTTP works only in Android **debug** builds (`android/app/src/debug/res/xml/network_security_config.xml`) and to local-network addresses on iOS (`NSAllowsLocalNetworking`).
 - Request logs never include passwords, tokens or response bodies.
 
-### Connecting another feature
+### What's connected
 
-The authentication feature is wired to the API. The other features still use `*LocalDataSource` demo data. To move one over, follow `features/authentication`:
+Every feature talks to the API through a `*RemoteDataSource`: authentication, profile and settings, rides, create ride, ride requests, community, notifications, messages and explore (places, reviews, saved places). Admin and home reuse those repositories. Only onboarding stays local, because "has seen the intro" is a per-device setting.
 
-1. **DTO**: add `fromJson` to the feature's DTO (field names match the API exactly; see http://localhost:4000/docs).
-2. **Remote data source**: a class that takes `ApiClient` and calls the endpoints.
-3. **Repository**: swap the local data source for the remote one. The domain layer and screens don't change.
-4. **Provider**: build the remote data source from `ref.watch(apiClientProvider)`.
+Photo pickers upload real images with `UploadService` (`lib/core/network/upload_service.dart`) and store the returned URL. Image URLs that point at `localhost` are rewritten to the host the app uses for the API (`AppConfig.mediaUrl`), so uploads also show on the emulator and phones.
 
-Show errors with `error.message` from the `AppException`.
+Not yet: realtime updates over the WebSocket (`/api/v1/ws`), so chats refresh on pull or reopen; push notifications; infinite scroll (lists load the first page, up to 100 items).
+
+### Adding an endpoint
+
+1. **DTO**: `fromJson`/`toJson` with field names exactly as in the API (http://localhost:4000/docs).
+2. **Remote data source**: add a method that calls `ApiClient`.
+3. **Repository**: expose it through the domain interface.
+4. **Provider/controller**: call it, and invalidate the affected providers after a change.
+
+Show errors with `error.message` from the `AppException` (`runOrShowError` in `lib/shared/utils/` does this for button actions).
 
 ## Tests
 

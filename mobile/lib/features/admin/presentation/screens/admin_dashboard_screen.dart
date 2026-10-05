@@ -9,6 +9,7 @@ import '../../../../core/enums/ride_enums.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../../../../shared/utils/run_or_show_error.dart';
 import '../../../../shared/widgets/stat_card.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../../ride_requests/domain/entities/ride_request.dart';
@@ -120,7 +121,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 title: 'Remove ${user.name}?',
                                 message: 'This rider will be removed from Biker Sync.',
                               );
-                              if (confirmed) await actions.removeUser(user.id);
+                              if (confirmed && context.mounted) await runOrShowError(context, () => actions.removeUser(user.id));
                             },
                           );
                         },
@@ -149,7 +150,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 title: 'Delete "${ride.title}"?',
                                 message: 'This ride will be removed for everyone.',
                               );
-                              if (confirmed) await actions.deleteRide(ride.id);
+                              if (confirmed && context.mounted) await runOrShowError(context, () => actions.deleteRide(ride.id));
                             },
                           );
                         },
@@ -180,11 +181,11 @@ class AdminDashboardScreen extends ConsumerWidget {
                                       children: [
                                         IconButton(
                                           icon: const Icon(Icons.check_circle_outline, color: AppColors.success),
-                                          onPressed: () => actions.approveRequest(request.id),
+                                          onPressed: () => runOrShowError(context, () => actions.approveRequest(request.id)),
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.cancel_outlined, color: AppColors.error),
-                                          onPressed: () => actions.declineRequest(request.id),
+                                          onPressed: () => runOrShowError(context, () => actions.declineRequest(request.id)),
                                         ),
                                       ],
                                     )
@@ -216,7 +217,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 title: 'Delete this post?',
                                 message: 'This post and its comments will be removed.',
                               );
-                              if (confirmed) await actions.deletePost(post.id);
+                              if (confirmed && context.mounted) await runOrShowError(context, () => actions.deletePost(post.id));
                             },
                           );
                         },

@@ -6,6 +6,7 @@ import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/dashboard_category.dart';
+import '../../../../shared/utils/run_or_show_error.dart';
 import '../../../../shared/layouts/app_scaffold.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
@@ -310,12 +311,12 @@ class HomeScreen extends ConsumerWidget {
                               onTap: () => context.push(
                                 RouteNames.userProfilePath(rider.id),
                               ),
-                              onFollow: () => ref
-                                  .read(profileControllerProvider)
-                                  .toggleFollow(
-                                    rider.id,
-                                    isCurrentlyFollowing: rider.isFollowing,
-                                  ),
+                              onFollow: () => runOrShowError(
+                                context,
+                                () => ref
+                                    .read(profileControllerProvider)
+                                    .toggleFollow(rider.id, isCurrentlyFollowing: rider.isFollowing),
+                              ),
                             );
                           },
                         ),
