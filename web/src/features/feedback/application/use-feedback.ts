@@ -25,6 +25,10 @@ export function useRecentFeedback(limit = 5) {
   });
 }
 
+export function useFeedbackCounts() {
+  return useQuery({ queryKey: [...feedbackKeys.all, 'counts'], queryFn: feedbackRepository.statusCounts, staleTime: 60_000 });
+}
+
 function invalidate(qc: ReturnType<typeof useQueryClient>) {
   void qc.invalidateQueries({ queryKey: feedbackKeys.all });
   void qc.invalidateQueries({ queryKey: ['overview'] });

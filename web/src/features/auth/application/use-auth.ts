@@ -23,6 +23,8 @@ export function useLogout() {
     mutationFn: authRepository.logout,
     onSettled: () => {
       qc.clear();
+      // Full page load so no state of the ended session survives.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.assign('/login?reason=signed-out');
     },
   });

@@ -22,6 +22,8 @@ function goToLogin(reason?: string) {
   if (next && next !== '/') params.set('next', next);
   if (reason) params.set('reason', reason);
   const qs = params.toString();
+  // A full page load (not a client navigation) drops all cached data of the ended session.
+  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
   window.location.assign(`/login${qs ? `?${qs}` : ''}`);
 }
 
