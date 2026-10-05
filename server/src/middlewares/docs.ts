@@ -3,7 +3,7 @@ import swaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger-ui';
 import type { RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
 import { documentFor, type DocsVariant } from '../docs/openapi.js';
-import { DOCS_CSS, DOCS_LOGO_SVG, rememberToken } from '../docs/theme.js';
+import { rememberToken } from '../docs/auth-token.js';
 
 /**
  * OpenAPI 3 documents generated from the route schemas.
@@ -56,34 +56,14 @@ export default fp(
 
       await child.register(swaggerUi, {
         routePrefix: '/docs',
-        logo: { type: 'image/svg+xml', content: Buffer.from(DOCS_LOGO_SVG) },
-        theme: {
-          title: 'Ride Sangai API',
-          css: [{ filename: 'ride-sangai.css', content: DOCS_CSS }],
-          favicon: [
-            {
-              filename: 'favicon.svg',
-              rel: 'icon',
-              sizes: 'any',
-              type: 'image/svg+xml',
-              content: Buffer.from(DOCS_LOGO_SVG),
-            },
-          ],
-        },
         uiConfig: {
           urls: [
             { url: '/docs/mobile.json', name: 'Mobile app API' },
             { url: '/docs/superadmin.json', name: 'Superadmin (web) API' },
           ],
-          docExpansion: 'none',
+          docExpansion: 'list',
           deepLinking: true,
-          filter: true,
           persistAuthorization: true,
-          tryItOutEnabled: true,
-          displayRequestDuration: true,
-          showCommonExtensions: true,
-          defaultModelsExpandDepth: -1,
-          syntaxHighlight: { theme: 'nord' },
           // Serialised into the page as source; it runs in the browser, not here.
           responseInterceptor: rememberToken as unknown as NonNullable<
             FastifySwaggerUiOptions['uiConfig']

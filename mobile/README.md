@@ -13,7 +13,12 @@ Start the server first (see [`../server/README.md`](../server/README.md)), then:
 | Real phone on your Wi-Fi | `flutter run --dart-define=API_BASE_URL=http://<your-computer-ip>:4000/api/v1` |
 | Release build | `flutter build apk --dart-define=API_BASE_URL=https://api.example.com/api/v1` |
 
-Sign in with the seeded demo account `demo@bikersync.app` / `biker123` (the "Try Demo Login" button), or `admin@gmail.com` / `Test@1234` for the admin dashboard.
+The seeded database has no demo riders: create a rider account with **Register** in the app. The only seeded account is the superadmin, `superadmin@ridesangai.app` / `SuperAdmin@123` (change it outside local development).
+
+### Roles
+
+- **Riders** (`role: user`) manage their own content: rides, posts, places and groups. The API checks ownership.
+- **Superadmin** (`role: superadmin`, `isSuperadmin: true` on the auth user) runs the platform from the web dashboard. Signing in as the superadmin on the phone opens the in-app **Superadmin Dashboard** (`lib/features/superadmin`), which uses the `/superadmin/...` endpoints.
 
 ## How networking works
 
@@ -47,7 +52,7 @@ All of it lives in `lib/core`:
 
 ### What's connected
 
-Every feature talks to the API through a `*RemoteDataSource`: authentication, profile and settings, rides, create ride, ride requests, community, notifications, messages and explore (places, reviews, saved places). Admin and home reuse those repositories. Only onboarding stays local, because "has seen the intro" is a per-device setting.
+Every feature talks to the API through a `*RemoteDataSource`: authentication, profile and settings, rides, create ride, ride requests, community, notifications, messages, explore (places, reviews, saved places) and feedback (Settings → Send feedback, `POST /feedback`, tagged with the platform and `AppConstants.appVersion`). The superadmin dashboard and home reuse those repositories. Only onboarding stays local, because "has seen the intro" is a per-device setting.
 
 Photo pickers upload real images with `UploadService` (`lib/core/network/upload_service.dart`) and store the returned URL. Image URLs that point at `localhost` are rewritten to the host the app uses for the API (`AppConfig.mediaUrl`), so uploads also show on the emulator and phones.
 
