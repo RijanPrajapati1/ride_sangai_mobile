@@ -112,10 +112,10 @@ void main() {
         : (status: 204, body: null));
     final comments = await repository.getComments('p1');
     await repository.deleteComment('c1');
-    await repository.adminDeletePost('p1');
+    await repository.superadminDeletePost('p1');
     expect(comments.single.isMine, isTrue);
     expect(adapter.requests.map((r) => '${r.method} ${r.path}'),
-        ['GET /posts/p1/comments', 'DELETE /comments/c1', 'DELETE /admin/posts/p1']);
+        ['GET /posts/p1/comments', 'DELETE /comments/c1', 'DELETE /superadmin/posts/p1']);
   });
 
   test('server errors become AppException with the server message', () async {

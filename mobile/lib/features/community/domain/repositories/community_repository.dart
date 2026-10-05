@@ -11,7 +11,7 @@ abstract class CommunityRepository {
   /// Only the fields passed are changed; pass `removeImage: true` to drop the image.
   Future<CommunityPost> updatePost(String id, {String? text, String? imageUrl, bool removeImage = false});
 
-  /// Deletes a post (its author or an admin).
+  /// Deletes a post (its author or a superadmin).
   Future<void> deletePost(String postId);
 
   Future<LikeState> likePost(String postId);
@@ -24,9 +24,9 @@ abstract class CommunityRepository {
   Future<LikeState> likeComment(String commentId);
   Future<LikeState> unlikeComment(String commentId);
 
-  /// Admin-only: every post, newest first (`GET /admin/posts`).
-  Future<List<CommunityPost>> getAllPostsForAdmin({int? limit});
+  /// Superadmin-only: every post, newest first (`GET /superadmin/posts`).
+  Future<List<CommunityPost>> getAllPostsForSuperadmin({int? limit});
 
-  /// Admin-only: removes a post and its comments (`DELETE /admin/posts/:id`).
-  Future<void> adminDeletePost(String postId);
+  /// Superadmin-only: removes a post and its comments (`DELETE /superadmin/posts/:id`).
+  Future<void> superadminDeletePost(String postId);
 }

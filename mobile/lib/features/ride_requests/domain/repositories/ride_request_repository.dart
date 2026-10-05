@@ -6,7 +6,7 @@ abstract class RideRequestRepository {
   /// first. [organizerId] must be the signed-in rider's id.
   Future<List<RideRequest>> getRequestsForOrganizer(String organizerId, {RideRequestStatus? status});
 
-  /// One ride's join requests (organizer or admin).
+  /// One ride's join requests (organizer or superadmin).
   Future<List<RideRequest>> getRequestsForRide(String rideId, {RideRequestStatus? status});
 
   Future<RideRequest> approve(String requestId);
@@ -14,6 +14,6 @@ abstract class RideRequestRepository {
   /// Declines a pending request; [reason] is shared with the rider.
   Future<RideRequest> decline(String requestId, {String? reason});
 
-  /// Admin-only: every join request across every ride.
+  /// Superadmin-only: every join request across every ride.
   Future<List<RideRequest>> getAllRequests({RideRequestStatus? status});
 }

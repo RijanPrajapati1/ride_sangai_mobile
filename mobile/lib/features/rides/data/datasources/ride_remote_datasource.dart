@@ -17,8 +17,8 @@ class RideRemoteDataSource {
   static String join(String id) => '/rides/$id/join';
   static const myRides = '/me/rides';
   static String userRides(String userId) => '/users/$userId/rides';
-  static const adminRides = '/admin/rides';
-  static String adminRide(String id) => '/admin/rides/$id';
+  static const superadminRides = '/superadmin/rides';
+  static String superadminRide(String id) => '/superadmin/rides/$id';
 
   final ApiClient _api;
 
@@ -96,13 +96,13 @@ class RideRemoteDataSource {
     return RideDto.fromJson(json);
   }
 
-  /// `DELETE /rides/:id`: the organizer (or an admin) cancels the ride.
+  /// `DELETE /rides/:id`: the organizer (or a superadmin) cancels the ride.
   Future<void> cancelRide(String rideId) => _api.delete<dynamic>(ride(rideId));
 
-  /// `GET /admin/rides`: every ride, newest start first.
+  /// `GET /superadmin/rides`: every ride, newest start first.
   Future<Paginated<RideDto>> getAllRides({String when = 'all', String? cursor, int? limit}) =>
-      _page(adminRides, {'when': when, 'cursor': cursor, 'limit': limit});
+      _page(superadminRides, {'when': when, 'cursor': cursor, 'limit': limit});
 
-  /// `DELETE /admin/rides/:id`.
-  Future<void> deleteRide(String rideId) => _api.delete<dynamic>(adminRide(rideId));
+  /// `DELETE /superadmin/rides/:id`.
+  Future<void> deleteRide(String rideId) => _api.delete<dynamic>(superadminRide(rideId));
 }

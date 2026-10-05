@@ -43,6 +43,11 @@ export class FeedbackRepository {
     });
   }
 
+  async delete(id: string): Promise<boolean> {
+    const { count } = await this.prisma.feedback.deleteMany({ where: { id } });
+    return count > 0;
+  }
+
   update(id: string, data: { status?: FeedbackStatus; adminNote?: string; resolvedAt?: Date | null }) {
     return this.prisma.feedback.update({ where: { id }, data, include: withUser });
   }

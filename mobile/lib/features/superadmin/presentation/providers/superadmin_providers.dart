@@ -9,56 +9,56 @@ import '../../../ride_requests/presentation/providers/ride_request_providers.dar
 import '../../../rides/domain/entities/ride.dart';
 import '../../../rides/presentation/providers/ride_providers.dart';
 
-final adminAllUsersProvider = FutureProvider<List<UserProfile>>((ref) {
+final superadminAllUsersProvider = FutureProvider<List<UserProfile>>((ref) {
   return ref.watch(userRepositoryProvider).getAllUsers();
 });
 
-final adminAllRidesProvider = FutureProvider<List<Ride>>((ref) {
+final superadminAllRidesProvider = FutureProvider<List<Ride>>((ref) {
   return ref.watch(rideRepositoryProvider).getAllRides();
 });
 
-final adminAllRequestsProvider = FutureProvider<List<RideRequest>>((ref) {
+final superadminAllRequestsProvider = FutureProvider<List<RideRequest>>((ref) {
   return ref.watch(rideRequestRepositoryProvider).getAllRequests();
 });
 
-final adminAllPostsProvider = FutureProvider<List<CommunityPost>>((ref) {
-  return ref.watch(communityRepositoryProvider).getAllPostsForAdmin();
+final superadminAllPostsProvider = FutureProvider<List<CommunityPost>>((ref) {
+  return ref.watch(communityRepositoryProvider).getAllPostsForSuperadmin();
 });
 
-final adminActionsControllerProvider = Provider((ref) => AdminActionsController(ref));
+final superadminActionsControllerProvider = Provider((ref) => SuperadminActionsController(ref));
 
-class AdminActionsController {
+class SuperadminActionsController {
   final Ref _ref;
 
-  AdminActionsController(this._ref);
+  SuperadminActionsController(this._ref);
 
   Future<void> removeUser(String userId) async {
     await _ref.read(userRepositoryProvider).removeUser(userId);
-    _ref.invalidate(adminAllUsersProvider);
+    _ref.invalidate(superadminAllUsersProvider);
     _ref.invalidate(recommendedRidersProvider);
   }
 
   Future<void> deleteRide(String rideId) async {
     await _ref.read(rideRepositoryProvider).deleteRide(rideId);
-    _ref.invalidate(adminAllRidesProvider);
+    _ref.invalidate(superadminAllRidesProvider);
     _ref.invalidate(upcomingRidesProvider);
   }
 
   Future<void> deletePost(String postId) async {
-    await _ref.read(communityRepositoryProvider).adminDeletePost(postId);
-    _ref.invalidate(adminAllPostsProvider);
+    await _ref.read(communityRepositoryProvider).superadminDeletePost(postId);
+    _ref.invalidate(superadminAllPostsProvider);
     _ref.invalidate(communityPostsProvider);
   }
 
   Future<void> approveRequest(String requestId) async {
     await _ref.read(rideRequestRepositoryProvider).approve(requestId);
-    _ref.invalidate(adminAllRequestsProvider);
+    _ref.invalidate(superadminAllRequestsProvider);
     _ref.invalidate(organizerRequestsProvider);
   }
 
   Future<void> declineRequest(String requestId) async {
     await _ref.read(rideRequestRepositoryProvider).decline(requestId);
-    _ref.invalidate(adminAllRequestsProvider);
+    _ref.invalidate(superadminAllRequestsProvider);
     _ref.invalidate(organizerRequestsProvider);
   }
 }

@@ -162,13 +162,20 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.rate_review_outlined),
+              title: const Text('Send feedback'),
+              subtitle: const Text('Report a bug or share an idea'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(RouteNames.feedback),
+            ),
+            ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('About Biker Sync'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => showAboutDialog(
                 context: context,
                 applicationName: AppConstants.appName,
-                applicationVersion: '1.0.0',
+                applicationVersion: AppConstants.appVersion,
                 applicationLegalese: AppConstants.appTagline,
               ),
             ),

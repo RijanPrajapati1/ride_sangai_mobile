@@ -42,7 +42,7 @@ Map<String, dynamic> apiError(String code, [String message = 'Nope.']) => {
     };
 
 Map<String, dynamic> session(String access, String refresh) => {
-      'user': {'id': 'u1', 'name': 'Alex', 'email': 'alex@example.com', 'avatarUrl': '', 'isAdmin': false},
+      'user': {'id': 'u1', 'name': 'Alex', 'email': 'alex@example.com', 'avatarUrl': '', 'role': 'user', 'isSuperadmin': false},
       'accessToken': access,
       'refreshToken': refresh,
       'tokenType': 'Bearer',

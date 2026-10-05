@@ -167,14 +167,14 @@ void main() {
     expect(page.hasMore, isTrue);
   });
 
-  test('getAllUsers loads every admin page', () async {
+  test('getAllUsers loads every superadmin page', () async {
     serve((o) => o.queryParameters['cursor'] == null
         ? (status: 200, body: {'items': [profileJson('a')], 'nextCursor': 'c2'})
         : (status: 200, body: {'items': [profileJson('b')], 'nextCursor': null}));
     final users = await repository.getAllUsers();
 
     expect(users.map((u) => u.id), ['a', 'b']);
-    expect(adapter.requests.every((r) => r.path == '/admin/users'), isTrue);
+    expect(adapter.requests.every((r) => r.path == '/superadmin/users'), isTrue);
   });
 
   test('server errors surface as AppException with the server message', () async {

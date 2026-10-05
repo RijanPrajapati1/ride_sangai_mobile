@@ -6,12 +6,12 @@ import '../../../../shared/widgets/app_chip.dart';
 import '../../../../shared/widgets/user_tile.dart';
 import '../../../profile/domain/entities/user_profile.dart';
 
-class AdminUserRow extends StatelessWidget {
+class SuperadminUserRow extends StatelessWidget {
   final UserProfile user;
   final VoidCallback onTap;
   final VoidCallback onRemove;
 
-  const AdminUserRow({super.key, required this.user, required this.onTap, required this.onRemove});
+  const SuperadminUserRow({super.key, required this.user, required this.onTap, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {

@@ -7,34 +7,48 @@ class AuthUserDto {
   final String name;
   final String email;
   final String avatarUrl;
-  final bool isAdmin;
+  /// `user` or `superadmin`.
+  final String role;
+  final bool isSuperadmin;
 
   const AuthUserDto({
     required this.id,
     required this.name,
     required this.email,
     required this.avatarUrl,
-    this.isAdmin = false,
+    this.role = 'user',
+    this.isSuperadmin = false,
   });
 
-  factory AuthUserDto.fromJson(Map<String, dynamic> json) => AuthUserDto(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        email: json['email'] as String,
-        avatarUrl: json['avatarUrl'] as String? ?? '',
-        isAdmin: json['isAdmin'] as bool? ?? false,
-      );
+  factory AuthUserDto.fromJson(Map<String, dynamic> json) {
+    final role = json['role'] as String? ?? 'user';
+    return AuthUserDto(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      avatarUrl: json['avatarUrl'] as String? ?? '',
+      role: role,
+      isSuperadmin: json['isSuperadmin'] as bool? ?? role == 'superadmin',
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'email': email,
         'avatarUrl': avatarUrl,
-        'isAdmin': isAdmin,
+        'role': role,
+        'isSuperadmin': isSuperadmin,
       };
 
-  AuthUser toEntity() =>
-      AuthUser(id: id, name: name, email: email, avatarUrl: avatarUrl, isAdmin: isAdmin);
+  AuthUser toEntity() => AuthUser(
+        id: id,
+        name: name,
+        email: email,
+        avatarUrl: avatarUrl,
+        role: UserRole.fromName(role),
+        isSuperadmin: isSuperadmin,
+      );
 }
 
 /// What login, register and refresh return: the user plus a token pair.

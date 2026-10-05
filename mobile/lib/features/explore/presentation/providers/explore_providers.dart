@@ -196,7 +196,7 @@ class ExploreActionsController {
     return place;
   }
 
-  /// Author or admin; only the given fields change.
+  /// Author or superadmin; only the given fields change.
   Future<Place> updatePlace(
     String placeId, {
     String? name,

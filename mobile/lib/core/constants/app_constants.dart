@@ -9,8 +9,7 @@ class AppConstants {
   /// Settings are saved here.
   static const String themeModeKey = 'theme_mode_v2';
 
-  /// Demo rider loaded by the server's seed data (`npm run db:seed`), used by
-  /// the "Try Demo Login" button.
-  static const String demoEmail = 'demo@bikersync.app';
-  static const String demoPassword = 'biker123';
+  /// Sent with feedback so reports can be traced to a build. Keep in sync
+  /// with `version:` in `pubspec.yaml`.
+  static const String appVersion = '1.0.0+1';
 }

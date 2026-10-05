@@ -50,7 +50,7 @@ abstract class RideRepository {
     String? imageUrl,
   });
 
-  /// Organizer or admin: changes only the fields that are passed.
+  /// Organizer or superadmin: changes only the fields that are passed.
   Future<Ride> updateRide(
     String rideId, {
     String? title,
@@ -66,12 +66,12 @@ abstract class RideRepository {
     String? imageUrl,
   });
 
-  /// Organizer or admin: cancels the ride (riders are notified).
+  /// Organizer or superadmin: cancels the ride (riders are notified).
   Future<void> cancelRide(String rideId);
 
-  /// Admin-only: every ride in the system, regardless of date or organizer.
+  /// Superadmin-only: every ride in the system, regardless of date or organizer.
   Future<List<Ride>> getAllRides();
 
-  /// Admin-only: removes a ride from the platform.
+  /// Superadmin-only: removes a ride from the platform.
   Future<void> deleteRide(String rideId);
 }

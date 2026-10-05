@@ -126,3 +126,14 @@ export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number];
 
 export const FEEDBACK_STATUSES = ['open', 'inProgress', 'resolved'] as const;
 export type FeedbackStatus = (typeof FEEDBACK_STATUSES)[number];
+
+/** Ways to rank riders on the superadmin leaderboard. */
+export const TOP_USER_METRICS = [
+  'followers',
+  'ridesOrganized',
+  'ridesJoined',
+  'posts',
+  'likesReceived',
+  'places',
+] as const;
+export type TopUserMetric = (typeof TOP_USER_METRICS)[number];

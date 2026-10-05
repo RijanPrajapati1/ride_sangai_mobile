@@ -1,9 +1,7 @@
+import type { TopUserMetric } from '../constants/enums.js';
 import { Prisma, type PrismaClient } from '../db/prisma.js';
 
-/** Leaderboard metrics. Each maps to a fixed SQL column (never user input). */
-export const TOP_USER_METRICS = ['followers', 'ridesOrganized', 'ridesJoined', 'posts', 'likesReceived', 'places'] as const;
-export type TopUserMetric = (typeof TOP_USER_METRICS)[number];
-
+/** Each leaderboard metric maps to a fixed SQL column (never user input). */
 const METRIC_COLUMN: Record<TopUserMetric, Prisma.Sql> = {
   followers: Prisma.raw('followers_count'),
   ridesOrganized: Prisma.raw('rides_organized'),
@@ -153,15 +151,25 @@ export class AdminRepository {
   }
 
   async breakdowns() {
-    const [ridesByCategory, ridesByDifficulty, requestsByStatus, placesByCategory, feedbackByStatus, feedbackRating] =
-      await this.prisma.$transaction([
-        this.prisma.ride.groupBy({ by: ['category'], _count: { _all: true }, orderBy: { category: 'asc' } }),
-        this.prisma.ride.groupBy({ by: ['difficulty'], _count: { _all: true }, orderBy: { difficulty: 'asc' } }),
-        this.prisma.rideRequest.groupBy({ by: ['status'], _count: { _all: true }, orderBy: { status: 'asc' } }),
-        this.prisma.place.groupBy({ by: ['category'], _count: { _all: true }, orderBy: { category: 'asc' } }),
-        this.prisma.feedback.groupBy({ by: ['status'], _count: { _all: true }, orderBy: { status: 'asc' } }),
-        this.prisma.feedback.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
-      ]);
+    const [
+      ridesByCategory,
+      ridesByDifficulty,
+      requestsByStatus,
+      placesByCategory,
+      feedbackByStatus,
+      feedbackRating,
+    ] = await this.prisma.$transaction([
+      this.prisma.ride.groupBy({ by: ['category'], _count: { _all: true }, orderBy: { category: 'asc' } }),
+      this.prisma.ride.groupBy({
+        by: ['difficulty'],
+        _count: { _all: true },
+        orderBy: { difficulty: 'asc' },
+      }),
+      this.prisma.rideRequest.groupBy({ by: ['status'], _count: { _all: true }, orderBy: { status: 'asc' } }),
+      this.prisma.place.groupBy({ by: ['category'], _count: { _all: true }, orderBy: { category: 'asc' } }),
+      this.prisma.feedback.groupBy({ by: ['status'], _count: { _all: true }, orderBy: { status: 'asc' } }),
+      this.prisma.feedback.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
+    ]);
     const count = (row: { _count: true | { _all?: number } | undefined }) =>
       typeof row._count === 'object' ? (row._count._all ?? 0) : 0;
     return {

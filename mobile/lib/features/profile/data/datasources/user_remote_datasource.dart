@@ -4,7 +4,7 @@ import '../dto/follow_dto.dart';
 import '../dto/user_preferences_dto.dart';
 import '../dto/user_profile_dto.dart';
 
-/// Calls the `/me`, `/users` and `/admin/users` endpoints. Only knows about
+/// Calls the `/me`, `/users` and `/superadmin/users` endpoints. Only knows about
 /// HTTP and JSON; mapping to domain entities is the repository's job.
 class UserRemoteDataSource {
   static const me = '/me';
@@ -15,8 +15,8 @@ class UserRemoteDataSource {
   static String follow(String id) => '/users/$id/follow';
   static String followers(String id) => '/users/$id/followers';
   static String following(String id) => '/users/$id/following';
-  static const adminUsers = '/admin/users';
-  static String adminUser(String id) => '/admin/users/$id';
+  static const superadminUsers = '/superadmin/users';
+  static String superadminUser(String id) => '/superadmin/users/$id';
 
   final ApiClient _api;
 
@@ -101,17 +101,17 @@ class UserRemoteDataSource {
     return Paginated.fromJson(json, FollowEdgeDto.fromJson);
   }
 
-  // --- Admin -----------------------------------------------------------------
+  // --- Superadmin ------------------------------------------------------------
 
-  /// Admin only. [role] is `user` or `admin`.
-  Future<Paginated<UserProfileDto>> getAdminUsers({String? query, String? role, String? cursor, int? limit}) async {
+  /// Superadmin only. [role] is `user` or `superadmin`.
+  Future<Paginated<UserProfileDto>> getSuperadminUsers({String? query, String? role, String? cursor, int? limit}) async {
     final json = await _api.get<Map<String, dynamic>>(
-      adminUsers,
+      superadminUsers,
       query: {'q': query, 'role': role, 'cursor': cursor, 'limit': limit},
     );
     return Paginated.fromJson(json, UserProfileDto.fromJson);
   }
 
-  /// Admin only. Removes a rider and everything they own.
-  Future<void> removeUser(String id) => _api.delete<dynamic>(adminUser(id));
+  /// Superadmin only. Removes a rider and everything they own.
+  Future<void> removeUser(String id) => _api.delete<dynamic>(superadminUser(id));
 }

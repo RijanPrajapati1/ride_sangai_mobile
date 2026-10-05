@@ -41,9 +41,9 @@ abstract class UserRepository {
     bool? showRidingStats,
   });
 
-  /// Admin-only: every rider registered in the app.
+  /// Superadmin-only: every rider registered in the app.
   Future<List<UserProfile>> getAllUsers();
 
-  /// Admin-only: removes a rider from the platform.
+  /// Superadmin-only: removes a rider from the platform.
   Future<void> removeUser(String userId);
 }

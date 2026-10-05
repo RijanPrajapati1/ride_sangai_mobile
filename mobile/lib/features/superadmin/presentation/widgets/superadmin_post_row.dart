@@ -7,11 +7,11 @@ import '../../../../core/extensions/date_time_extensions.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../community/domain/entities/community_post.dart';
 
-class AdminPostRow extends StatelessWidget {
+class SuperadminPostRow extends StatelessWidget {
   final CommunityPost post;
   final VoidCallback onDelete;
 
-  const AdminPostRow({super.key, required this.post, required this.onDelete});
+  const SuperadminPostRow({super.key, required this.post, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {

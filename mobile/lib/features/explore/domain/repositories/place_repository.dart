@@ -52,7 +52,7 @@ abstract class PlaceRepository {
     String? entryFee,
   });
 
-  /// Author or admin. Only the non-null fields change; pass '' to clear
+  /// Author or superadmin. Only the non-null fields change; pass '' to clear
   /// [bestTime], [tips] or [entryFee].
   Future<Place> updatePlace(
     String placeId, {
@@ -83,6 +83,6 @@ abstract class PlaceRepository {
   });
   Future<void> deleteReview(String placeId);
 
-  /// Author or admin.
+  /// Author or superadmin.
   Future<void> deletePlace(String placeId);
 }

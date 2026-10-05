@@ -38,7 +38,13 @@ export class FeedbackService {
 
   async send(
     userId: string,
-    input: { category?: FeedbackCategory; message: string; rating?: number; platform?: string; appVersion?: string },
+    input: {
+      category?: FeedbackCategory;
+      message: string;
+      rating?: number;
+      platform?: string;
+      appVersion?: string;
+    },
   ) {
     const row = await this.repo.create({
       userId,
@@ -51,10 +57,18 @@ export class FeedbackService {
     return toFeedback(row);
   }
 
-  async list(query: { status?: FeedbackStatus; category?: FeedbackCategory; limit?: number; cursor?: string }) {
+  async list(query: {
+    status?: FeedbackStatus;
+    category?: FeedbackCategory;
+    limit?: number;
+    cursor?: string;
+  }) {
     const limit = pageLimit(query.limit);
     const rows = await this.repo.page(
-      { ...(query.status ? { status: query.status } : {}), ...(query.category ? { category: query.category } : {}) },
+      {
+        ...(query.status ? { status: query.status } : {}),
+        ...(query.category ? { category: query.category } : {}),
+      },
       decodeTimeCursor(query.cursor),
       limit,
     );
@@ -76,7 +90,10 @@ export class FeedbackService {
         action: 'feedback.update',
         targetType: 'feedback',
         targetId: id,
-        details: { ...(input.status ? { status: input.status } : {}), noteChanged: input.adminNote !== undefined },
+        details: {
+          ...(input.status ? { status: input.status } : {}),
+          noteChanged: input.adminNote !== undefined,
+        },
       });
       const row = await this.repo.update(id, {
         ...(input.status !== undefined ? { status: input.status } : {}),
@@ -84,6 +101,15 @@ export class FeedbackService {
         ...(resolvedAt !== undefined ? { resolvedAt } : {}),
       });
       return toAdminFeedback(row);
+    });
+  }
+
+  /** For spam or test entries. Recorded in the audit log. */
+  async remove(admin: Actor, id: string): Promise<void> {
+    await this.uow.run(async ({ db }) => {
+      if (!(await this.repo.delete(id)))
+        throw notFound('This feedback could not be found.', 'FEEDBACK_NOT_FOUND');
+      await audit(db, { actorId: admin.id, action: 'feedback.remove', targetType: 'feedback', targetId: id });
     });
   }
 }

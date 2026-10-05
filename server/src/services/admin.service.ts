@@ -1,5 +1,6 @@
 import type { UserRole } from '../constants/enums.js';
 import type { UnitOfWork } from '../db/prisma.js';
+import type { TopUserMetric } from '../constants/enums.js';
 import type { AdminRepository } from '../repositories/admin.repository.js';
 import type { BannerRepository } from '../repositories/banner.repository.js';
 import { audit } from '../utils/audit.js';
@@ -54,6 +55,58 @@ export class AdminService {
 
   stats() {
     return this.repo.stats();
+  }
+
+  async analytics(days = 30) {
+    const now = new Date();
+    const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const from = new Date(today - (days - 1) * 86_400_000);
+    const [daily, activeUsers, breakdowns] = await Promise.all([
+      this.repo.dailyActivity(from),
+      this.repo.activeUsers(now),
+      this.repo.breakdowns(),
+    ]);
+    const keys = [
+      'signups',
+      'rides',
+      'joinRequests',
+      'posts',
+      'comments',
+      'messages',
+      'places',
+      'feedback',
+    ] as const;
+    const totals = Object.fromEntries(
+      keys.map((key) => [key, daily.reduce((sum, row) => sum + row[key], 0)]),
+    ) as Record<(typeof keys)[number], number>;
+    return {
+      days,
+      totals,
+      daily: daily.map(({ day, ...counts }) => ({ date: day.toISOString().slice(0, 10), ...counts })),
+      activeUsers,
+      ...breakdowns,
+    };
+  }
+
+  async topUsers(metric: TopUserMetric = 'followers', limit = 10) {
+    const rows = await this.repo.topUsers(metric, limit);
+    return {
+      metric,
+      items: rows.map((row, index) => ({
+        rank: index + 1,
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        avatarUrl: row.avatar_url,
+        joinedAt: row.created_at,
+        followers: row.followers_count,
+        ridesOrganized: row.rides_organized,
+        ridesJoined: row.rides_joined,
+        posts: row.posts,
+        likesReceived: row.likes_received,
+        places: row.places,
+      })),
+    };
   }
 
   async listUsers(admin: Actor, query: { q?: string; role?: UserRole; limit?: number; cursor?: string }) {

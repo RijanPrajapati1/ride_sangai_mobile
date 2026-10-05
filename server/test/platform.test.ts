@@ -1,7 +1,7 @@
 import type { InjectOptions } from 'fastify';
 import { describe, expect, it } from 'vitest';
 import { useTestApp } from './helpers/context.js';
-import { daysFromNow, registerAdmin, registerUser } from './helpers/factories.js';
+import { daysFromNow, registerSuperadmin, registerUser } from './helpers/factories.js';
 
 const ctx = useTestApp();
 const inject = (options: InjectOptions) => ctx.app.inject(options);
@@ -92,7 +92,7 @@ describe('home and meta', () => {
 
 describe('admin', () => {
   it('is admin-only and moderates users, posts and banners with an audit trail', async () => {
-    const admin = await registerAdmin(ctx.app, ctx.prisma);
+    const admin = await registerSuperadmin(ctx.app, ctx.prisma);
     const rider = await registerUser(ctx.app);
     expect(
       (await inject({ method: 'GET', url: '/api/v1/superadmin/stats', headers: rider.headers })).statusCode,
@@ -133,8 +133,13 @@ describe('admin', () => {
     });
     expect(self.json().error.code).toBe('CANNOT_REMOVE_SELF');
     expect(
-      (await inject({ method: 'DELETE', url: `/api/v1/superadmin/users/${rider.id}`, headers: admin.headers }))
-        .statusCode,
+      (
+        await inject({
+          method: 'DELETE',
+          url: `/api/v1/superadmin/users/${rider.id}`,
+          headers: admin.headers,
+        })
+      ).statusCode,
     ).toBe(204);
     // The removed rider's token stops working immediately.
     expect((await inject({ method: 'GET', url: '/api/v1/me', headers: rider.headers })).statusCode).toBe(401);

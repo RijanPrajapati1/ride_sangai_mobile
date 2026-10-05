@@ -59,11 +59,11 @@ class CommunityRepositoryImpl implements CommunityRepository {
       (await _dataSource.unlikeComment(commentId)).toEntity();
 
   @override
-  Future<List<CommunityPost>> getAllPostsForAdmin({int? limit}) async {
-    final page = await _dataSource.getAdminPosts(limit: limit);
+  Future<List<CommunityPost>> getAllPostsForSuperadmin({int? limit}) async {
+    final page = await _dataSource.getSuperadminPosts(limit: limit);
     return page.items.map((d) => d.toEntity()).toList();
   }
 
   @override
-  Future<void> adminDeletePost(String postId) => _dataSource.adminDeletePost(postId);
+  Future<void> superadminDeletePost(String postId) => _dataSource.superadminDeletePost(postId);
 }

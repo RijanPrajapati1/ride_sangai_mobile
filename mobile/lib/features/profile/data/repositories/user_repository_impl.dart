@@ -9,8 +9,8 @@ import '../dto/user_preferences_dto.dart';
 import '../dto/user_profile_dto.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  /// Page size used when the admin list is loaded in full.
-  static const _adminPageSize = 100;
+  /// Page size used when the superadmin list is loaded in full.
+  static const _superadminPageSize = 100;
 
   final UserRemoteDataSource _remote;
 
@@ -91,13 +91,13 @@ class UserRepositoryImpl implements UserRepository {
     return (await _remote.patchPreferences(changes)).toEntity();
   }
 
-  /// Loads every page of `GET /admin/users` (alphabetical).
+  /// Loads every page of `GET /superadmin/users` (alphabetical).
   @override
   Future<List<UserProfile>> getAllUsers() async {
     final users = <UserProfile>[];
     String? cursor;
     do {
-      final page = await _remote.getAdminUsers(cursor: cursor, limit: _adminPageSize);
+      final page = await _remote.getSuperadminUsers(cursor: cursor, limit: _superadminPageSize);
       users.addAll(page.items.map((d) => d.toEntity()));
       cursor = page.nextCursor;
     } while (cursor != null);

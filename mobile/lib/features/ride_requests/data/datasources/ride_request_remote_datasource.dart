@@ -9,7 +9,7 @@ class RideRequestRemoteDataSource {
   static const myRequests = '/me/ride-requests';
   static String approvePath(String requestId) => '/ride-requests/$requestId/approve';
   static String declinePath(String requestId) => '/ride-requests/$requestId/decline';
-  static const adminRequests = '/admin/ride-requests';
+  static const superadminRequests = '/superadmin/ride-requests';
 
   final ApiClient _api;
 
@@ -24,7 +24,7 @@ class RideRequestRemoteDataSource {
   Future<Paginated<RideRequestDto>> getMyRideRequests({RideRequestStatus? status, String? cursor, int? limit}) =>
       _page(myRequests, {'status': status?.name, 'cursor': cursor, 'limit': limit});
 
-  /// `GET /rides/:id/requests` (organizer or admin).
+  /// `GET /rides/:id/requests` (organizer or superadmin).
   Future<Paginated<RideRequestDto>> getRequestsForRide(
     String rideId, {
     RideRequestStatus? status,
@@ -47,7 +47,7 @@ class RideRequestRemoteDataSource {
     return RideRequestDto.fromJson(json);
   }
 
-  /// `GET /admin/ride-requests`: every request, newest first.
+  /// `GET /superadmin/ride-requests`: every request, newest first.
   Future<Paginated<RideRequestDto>> getAllRequests({RideRequestStatus? status, String? cursor, int? limit}) =>
-      _page(adminRequests, {'status': status?.name, 'cursor': cursor, 'limit': limit});
+      _page(superadminRequests, {'status': status?.name, 'cursor': cursor, 'limit': limit});
 }

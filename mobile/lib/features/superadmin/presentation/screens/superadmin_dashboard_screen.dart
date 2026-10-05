@@ -13,13 +13,13 @@ import '../../../../shared/utils/run_or_show_error.dart';
 import '../../../../shared/widgets/stat_card.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../../ride_requests/domain/entities/ride_request.dart';
-import '../providers/admin_providers.dart';
-import '../widgets/admin_post_row.dart';
-import '../widgets/admin_ride_row.dart';
-import '../widgets/admin_user_row.dart';
+import '../providers/superadmin_providers.dart';
+import '../widgets/superadmin_post_row.dart';
+import '../widgets/superadmin_ride_row.dart';
+import '../widgets/superadmin_user_row.dart';
 
-class AdminDashboardScreen extends ConsumerWidget {
-  const AdminDashboardScreen({super.key});
+class SuperadminDashboardScreen extends ConsumerWidget {
+  const SuperadminDashboardScreen({super.key});
 
   Future<bool> _confirm(BuildContext context, {required String title, required String message}) async {
     final confirmed = await showDialog<bool>(
@@ -47,17 +47,17 @@ class AdminDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final usersAsync = ref.watch(adminAllUsersProvider);
-    final ridesAsync = ref.watch(adminAllRidesProvider);
-    final requestsAsync = ref.watch(adminAllRequestsProvider);
-    final postsAsync = ref.watch(adminAllPostsProvider);
-    final actions = ref.read(adminActionsControllerProvider);
+    final usersAsync = ref.watch(superadminAllUsersProvider);
+    final ridesAsync = ref.watch(superadminAllRidesProvider);
+    final requestsAsync = ref.watch(superadminAllRequestsProvider);
+    final postsAsync = ref.watch(superadminAllPostsProvider);
+    final actions = ref.read(superadminActionsControllerProvider);
 
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Admin Dashboard'),
+          title: const Text('Superadmin Dashboard'),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
@@ -101,7 +101,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                 children: [
                   usersAsync.when(
                     loading: () => const LoadingWidget(),
-                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(adminAllUsersProvider)),
+                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(superadminAllUsersProvider)),
                     data: (users) {
                       if (users.isEmpty) {
                         return const EmptyState(icon: Icons.people_outline, title: 'No riders', message: 'Riders will show up here.');
@@ -112,7 +112,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                         separatorBuilder: (_, _) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final user = users[index];
-                          return AdminUserRow(
+                          return SuperadminUserRow(
                             user: user,
                             onTap: () => context.push(RouteNames.userProfilePath(user.id)),
                             onRemove: () async {
@@ -130,7 +130,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   ),
                   ridesAsync.when(
                     loading: () => const LoadingWidget(),
-                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(adminAllRidesProvider)),
+                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(superadminAllRidesProvider)),
                     data: (rides) {
                       if (rides.isEmpty) {
                         return const EmptyState(icon: Icons.pedal_bike_outlined, title: 'No rides', message: 'Rides will show up here.');
@@ -141,7 +141,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                         separatorBuilder: (_, _) => const SizedBox(height: AppDimensions.spaceSm),
                         itemBuilder: (context, index) {
                           final ride = rides[index];
-                          return AdminRideRow(
+                          return SuperadminRideRow(
                             ride: ride,
                             onTap: () => context.push(RouteNames.rideDetailsPath(ride.id)),
                             onDelete: () async {
@@ -159,7 +159,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   ),
                   requestsAsync.when(
                     loading: () => const LoadingWidget(),
-                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(adminAllRequestsProvider)),
+                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(superadminAllRequestsProvider)),
                     data: (requests) {
                       if (requests.isEmpty) {
                         return const EmptyState(icon: Icons.inbox_outlined, title: 'No requests', message: 'Join requests will show up here.');
@@ -198,7 +198,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   ),
                   postsAsync.when(
                     loading: () => const LoadingWidget(),
-                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(adminAllPostsProvider)),
+                    error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(superadminAllPostsProvider)),
                     data: (posts) {
                       if (posts.isEmpty) {
                         return const EmptyState(icon: Icons.groups_outlined, title: 'No posts', message: 'Community posts will show up here.');
@@ -209,7 +209,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                         separatorBuilder: (_, _) => const SizedBox(height: AppDimensions.spaceSm),
                         itemBuilder: (context, index) {
                           final post = posts[index];
-                          return AdminPostRow(
+                          return SuperadminPostRow(
                             post: post,
                             onDelete: () async {
                               final confirmed = await _confirm(

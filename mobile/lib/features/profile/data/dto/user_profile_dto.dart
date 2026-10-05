@@ -46,7 +46,7 @@ class UserProfileDto {
   factory UserProfileDto.fromJson(Map<String, dynamic> json) => UserProfileDto(
         id: json['id'] as String,
         name: json['name'] as String,
-        // Only sent to the owner and admins; null for everyone else.
+        // Only sent to the owner and superadmins; null for everyone else.
         email: json['email'] as String? ?? '',
         avatarUrl: json['avatarUrl'] as String? ?? '',
         bio: json['bio'] as String? ?? '',

@@ -8,12 +8,12 @@ import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../../rides/domain/entities/ride.dart';
 
-class AdminRideRow extends StatelessWidget {
+class SuperadminRideRow extends StatelessWidget {
   final Ride ride;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
-  const AdminRideRow({super.key, required this.ride, required this.onTap, required this.onDelete});
+  const SuperadminRideRow({super.key, required this.ride, required this.onTap, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {

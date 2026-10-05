@@ -99,7 +99,7 @@ class PlaceRemoteDataSource {
     return PlaceDto.fromJson(json);
   }
 
-  /// Partial update (author or admin). [fields] uses the `POST /places` keys.
+  /// Partial update (author or superadmin). [fields] uses the `POST /places` keys.
   Future<PlaceDto> updatePlace(String id, Map<String, dynamic> fields) async {
     final json = await _api.patch<Map<String, dynamic>>(placePath(id), data: fields);
     return PlaceDto.fromJson(json);

@@ -9,7 +9,6 @@ import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -43,12 +42,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         SnackBar(content: Text(ref.read(authControllerProvider).error ?? 'Login failed')),
       );
     }
-  }
-
-  void _fillDemo() {
-    _emailController.text = AppConstants.demoEmail;
-    _passwordController.text = AppConstants.demoPassword;
-    _submit();
   }
 
   @override
@@ -108,12 +101,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: AppDimensions.spaceSm),
                 AppButton(label: 'Log In', onPressed: _submit, isLoading: authState.isLoading),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppOutlinedButton(
-                  label: 'Try Demo Login',
-                  icon: Icons.flash_on_outlined,
-                  onPressed: authState.isLoading ? null : _fillDemo,
-                ),
                 const SizedBox(height: AppDimensions.spaceLg),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

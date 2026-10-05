@@ -4,8 +4,8 @@ import '../dto/comment_dto.dart';
 import '../dto/community_post_dto.dart';
 import '../dto/like_state_dto.dart';
 
-/// Calls the community endpoints (`/posts`, `/comments`) and the admin post
-/// moderation endpoints (`/admin/posts`).
+/// Calls the community endpoints (`/posts`, `/comments`) and the superadmin post
+/// moderation endpoints (`/superadmin/posts`).
 class CommunityRemoteDataSource {
   static const posts = '/posts';
   static String post(String id) => '/posts/$id';
@@ -13,8 +13,8 @@ class CommunityRemoteDataSource {
   static String postComments(String id) => '/posts/$id/comments';
   static String comment(String id) => '/comments/$id';
   static String commentLike(String id) => '/comments/$id/like';
-  static const adminPosts = '/admin/posts';
-  static String adminPost(String id) => '/admin/posts/$id';
+  static const superadminPosts = '/superadmin/posts';
+  static String superadminPost(String id) => '/superadmin/posts/$id';
 
   final ApiClient _api;
 
@@ -82,10 +82,10 @@ class CommunityRemoteDataSource {
   Future<LikeStateDto> unlikeComment(String id) async =>
       LikeStateDto.fromJson(await _api.delete<Map<String, dynamic>>(commentLike(id)));
 
-  Future<Paginated<CommunityPostDto>> getAdminPosts({String? cursor, int? limit}) async {
-    final json = await _api.get<Map<String, dynamic>>(adminPosts, query: {'cursor': cursor, 'limit': limit});
+  Future<Paginated<CommunityPostDto>> getSuperadminPosts({String? cursor, int? limit}) async {
+    final json = await _api.get<Map<String, dynamic>>(superadminPosts, query: {'cursor': cursor, 'limit': limit});
     return Paginated.fromJson(json, CommunityPostDto.fromJson);
   }
 
-  Future<void> adminDeletePost(String id) => _api.delete<dynamic>(adminPost(id));
+  Future<void> superadminDeletePost(String id) => _api.delete<dynamic>(superadminPost(id));
 }
