@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertCircle, Eye, EyeOff, Info, Lock, Mail } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Field, Input } from '@/shared/ui/input';
@@ -28,6 +28,11 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
   const notice = reason ? REASONS[reason] : undefined;
+  // Until React has hydrated, a submit would fall back to a native form post;
+  // keep the button disabled so credentials only ever go through the BFF.
+  const [hydrated, setHydrated] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration flag
+  useEffect(() => setHydrated(true), []);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -113,7 +118,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
               </div>
             )}
 
-            <form className="mt-6 flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+            <form className="mt-6 flex flex-col gap-4" method="post" onSubmit={onSubmit} noValidate>
               <Field label="Email" htmlFor="email" hint={fieldErrors.email && <span className="text-danger-ink">{fieldErrors.email}</span>}>
                 <div className="relative">
                   <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-subtle" />
@@ -151,7 +156,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
                   </button>
                 </div>
               </Field>
-              <Button type="submit" size="lg" className="mt-2 w-full" loading={login.isPending}>
+              <Button type="submit" size="lg" className="mt-2 w-full" loading={login.isPending} disabled={!hydrated}>
                 Sign in
               </Button>
             </form>

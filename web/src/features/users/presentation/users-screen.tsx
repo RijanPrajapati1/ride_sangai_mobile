@@ -71,7 +71,7 @@ export function UsersScreen() {
               <THead>
                 <tr>
                   <TH>{role === 'user' ? 'Rider' : 'Superadmin'}</TH>
-                  <TH>Role</TH>
+                  <TH className="hidden sm:table-cell">Role</TH>
                   <TH className="hidden md:table-cell">Joined</TH>
                   <TH className="hidden lg:table-cell">Last sign-in</TH>
                   <TH className="text-right">Followers</TH>
@@ -92,7 +92,7 @@ export function UsersScreen() {
                         trailing={u.isMe && <Badge tone="primary">You</Badge>}
                       />
                     </TD>
-                    <TD>
+                    <TD className="hidden sm:table-cell">
                       {u.role === 'superadmin' ? (
                         <Badge tone="primary">
                           <ShieldCheck /> Superadmin

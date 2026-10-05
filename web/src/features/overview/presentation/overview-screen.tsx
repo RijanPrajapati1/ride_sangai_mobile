@@ -78,14 +78,16 @@ export function OverviewScreen() {
           tone={openFeedback ? 'accent' : 'neutral'}
           hint={openFeedback ? 'Needs a reply' : 'All caught up'}
         />
-        <ActiveUsersCard data={a?.activeUsers} loading={loadingAnalytics} />
       </section>
 
-      <section className="mt-4 grid gap-4 sm:mt-6 xl:grid-cols-3">
+      <section className="mt-4 grid gap-4 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <ActivityChart data={a} loading={loadingAnalytics} days={days} onDaysChange={setDays} />
         </div>
-        <RatingCard average={a?.feedbackAverageRating} count={a?.feedbackRatings} loading={loadingAnalytics} />
+        <div className="flex flex-col gap-4">
+          <ActiveUsersCard data={a?.activeUsers} loading={loadingAnalytics} />
+          <RatingCard average={a?.feedbackAverageRating} count={a?.feedbackRatings} loading={loadingAnalytics} />
+        </div>
       </section>
 
       <section aria-label="Breakdowns" className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -23,8 +23,10 @@ function BannerForm({ banner, onDone }: { banner?: Banner; onDone: () => void })
   const [values, setValues] = useState<BannerFormValues>(() => toFormValues(banner));
   const [errors, setErrors] = useState<Errors>({});
   const save = useSaveBanner();
-  const set = <K extends keyof BannerFormValues>(key: K, value: BannerFormValues[K]) =>
+  const set = <K extends keyof BannerFormValues>(key: K, value: BannerFormValues[K]) => {
     setValues((v) => ({ ...v, [key]: value }));
+    setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { QueryProvider } from '@/core/query/query-provider';
-import { THEME_COOKIE, ThemeProvider, type Theme } from '@/shared/layout/theme';
+import { ThemeProvider } from '@/shared/layout/theme';
+import { THEME_COOKIE, type Theme } from '@/shared/layout/theme-cookie';
 import { Toaster } from '@/shared/layout/toaster';
 import './globals.css';
 

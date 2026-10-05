@@ -1,6 +1,7 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { goToLogin } from '@/core/http/api-client';
 import { authRepository } from '../data/auth.repository';
 import type { LoginInput } from './login.schema';
 
@@ -18,14 +19,8 @@ export function useLogin() {
 }
 
 export function useLogout() {
-  const qc = useQueryClient();
   return useMutation({
     mutationFn: authRepository.logout,
-    onSettled: () => {
-      qc.clear();
-      // Full page load so no state of the ended session survives.
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.assign('/login?reason=signed-out');
-    },
+    onSettled: () => goToLogin('signed-out', { keepLocation: false }),
   });
 }

@@ -1,8 +1,8 @@
 'use client';
 
 /**
- * Composition root for the signed-in area: wires feature entry points into the
- * shared app shell. Navigation only — no business logic.
+ * The signed-in area's frame: sidebar sections, the user menu and the open
+ * feedback badge, placed in the shared app shell. Navigation only.
  */
 import {
   FileClock,

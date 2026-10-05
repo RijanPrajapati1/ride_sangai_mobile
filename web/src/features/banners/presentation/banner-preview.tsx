@@ -49,7 +49,7 @@ export function BannerPreview({
         </svg>
       )}
       {category && (
-        <span className="absolute top-3 left-3 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium backdrop-blur">
+        <span className="mb-2 self-start rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium backdrop-blur">
           {humanize(category)}
         </span>
       )}

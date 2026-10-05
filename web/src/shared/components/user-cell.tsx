@@ -18,7 +18,7 @@ export function UserCell({
   trailing?: React.ReactNode;
 }) {
   return (
-    <div className={cn('flex min-w-0 items-center gap-3', className)}>
+    <div className={cn('flex min-w-0 items-center gap-3 text-sm', className)}>
       <Avatar name={name} src={avatarUrl} size={size} />
       <div className="min-w-0">
         <div className="flex items-center gap-1.5">

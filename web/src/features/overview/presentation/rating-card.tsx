@@ -13,9 +13,9 @@ export function RatingCard({
   loading: boolean;
 }) {
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-1 flex-col">
       <CardHeader title="Feedback rating" description="Average of rated feedback, all time" />
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 py-6">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 py-5">
         {loading && average === undefined ? (
           <Skeleton className="h-14 w-28" />
         ) : average == null ? (

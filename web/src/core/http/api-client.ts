@@ -13,13 +13,17 @@ export interface RequestOptions {
 
 let redirecting = false;
 
-/** Sends the browser to /login once the session is gone. */
-function goToLogin(reason?: string) {
+/**
+ * Sends the browser to /login (a full page load, so no state of the ended
+ * session survives). Only the first call wins, so a burst of 401s — or a
+ * sign-out racing in-flight requests — cannot redirect twice.
+ */
+export function goToLogin(reason?: string, { keepLocation = true } = {}) {
   if (redirecting || typeof window === 'undefined') return;
   redirecting = true;
   const next = `${window.location.pathname}${window.location.search}`;
   const params = new URLSearchParams();
-  if (next && next !== '/') params.set('next', next);
+  if (keepLocation && next && next !== '/') params.set('next', next);
   if (reason) params.set('reason', reason);
   const qs = params.toString();
   // A full page load (not a client navigation) drops all cached data of the ended session.

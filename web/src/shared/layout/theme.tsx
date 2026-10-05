@@ -3,9 +3,9 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import { THEME_COOKIE, type Theme } from './theme-cookie';
 
-export type Theme = 'light' | 'dark';
-export const THEME_COOKIE = 'rs-theme';
+export type { Theme };
 
 const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void }>({
   theme: 'light',

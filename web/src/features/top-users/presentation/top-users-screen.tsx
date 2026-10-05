@@ -23,6 +23,8 @@ export function TopUsersScreen() {
   const { data, isPending, isError, error, refetch, isFetching } = useTopUsers(metric, limit);
   const items = data ?? [];
   const leaderHasActivity = items.some((u) => u[metric] > 0);
+  // The ranking metric comes first so it stays visible on narrow screens.
+  const columns = [metric, ...TOP_USER_METRICS.filter((m) => m !== metric)];
 
   return (
     <>
@@ -72,7 +74,7 @@ export function TopUsersScreen() {
               <tr>
                 <TH className="w-14">#</TH>
                 <TH>Rider</TH>
-                {TOP_USER_METRICS.map((m) => (
+                {columns.map((m) => (
                   <TH
                     key={m}
                     className={cn('text-right', m === metric && 'text-primary-ink')}
@@ -92,10 +94,10 @@ export function TopUsersScreen() {
                   <TD>
                     <RankBadge rank={u.rank} />
                   </TD>
-                  <TD className="min-w-56">
+                  <TD className="min-w-48">
                     <UserCell name={u.name} avatarUrl={u.avatarUrl} secondary={u.email} />
                   </TD>
-                  {TOP_USER_METRICS.map((m) => (
+                  {columns.map((m) => (
                     <TD
                       key={m}
                       className={cn(

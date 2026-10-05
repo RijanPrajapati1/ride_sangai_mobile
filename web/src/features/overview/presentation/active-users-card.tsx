@@ -15,9 +15,9 @@ export function ActiveUsersCard({
     { label: '30 days', value: data?.last30Days },
   ];
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 shadow-card sm:col-span-2">
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 shadow-card">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[13px] font-medium text-muted">Active riders</span>
+        <span className="text-[13px] font-medium text-muted">Active riders <span className="font-normal text-subtle">· signed-in sessions</span></span>
         <span className="flex size-8 items-center justify-center rounded-lg bg-success-soft text-success-ink">
           <Activity className="size-4" />
         </span>
