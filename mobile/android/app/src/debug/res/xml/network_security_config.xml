@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: lets the app reach a local dev server over plain HTTP
+     (emulator 10.0.2.2, localhost, or your computer's LAN IP). Release builds
+     don't include this file, so Android blocks cleartext traffic there. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

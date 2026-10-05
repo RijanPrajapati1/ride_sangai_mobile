@@ -9,7 +9,7 @@ import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
-import '../../data/datasources/auth_local_datasource.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -46,8 +46,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _fillDemo() {
-    _emailController.text = AuthLocalDataSource.demoEmail;
-    _passwordController.text = AuthLocalDataSource.demoPassword;
+    _emailController.text = AppConstants.demoEmail;
+    _passwordController.text = AppConstants.demoPassword;
     _submit();
   }
 

@@ -68,7 +68,7 @@ type Env = Record<string, string | undefined>;
 class ConfigReader {
   readonly errors: string[] = [];
 
-  constructor(private readonly env: Env) {}
+  constructor(private readonly env: Env) { }
 
   private raw(name: string): string | undefined {
     const value = this.env[name];
@@ -149,9 +149,9 @@ export function loadConfig(env: Env = process.env): AppConfig {
     corsRaw === '*'
       ? true
       : corsRaw
-          .split(',')
-          .map((origin) => origin.trim())
-          .filter(Boolean);
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean);
 
   const publicUrl = r.string('PUBLIC_URL', `http://localhost:${port}`).replace(/\/+$/, '');
 

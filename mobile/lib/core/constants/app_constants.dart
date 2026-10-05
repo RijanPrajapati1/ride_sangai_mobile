@@ -8,8 +8,12 @@ class AppConstants {
   static const Duration shortDataSourceDelay = Duration(milliseconds: 300);
 
   static const String onboardingCompleteKey = 'onboarding_complete';
-  static const String authTokenKey = 'auth_session';
   static const String themeModeKey = 'theme_mode';
+
+  /// Demo rider loaded by the server's seed data (`npm run db:seed`), used by
+  /// the "Try Demo Login" button.
+  static const String demoEmail = 'demo@bikersync.app';
+  static const String demoPassword = 'biker123';
 
   static const String currentUserId = 'u_001';
   static const String adminUserId = 'admin_001';
