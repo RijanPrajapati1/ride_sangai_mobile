@@ -25,7 +25,7 @@ class NotificationTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (notification.actorAvatarUrl != null)
-              AppAvatar(imageUrl: notification.actorAvatarUrl, name: notification.title, size: 44)
+              AppAvatar(imageUrl: notification.actorAvatarUrl, name: notification.actorName ?? notification.title, size: 44)
             else
               Container(
                 width: 44,

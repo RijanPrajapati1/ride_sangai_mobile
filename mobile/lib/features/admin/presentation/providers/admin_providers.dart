@@ -22,7 +22,7 @@ final adminAllRequestsProvider = FutureProvider<List<RideRequest>>((ref) {
 });
 
 final adminAllPostsProvider = FutureProvider<List<CommunityPost>>((ref) {
-  return ref.watch(communityRepositoryProvider).getPosts();
+  return ref.watch(communityRepositoryProvider).getAllPostsForAdmin();
 });
 
 final adminActionsControllerProvider = Provider((ref) => AdminActionsController(ref));
@@ -45,7 +45,7 @@ class AdminActionsController {
   }
 
   Future<void> deletePost(String postId) async {
-    await _ref.read(communityRepositoryProvider).deletePost(postId);
+    await _ref.read(communityRepositoryProvider).adminDeletePost(postId);
     _ref.invalidate(adminAllPostsProvider);
     _ref.invalidate(communityPostsProvider);
   }
