@@ -1,35 +1,17 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
 import type { AppConfig } from '../config/env.js';
 import { Prisma, PrismaClient } from '../generated/prisma/client.js';
 import { isRetryableTransactionError } from '../utils/db-errors.js';
+import { createPool } from './db.js';
 
 export { Prisma, PrismaClient };
 
 /** The client itself or an interactive-transaction client. Repositories accept either. */
 export type Db = PrismaClient | Prisma.TransactionClient;
 
-/**
- * Creates the Prisma client on top of a node-postgres pool we configure
- * ourselves (pool size, statement timeout, application name).
- */
+/** Creates the Prisma client on top of our own node-postgres pool (see `db.ts`). */
 export function createPrisma(config: AppConfig['db'], applicationName = 'ride-sangai-api'): PrismaClient {
-  const pool = new pg.Pool({
-    connectionString: config.url,
-    max: config.poolMax,
-    idleTimeoutMillis: 30_000,
-    connectionTimeoutMillis: 10_000,
-    application_name: applicationName,
-    ssl: config.ssl ? { rejectUnauthorized: false } : undefined,
-    ...(config.statementTimeoutMs > 0 ? { statement_timeout: config.statementTimeoutMs } : {}),
-    idle_in_transaction_session_timeout: 60_000,
-    // Every session runs in UTC. The Prisma pg adapter reads/writes timestamps
-    // without their offset, so a non-UTC server timezone (e.g. Asia/Kathmandu)
-    // would otherwise shift times written by Prisma against SQL now().
-    options: '-c TimeZone=UTC',
-  });
-  // An idle client erroring (e.g. the server restarted) must not crash the process.
-  pool.on('error', (err) => console.error('Unexpected error on idle Postgres client', err));
+  const pool = createPool(config, applicationName);
   return new PrismaClient({ adapter: new PrismaPg(pool, { disposeExternalPool: true }) });
 }
 
