@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/constants/app_constants.dart';
-import '../../features/admin/presentation/screens/admin_dashboard_screen.dart';
+import '../../features/superadmin/presentation/screens/superadmin_dashboard_screen.dart';
 import '../../features/authentication/presentation/providers/auth_providers.dart';
 import '../../features/authentication/presentation/screens/forgot_password_screen.dart';
 import '../../features/authentication/presentation/screens/login_screen.dart';
@@ -11,6 +11,7 @@ import '../../features/community/presentation/screens/community_screen.dart';
 import '../../features/community/presentation/screens/post_detail_screen.dart';
 import '../../features/create_ride/presentation/screens/create_ride_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
+import '../../features/feedback/presentation/screens/feedback_screen.dart';
 import '../../features/explore/presentation/screens/place_details_screen.dart';
 import '../../features/explore/presentation/screens/saved_places_screen.dart';
 import '../../features/explore/presentation/screens/share_place_screen.dart';
@@ -32,13 +33,25 @@ import '../app_shell.dart';
 import '../splash_screen.dart';
 import 'route_names.dart';
 
+/// Created once for the app's lifetime. Rebuilding the router on every auth
+/// change would recreate the current screen and wipe what the user typed
+/// (for example after a failed login). Instead, [refresh] re-runs `redirect`
+/// only when something that affects navigation changes.
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authControllerProvider);
-  final onboardingAsync = ref.watch(onboardingCompleteProvider);
+  final refresh = ValueNotifier<int>(0);
+  ref.listen(
+    authControllerProvider.select((auth) => (auth.status, auth.user?.isSuperadmin)),
+    (_, _) => refresh.value++,
+  );
+  ref.listen(onboardingCompleteProvider, (_, _) => refresh.value++);
+  ref.onDispose(refresh.dispose);
 
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: RouteNames.splash,
+    refreshListenable: refresh,
     redirect: (context, state) {
+      final authState = ref.read(authControllerProvider);
+      final onboardingAsync = ref.read(onboardingCompleteProvider);
       final location = state.matchedLocation;
       final isAuthRoute = location == RouteNames.login ||
           location == RouteNames.register ||
@@ -60,8 +73,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return isAuthRoute ? null : RouteNames.login;
       }
 
-      final isAdmin = authState.user?.isAdmin ?? false;
-      final isAdminRoute = location == RouteNames.admin;
+      final isSuperadmin = authState.user?.isSuperadmin ?? false;
+      final isSuperadminRoute = location == RouteNames.superadmin;
       const riderShellRoots = {
         RouteNames.home,
         RouteNames.rides,
@@ -69,14 +82,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         RouteNames.profile,
       };
 
-      if (isAdmin) {
-        // Admins can still drill into a rider/ride/post's detail page (pushed
+      if (isSuperadmin) {
+        // Superadmins can still drill into a rider/ride/post's detail page (pushed
         // on top of the dashboard) to review it before moderating — only the
         // rider bottom-nav tabs themselves are off-limits.
         final blocked = isSplash || isOnboardingRoute || isAuthRoute || riderShellRoots.contains(location);
-        return blocked ? RouteNames.admin : null;
+        return blocked ? RouteNames.superadmin : null;
       }
-      if (isAdminRoute) {
+      if (isSuperadminRoute) {
         return RouteNames.home;
       }
 
@@ -87,7 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: RouteNames.splash, builder: (context, state) => const SplashScreen()),
-      GoRoute(path: RouteNames.admin, builder: (context, state) => const AdminDashboardScreen()),
+      GoRoute(path: RouteNames.superadmin, builder: (context, state) => const SuperadminDashboardScreen()),
       GoRoute(path: RouteNames.onboarding, builder: (context, state) => const OnboardingScreen()),
       GoRoute(path: RouteNames.login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: RouteNames.register, builder: (context, state) => const RegisterScreen()),
@@ -120,6 +133,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => ProfileScreen(userId: state.pathParameters['userId']!),
       ),
       GoRoute(path: RouteNames.settings, builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: RouteNames.feedback, builder: (context, state) => const FeedbackScreen()),
       GoRoute(path: RouteNames.explore, builder: (context, state) => const ExploreScreen()),
       GoRoute(path: RouteNames.savedPlaces, builder: (context, state) => const SavedPlacesScreen()),
       GoRoute(path: RouteNames.sharePlace, builder: (context, state) => const SharePlaceScreen()),
@@ -147,11 +161,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: RouteNames.profile,
-              builder: (context, state) => const ProfileScreen(userId: AppConstants.currentUserId),
+              builder: (context, state) => ProfileScreen(userId: ref.read(currentUserIdProvider)),
             ),
           ]),
         ],
       ),
     ],
   );
+  ref.onDispose(router.dispose);
+  return router;
 });

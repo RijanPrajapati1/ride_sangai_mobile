@@ -18,7 +18,8 @@ describe('auth', () => {
       name: 'Alex Shrestha',
       email: 'alex@example.com',
       avatarUrl: '',
-      isAdmin: false,
+      role: 'user',
+      isSuperadmin: false,
     });
     expect(body.tokenType).toBe('Bearer');
     expect(body.refreshToken).toEqual(expect.any(String));
@@ -148,6 +149,20 @@ describe('auth', () => {
     const docs = await ctx.app.inject({ method: 'GET', url: '/docs/json' });
     expect(docs.statusCode).toBe(200);
     expect(docs.json().paths['/api/v1/auth/login']).toBeDefined();
+  });
+
+  it('answers CORS preflights for protected routes without a token', async () => {
+    const res = await ctx.app.inject({
+      method: 'OPTIONS',
+      url: '/api/v1/auth/me',
+      headers: {
+        origin: 'http://localhost:5555',
+        'access-control-request-method': 'GET',
+        'access-control-request-headers': 'authorization',
+      },
+    });
+    expect(res.statusCode).toBe(204);
+    expect(res.headers['access-control-allow-origin']).toBe('http://localhost:5555');
   });
 
   it('returns a consistent 404 envelope for unknown routes', async () => {

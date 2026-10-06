@@ -331,6 +331,7 @@ export type UserWhereInput = {
   places?: Prisma.PlaceListRelationFilter
   placeReviews?: Prisma.PlaceReviewListRelationFilter
   placeSaves?: Prisma.PlaceSaveListRelationFilter
+  feedback?: Prisma.FeedbackListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -377,6 +378,7 @@ export type UserOrderByWithRelationInput = {
   places?: Prisma.PlaceOrderByRelationAggregateInput
   placeReviews?: Prisma.PlaceReviewOrderByRelationAggregateInput
   placeSaves?: Prisma.PlaceSaveOrderByRelationAggregateInput
+  feedback?: Prisma.FeedbackOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -426,6 +428,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   places?: Prisma.PlaceListRelationFilter
   placeReviews?: Prisma.PlaceReviewListRelationFilter
   placeSaves?: Prisma.PlaceSaveListRelationFilter
+  feedback?: Prisma.FeedbackListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -518,6 +521,7 @@ export type UserCreateInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -564,6 +568,7 @@ export type UserUncheckedCreateInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -610,6 +615,7 @@ export type UserUpdateInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -656,6 +662,7 @@ export type UserUncheckedUpdateInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1223,6 +1230,22 @@ export type UserUpdateOneRequiredWithoutPlaceSavesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlaceSavesInput, Prisma.UserUpdateWithoutPlaceSavesInput>, Prisma.UserUncheckedUpdateWithoutPlaceSavesInput>
 }
 
+export type UserCreateNestedOneWithoutFeedbackInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutFeedbackNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackInput
+  upsert?: Prisma.UserUpsertWithoutFeedbackInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeedbackInput, Prisma.UserUpdateWithoutFeedbackInput>, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+}
+
 export type UserCreateWithoutPreferencesInput = {
   id?: string
   email: string
@@ -1266,6 +1289,7 @@ export type UserCreateWithoutPreferencesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPreferencesInput = {
@@ -1311,6 +1335,7 @@ export type UserUncheckedCreateWithoutPreferencesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPreferencesInput = {
@@ -1372,6 +1397,7 @@ export type UserUpdateWithoutPreferencesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPreferencesInput = {
@@ -1417,6 +1443,7 @@ export type UserUncheckedUpdateWithoutPreferencesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1462,6 +1489,7 @@ export type UserCreateWithoutSessionsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1507,6 +1535,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1568,6 +1597,7 @@ export type UserUpdateWithoutSessionsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1613,6 +1643,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -1658,6 +1689,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -1703,6 +1735,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -1764,6 +1797,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -1809,6 +1843,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
@@ -1854,6 +1889,7 @@ export type UserCreateWithoutFollowingInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
@@ -1899,6 +1935,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -1949,6 +1986,7 @@ export type UserCreateWithoutFollowersInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
@@ -1994,6 +2032,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -2055,6 +2094,7 @@ export type UserUpdateWithoutFollowingInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -2100,6 +2140,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -2156,6 +2197,7 @@ export type UserUpdateWithoutFollowersInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -2201,6 +2243,7 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeviceTokensInput = {
@@ -2246,6 +2289,7 @@ export type UserCreateWithoutDeviceTokensInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeviceTokensInput = {
@@ -2291,6 +2335,7 @@ export type UserUncheckedCreateWithoutDeviceTokensInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeviceTokensInput = {
@@ -2352,6 +2397,7 @@ export type UserUpdateWithoutDeviceTokensInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeviceTokensInput = {
@@ -2397,6 +2443,7 @@ export type UserUncheckedUpdateWithoutDeviceTokensInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizedRidesInput = {
@@ -2442,6 +2489,7 @@ export type UserCreateWithoutOrganizedRidesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizedRidesInput = {
@@ -2487,6 +2535,7 @@ export type UserUncheckedCreateWithoutOrganizedRidesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizedRidesInput = {
@@ -2548,6 +2597,7 @@ export type UserUpdateWithoutOrganizedRidesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizedRidesInput = {
@@ -2593,6 +2643,7 @@ export type UserUncheckedUpdateWithoutOrganizedRidesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRideRequestsInput = {
@@ -2638,6 +2689,7 @@ export type UserCreateWithoutRideRequestsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRideRequestsInput = {
@@ -2683,6 +2735,7 @@ export type UserUncheckedCreateWithoutRideRequestsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRideRequestsInput = {
@@ -2733,6 +2786,7 @@ export type UserCreateWithoutDecidedRideRequestsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDecidedRideRequestsInput = {
@@ -2778,6 +2832,7 @@ export type UserUncheckedCreateWithoutDecidedRideRequestsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDecidedRideRequestsInput = {
@@ -2839,6 +2894,7 @@ export type UserUpdateWithoutRideRequestsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRideRequestsInput = {
@@ -2884,6 +2940,7 @@ export type UserUncheckedUpdateWithoutRideRequestsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDecidedRideRequestsInput = {
@@ -2940,6 +2997,7 @@ export type UserUpdateWithoutDecidedRideRequestsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDecidedRideRequestsInput = {
@@ -2985,6 +3043,7 @@ export type UserUncheckedUpdateWithoutDecidedRideRequestsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -3030,6 +3089,7 @@ export type UserCreateWithoutPostsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -3075,6 +3135,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -3136,6 +3197,7 @@ export type UserUpdateWithoutPostsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -3181,6 +3243,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostLikesInput = {
@@ -3226,6 +3289,7 @@ export type UserCreateWithoutPostLikesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostLikesInput = {
@@ -3271,6 +3335,7 @@ export type UserUncheckedCreateWithoutPostLikesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostLikesInput = {
@@ -3332,6 +3397,7 @@ export type UserUpdateWithoutPostLikesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostLikesInput = {
@@ -3377,6 +3443,7 @@ export type UserUncheckedUpdateWithoutPostLikesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -3422,6 +3489,7 @@ export type UserCreateWithoutCommentsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -3467,6 +3535,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -3528,6 +3597,7 @@ export type UserUpdateWithoutCommentsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -3573,6 +3643,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentLikesInput = {
@@ -3618,6 +3689,7 @@ export type UserCreateWithoutCommentLikesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentLikesInput = {
@@ -3663,6 +3735,7 @@ export type UserUncheckedCreateWithoutCommentLikesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentLikesInput = {
@@ -3724,6 +3797,7 @@ export type UserUpdateWithoutCommentLikesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentLikesInput = {
@@ -3769,6 +3843,7 @@ export type UserUncheckedUpdateWithoutCommentLikesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsAsAInput = {
@@ -3814,6 +3889,7 @@ export type UserCreateWithoutConversationsAsAInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsAInput = {
@@ -3859,6 +3935,7 @@ export type UserUncheckedCreateWithoutConversationsAsAInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsAInput = {
@@ -3909,6 +3986,7 @@ export type UserCreateWithoutConversationsAsBInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsBInput = {
@@ -3954,6 +4032,7 @@ export type UserUncheckedCreateWithoutConversationsAsBInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsBInput = {
@@ -4015,6 +4094,7 @@ export type UserUpdateWithoutConversationsAsAInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsAInput = {
@@ -4060,6 +4140,7 @@ export type UserUncheckedUpdateWithoutConversationsAsAInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutConversationsAsBInput = {
@@ -4116,6 +4197,7 @@ export type UserUpdateWithoutConversationsAsBInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsBInput = {
@@ -4161,6 +4243,7 @@ export type UserUncheckedUpdateWithoutConversationsAsBInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationMembersInput = {
@@ -4206,6 +4289,7 @@ export type UserCreateWithoutConversationMembersInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationMembersInput = {
@@ -4251,6 +4335,7 @@ export type UserUncheckedCreateWithoutConversationMembersInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationMembersInput = {
@@ -4312,6 +4397,7 @@ export type UserUpdateWithoutConversationMembersInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationMembersInput = {
@@ -4357,6 +4443,7 @@ export type UserUncheckedUpdateWithoutConversationMembersInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -4402,6 +4489,7 @@ export type UserCreateWithoutMessagesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -4447,6 +4535,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -4508,6 +4597,7 @@ export type UserUpdateWithoutMessagesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -4553,6 +4643,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOwnedGroupsInput = {
@@ -4598,6 +4689,7 @@ export type UserCreateWithoutOwnedGroupsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedGroupsInput = {
@@ -4643,6 +4735,7 @@ export type UserUncheckedCreateWithoutOwnedGroupsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedGroupsInput = {
@@ -4704,6 +4797,7 @@ export type UserUpdateWithoutOwnedGroupsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
@@ -4749,6 +4843,7 @@ export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGroupMembershipsInput = {
@@ -4794,6 +4889,7 @@ export type UserCreateWithoutGroupMembershipsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -4839,6 +4935,7 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -4900,6 +4997,7 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -4945,6 +5043,7 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGroupMessagesInput = {
@@ -4990,6 +5089,7 @@ export type UserCreateWithoutGroupMessagesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGroupMessagesInput = {
@@ -5035,6 +5135,7 @@ export type UserUncheckedCreateWithoutGroupMessagesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGroupMessagesInput = {
@@ -5096,6 +5197,7 @@ export type UserUpdateWithoutGroupMessagesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupMessagesInput = {
@@ -5141,6 +5243,7 @@ export type UserUncheckedUpdateWithoutGroupMessagesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -5186,6 +5289,7 @@ export type UserCreateWithoutNotificationsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -5231,6 +5335,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -5281,6 +5386,7 @@ export type UserCreateWithoutActedNotificationsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActedNotificationsInput = {
@@ -5326,6 +5432,7 @@ export type UserUncheckedCreateWithoutActedNotificationsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActedNotificationsInput = {
@@ -5387,6 +5494,7 @@ export type UserUpdateWithoutNotificationsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -5432,6 +5540,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutActedNotificationsInput = {
@@ -5488,6 +5597,7 @@ export type UserUpdateWithoutActedNotificationsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActedNotificationsInput = {
@@ -5533,6 +5643,7 @@ export type UserUncheckedUpdateWithoutActedNotificationsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadsInput = {
@@ -5578,6 +5689,7 @@ export type UserCreateWithoutUploadsInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadsInput = {
@@ -5623,6 +5735,7 @@ export type UserUncheckedCreateWithoutUploadsInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadsInput = {
@@ -5684,6 +5797,7 @@ export type UserUpdateWithoutUploadsInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadsInput = {
@@ -5729,6 +5843,7 @@ export type UserUncheckedUpdateWithoutUploadsInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditEntriesInput = {
@@ -5774,6 +5889,7 @@ export type UserCreateWithoutAuditEntriesInput = {
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditEntriesInput = {
@@ -5819,6 +5935,7 @@ export type UserUncheckedCreateWithoutAuditEntriesInput = {
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditEntriesInput = {
@@ -5880,6 +5997,7 @@ export type UserUpdateWithoutAuditEntriesInput = {
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditEntriesInput = {
@@ -5925,6 +6043,7 @@ export type UserUncheckedUpdateWithoutAuditEntriesInput = {
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlacesInput = {
@@ -5970,6 +6089,7 @@ export type UserCreateWithoutPlacesInput = {
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlacesInput = {
@@ -6015,6 +6135,7 @@ export type UserUncheckedCreateWithoutPlacesInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlacesInput = {
@@ -6076,6 +6197,7 @@ export type UserUpdateWithoutPlacesInput = {
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlacesInput = {
@@ -6121,6 +6243,7 @@ export type UserUncheckedUpdateWithoutPlacesInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlaceReviewsInput = {
@@ -6166,6 +6289,7 @@ export type UserCreateWithoutPlaceReviewsInput = {
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlaceReviewsInput = {
@@ -6211,6 +6335,7 @@ export type UserUncheckedCreateWithoutPlaceReviewsInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlaceReviewsInput = {
@@ -6272,6 +6397,7 @@ export type UserUpdateWithoutPlaceReviewsInput = {
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlaceReviewsInput = {
@@ -6317,6 +6443,7 @@ export type UserUncheckedUpdateWithoutPlaceReviewsInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlaceSavesInput = {
@@ -6362,6 +6489,7 @@ export type UserCreateWithoutPlaceSavesInput = {
   auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
   places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  feedback?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlaceSavesInput = {
@@ -6407,6 +6535,7 @@ export type UserUncheckedCreateWithoutPlaceSavesInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
   places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
   placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  feedback?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlaceSavesInput = {
@@ -6468,6 +6597,7 @@ export type UserUpdateWithoutPlaceSavesInput = {
   auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
   places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  feedback?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlaceSavesInput = {
@@ -6513,6 +6643,207 @@ export type UserUncheckedUpdateWithoutPlaceSavesInput = {
   auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
   places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
   placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  feedback?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFeedbackInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFeedbackInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  avatarUrl?: string
+  bio?: string
+  location?: string
+  experienceLevel?: $Enums.ExperienceLevel
+  preferredRideType?: $Enums.RideType
+  interests?: Prisma.UserCreateinterestsInput | string[]
+  role?: $Enums.UserRole
+  followersCount?: number
+  followingCount?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  organizedRides?: Prisma.RideUncheckedCreateNestedManyWithoutOrganizerInput
+  rideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutUserInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  commentLikes?: Prisma.CommentLikeUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsA?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserAInput
+  conversationsAsB?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserBInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  ownedGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutOwnerInput
+  groupMemberships?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
+  groupMessages?: Prisma.GroupMessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  actedNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutActorInput
+  uploads?: Prisma.UploadUncheckedCreateNestedManyWithoutOwnerInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+  places?: Prisma.PlaceUncheckedCreateNestedManyWithoutAuthorInput
+  placeReviews?: Prisma.PlaceReviewUncheckedCreateNestedManyWithoutAuthorInput
+  placeSaves?: Prisma.PlaceSaveUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFeedbackInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+}
+
+export type UserUpsertWithoutFeedbackInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackInput, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackInput, Prisma.UserUncheckedCreateWithoutFeedbackInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFeedbackInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackInput, Prisma.UserUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type UserUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  preferredRideType?: Prisma.EnumRideTypeFieldUpdateOperationsInput | $Enums.RideType
+  interests?: Prisma.UserUpdateinterestsInput | string[]
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  organizedRides?: Prisma.RideUncheckedUpdateManyWithoutOrganizerNestedInput
+  rideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutUserNestedInput
+  decidedRideRequests?: Prisma.RideRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  commentLikes?: Prisma.CommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsA?: Prisma.ConversationUncheckedUpdateManyWithoutUserANestedInput
+  conversationsAsB?: Prisma.ConversationUncheckedUpdateManyWithoutUserBNestedInput
+  conversationMembers?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  ownedGroups?: Prisma.GroupUncheckedUpdateManyWithoutOwnerNestedInput
+  groupMemberships?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+  groupMessages?: Prisma.GroupMessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  actedNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutActorNestedInput
+  uploads?: Prisma.UploadUncheckedUpdateManyWithoutOwnerNestedInput
+  auditEntries?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  places?: Prisma.PlaceUncheckedUpdateManyWithoutAuthorNestedInput
+  placeReviews?: Prisma.PlaceReviewUncheckedUpdateManyWithoutAuthorNestedInput
+  placeSaves?: Prisma.PlaceSaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -6547,6 +6878,7 @@ export type UserCountOutputType = {
   places: number
   placeReviews: number
   placeSaves: number
+  feedback: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6576,6 +6908,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   places?: boolean | UserCountOutputTypeCountPlacesArgs
   placeReviews?: boolean | UserCountOutputTypeCountPlaceReviewsArgs
   placeSaves?: boolean | UserCountOutputTypeCountPlaceSavesArgs
+  feedback?: boolean | UserCountOutputTypeCountFeedbackArgs
 }
 
 /**
@@ -6770,6 +7103,13 @@ export type UserCountOutputTypeCountPlaceSavesArgs<ExtArgs extends runtime.Types
   where?: Prisma.PlaceSaveWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeedbackWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -6815,6 +7155,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   places?: boolean | Prisma.User$placesArgs<ExtArgs>
   placeReviews?: boolean | Prisma.User$placeReviewsArgs<ExtArgs>
   placeSaves?: boolean | Prisma.User$placeSavesArgs<ExtArgs>
+  feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6904,6 +7245,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   places?: boolean | Prisma.User$placesArgs<ExtArgs>
   placeReviews?: boolean | Prisma.User$placeReviewsArgs<ExtArgs>
   placeSaves?: boolean | Prisma.User$placeSavesArgs<ExtArgs>
+  feedback?: boolean | Prisma.User$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -6939,6 +7281,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     places: Prisma.$PlacePayload<ExtArgs>[]
     placeReviews: Prisma.$PlaceReviewPayload<ExtArgs>[]
     placeSaves: Prisma.$PlaceSavePayload<ExtArgs>[]
+    feedback: Prisma.$FeedbackPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -7384,6 +7727,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   places<T extends Prisma.User$placesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   placeReviews<T extends Prisma.User$placeReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placeReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   placeSaves<T extends Prisma.User$placeSavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$placeSavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlaceSavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedback<T extends Prisma.User$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8462,6 +8806,30 @@ export type User$placeSavesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.PlaceSaveScalarFieldEnum | Prisma.PlaceSaveScalarFieldEnum[]
+}
+
+/**
+ * User.feedback
+ */
+export type User$feedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Feedback
+   */
+  select?: Prisma.FeedbackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Feedback
+   */
+  omit?: Prisma.FeedbackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeedbackInclude<ExtArgs> | null
+  where?: Prisma.FeedbackWhereInput
+  orderBy?: Prisma.FeedbackOrderByWithRelationInput | Prisma.FeedbackOrderByWithRelationInput[]
+  cursor?: Prisma.FeedbackWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeedbackScalarFieldEnum | Prisma.FeedbackScalarFieldEnum[]
 }
 
 /**

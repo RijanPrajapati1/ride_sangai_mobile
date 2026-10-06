@@ -80,7 +80,7 @@ export const NOTIFICATION_TYPES = [
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
-export const USER_ROLES = ['user', 'admin'] as const;
+export const USER_ROLES = ['user', 'superadmin'] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
 export const GROUP_MEMBER_ROLES = ['owner', 'member'] as const;
@@ -120,3 +120,20 @@ export const PLACE_CATEGORIES = [
   'other',
 ] as const;
 export type PlaceCategory = (typeof PLACE_CATEGORIES)[number];
+
+export const FEEDBACK_CATEGORIES = ['bug', 'idea', 'praise', 'other'] as const;
+export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number];
+
+export const FEEDBACK_STATUSES = ['open', 'inProgress', 'resolved'] as const;
+export type FeedbackStatus = (typeof FEEDBACK_STATUSES)[number];
+
+/** Ways to rank riders on the superadmin leaderboard. */
+export const TOP_USER_METRICS = [
+  'followers',
+  'ridesOrganized',
+  'ridesJoined',
+  'posts',
+  'likesReceived',
+  'places',
+] as const;
+export type TopUserMetric = (typeof TOP_USER_METRICS)[number];

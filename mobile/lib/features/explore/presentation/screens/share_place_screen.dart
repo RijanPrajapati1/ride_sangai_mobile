@@ -16,6 +16,7 @@ import '../../../../shared/widgets/app_dropdown.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../providers/explore_providers.dart';
+import '../utils/error_message.dart';
 import '../widgets/place_map.dart';
 import '../widgets/place_photo_picker.dart';
 
@@ -107,7 +108,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(e))));
     }
   }
 

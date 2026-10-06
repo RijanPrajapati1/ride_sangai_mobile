@@ -7,6 +7,7 @@ import '../../../../shared/layouts/app_scaffold.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../utils/error_message.dart';
 import '../providers/message_providers.dart';
 import '../widgets/conversation_tile.dart';
 
@@ -21,7 +22,7 @@ class ConversationsScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Messages')),
       body: conversationsAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(conversationsProvider)),
+        error: (e, st) => AppErrorWidget(message: errorMessage(e), onRetry: () => ref.invalidate(conversationsProvider)),
         data: (conversations) {
           if (conversations.isEmpty) {
             return const EmptyState(
@@ -31,7 +32,10 @@ class ConversationsScreen extends ConsumerWidget {
             );
           }
           return RefreshIndicator(
-            onRefresh: () async => ref.invalidate(conversationsProvider),
+            onRefresh: () {
+              ref.invalidate(unreadMessagesCountProvider);
+              return ref.refresh(conversationsProvider.future);
+            },
             child: ListView.separated(
               itemCount: conversations.length,
               separatorBuilder: (_, _) => const Divider(height: 1, indent: 76),

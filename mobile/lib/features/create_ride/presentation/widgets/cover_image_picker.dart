@@ -1,67 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/errors/app_exception.dart';
+import '../../../../core/network/upload_service.dart';
 import '../../../../shared/widgets/app_network_image.dart';
 
-const demoCoverOptions = [
-  'https://picsum.photos/seed/cover-a/900/600',
-  'https://picsum.photos/seed/cover-b/900/600',
-  'https://picsum.photos/seed/cover-c/900/600',
-  'https://picsum.photos/seed/cover-d/900/600',
-];
-
-/// Demo cover-photo selector — picks from a small placeholder gallery since
-/// real gallery/upload access isn't wired up yet.
-class CoverImagePicker extends StatelessWidget {
+/// Cover-photo selector: picks a photo from the gallery, uploads it
+/// (`POST /uploads`, purpose `rideCover`) and reports the uploaded URL.
+class CoverImagePicker extends ConsumerStatefulWidget {
   final String? imageUrl;
   final ValueChanged<String> onChanged;
 
   const CoverImagePicker({super.key, required this.imageUrl, required this.onChanged});
 
-  Future<void> _pick(BuildContext context) async {
-    final selected = await showModalBottomSheet<String>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.spaceMd),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Choose a cover photo', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: AppDimensions.spaceMd),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.5,
-                children: [
-                  for (final url in demoCoverOptions)
-                    InkWell(
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                      onTap: () => Navigator.of(context).pop(url),
-                      child: AppNetworkImage(
-                        url: url,
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    if (selected != null) onChanged(selected);
+  @override
+  ConsumerState<CoverImagePicker> createState() => _CoverImagePickerState();
+}
+
+class _CoverImagePickerState extends ConsumerState<CoverImagePicker> {
+  bool _uploading = false;
+
+  Future<void> _pick() async {
+    if (_uploading) return;
+    setState(() => _uploading = true);
+    try {
+      final url = await ref.read(uploadServiceProvider).pickAndUpload(purpose: UploadPurpose.rideCover);
+      if (url != null) widget.onChanged(url);
+    } catch (error) {
+      if (!mounted) return;
+      final message = error is AppException ? error.message : 'Could not upload the photo. Please try again.';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final tokens = context.appColors;
+    final imageUrl = widget.imageUrl;
     return InkWell(
-      onTap: () => _pick(context),
+      onTap: _uploading ? null : _pick,
       borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
       child: Container(
         height: 150,
@@ -72,8 +53,11 @@ class CoverImagePicker extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
           border: Border.all(color: tokens.border),
         ),
-        child: imageUrl == null
-            ? Column(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (imageUrl == null || imageUrl.isEmpty)
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.add_photo_alternate_outlined, color: tokens.textMuted, size: 30),
@@ -81,21 +65,25 @@ class CoverImagePicker extends StatelessWidget {
                   Text('Add cover photo', style: Theme.of(context).textTheme.bodyMedium),
                 ],
               )
-            : Stack(
-                fit: StackFit.expand,
-                children: [
-                  AppNetworkImage(url: imageUrl),
-                  Positioned(
-                    right: 8,
-                    bottom: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(color: Colors.black45, shape: BoxShape.circle),
-                      child: const Icon(Icons.edit, color: Colors.white, size: 16),
-                    ),
-                  ),
-                ],
+            else ...[
+              AppNetworkImage(url: imageUrl),
+              Positioned(
+                right: 8,
+                bottom: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: const BoxDecoration(color: Colors.black45, shape: BoxShape.circle),
+                  child: const Icon(Icons.edit, color: Colors.white, size: 16),
+                ),
               ),
+            ],
+            if (_uploading)
+              const ColoredBox(
+                color: Colors.black38,
+                child: Center(child: CircularProgressIndicator(color: Colors.white)),
+              ),
+          ],
+        ),
       ),
     );
   }

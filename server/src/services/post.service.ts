@@ -108,7 +108,7 @@ export class PostService {
     await this.uow.run(async ({ db }) => {
       const post = await this.repo.findOwner(postId, db);
       if (!post) throw POST_NOT_FOUND();
-      if (post.authorId !== actor.id && actor.role !== 'admin')
+      if (post.authorId !== actor.id && actor.role !== 'superadmin')
         throw forbidden('Only the author can delete this post.', 'NOT_POST_AUTHOR');
       if (post.authorId !== actor.id) {
         await audit(db, {
@@ -189,7 +189,7 @@ export class PostService {
     const comment = await this.repo.findComment(commentId);
     if (!comment) throw COMMENT_NOT_FOUND();
     const allowed =
-      comment.authorId === actor.id || comment.post.authorId === actor.id || actor.role === 'admin';
+      comment.authorId === actor.id || comment.post.authorId === actor.id || actor.role === 'superadmin';
     if (!allowed) throw forbidden('You cannot delete this comment.', 'NOT_COMMENT_AUTHOR');
     await this.repo.deleteComment(commentId);
   }

@@ -35,7 +35,15 @@ class AppButton extends StatelessWidget {
             ],
           );
 
-    final button = ElevatedButton(onPressed: isLoading ? null : onPressed, child: child);
+    // The theme's minimumSize is full-width; drop that when not expanding so the
+    // button can sit inside a Row without unbounded-width layout errors.
+    final button = ElevatedButton(
+      onPressed: isLoading ? null : onPressed,
+      style: expand
+          ? null
+          : ElevatedButton.styleFrom(minimumSize: const Size(64, AppDimensions.buttonHeight)),
+      child: child,
+    );
     return expand ? SizedBox(width: double.infinity, child: button) : button;
   }
 }
@@ -60,9 +68,11 @@ class AppOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final button = OutlinedButton(
       onPressed: onPressed,
-      style: color != null
-          ? OutlinedButton.styleFrom(foregroundColor: color, side: BorderSide(color: color!))
-          : null,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: color,
+        side: color != null ? BorderSide(color: color!) : null,
+        minimumSize: expand ? null : const Size(64, AppDimensions.buttonHeight),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

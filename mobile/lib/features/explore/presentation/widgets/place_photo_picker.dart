@@ -1,65 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/network/upload_service.dart';
 import '../../../../shared/widgets/app_network_image.dart';
+import '../utils/error_message.dart';
 
-const demoPlacePhotos = [
-  'https://picsum.photos/seed/place-a/900/600',
-  'https://picsum.photos/seed/place-b/900/600',
-  'https://picsum.photos/seed/place-c/900/600',
-  'https://picsum.photos/seed/place-d/900/600',
-  'https://picsum.photos/seed/place-e/900/600',
-  'https://picsum.photos/seed/place-f/900/600',
-];
-
-/// Demo photo selector (up to [max]) from a placeholder gallery, like the ride
-/// cover picker; swap for real uploads (POST /api/v1/uploads) later.
-class PlacePhotoPicker extends StatelessWidget {
+/// Picks photos from the gallery (up to [max] in total), uploads them
+/// (`POST /uploads`, purpose `place`) and reports the full list of URLs.
+class PlacePhotoPicker extends ConsumerStatefulWidget {
   final List<String> photos;
   final ValueChanged<List<String>> onChanged;
   final int max;
 
   const PlacePhotoPicker({super.key, required this.photos, required this.onChanged, this.max = 5});
 
-  Future<void> _add(BuildContext context) async {
-    final available = demoPlacePhotos.where((url) => !photos.contains(url)).toList();
-    final picked = await showModalBottomSheet<String>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.spaceMd),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Add a photo', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: AppDimensions.spaceMd),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 3,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                children: [
-                  for (final url in available)
-                    InkWell(
-                      onTap: () => Navigator.of(context).pop(url),
-                      child: AppNetworkImage(url: url, borderRadius: BorderRadius.circular(AppDimensions.radiusSm)),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    if (picked != null) onChanged([...photos, picked]);
+  @override
+  ConsumerState<PlacePhotoPicker> createState() => _PlacePhotoPickerState();
+}
+
+class _PlacePhotoPickerState extends ConsumerState<PlacePhotoPicker> {
+  bool _uploading = false;
+
+  Future<void> _add() async {
+    final remainingSlots = widget.max - widget.photos.length;
+    if (remainingSlots < 1 || _uploading) return;
+    setState(() => _uploading = true);
+    try {
+      final urls = await ref
+          .read(uploadServiceProvider)
+          .pickAndUploadMany(purpose: UploadPurpose.place, limit: remainingSlots);
+      if (urls.isNotEmpty) widget.onChanged([...widget.photos, ...urls.take(remainingSlots)]);
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(e))));
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final tokens = context.appColors;
+    final photos = widget.photos;
     return SizedBox(
       height: 96,
       child: ListView(
@@ -75,7 +59,7 @@ class PlacePhotoPicker extends StatelessWidget {
                     right: 2,
                     top: 2,
                     child: InkWell(
-                      onTap: () => onChanged([...photos]..remove(url)),
+                      onTap: _uploading ? null : () => widget.onChanged([...photos]..remove(url)),
                       child: const CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.black54,
@@ -86,9 +70,9 @@ class PlacePhotoPicker extends StatelessWidget {
                 ],
               ),
             ),
-          if (photos.length < max)
+          if (photos.length < widget.max || _uploading)
             InkWell(
-              onTap: () => _add(context),
+              onTap: _uploading ? null : _add,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
               child: Container(
                 width: 120,
@@ -100,9 +84,15 @@ class PlacePhotoPicker extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.add_photo_alternate_outlined, color: AppColors.primary),
+                    if (_uploading)
+                      const SizedBox.square(dimension: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
+                    else
+                      const Icon(Icons.add_photo_alternate_outlined, color: AppColors.primary),
                     const SizedBox(height: 4),
-                    Text(photos.isEmpty ? 'Add photos' : 'Add more', style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      _uploading ? 'Uploading…' : (photos.isEmpty ? 'Add photos' : 'Add more'),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),

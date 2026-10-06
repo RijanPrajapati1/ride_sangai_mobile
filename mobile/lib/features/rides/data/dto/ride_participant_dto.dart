@@ -1,5 +1,7 @@
+import '../../../../core/utils/json_parsing.dart';
 import '../../domain/entities/ride_participant.dart';
 
+/// Matches the API's `RideParticipant` (`GET /rides/:id/participants`).
 class RideParticipantDto {
   final String id;
   final String rideId;
@@ -8,7 +10,7 @@ class RideParticipantDto {
   final String avatarUrl;
   final DateTime joinedAt;
 
-  RideParticipantDto({
+  const RideParticipantDto({
     required this.id,
     required this.rideId,
     required this.userId,
@@ -16,6 +18,24 @@ class RideParticipantDto {
     required this.avatarUrl,
     required this.joinedAt,
   });
+
+  factory RideParticipantDto.fromJson(Map<String, dynamic> json) => RideParticipantDto(
+        id: json['id'] as String,
+        rideId: json['rideId'] as String,
+        userId: json['userId'] as String,
+        name: json['name'] as String? ?? '',
+        avatarUrl: json['avatarUrl'] as String? ?? '',
+        joinedAt: parseDate(json['joinedAt']),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'rideId': rideId,
+        'userId': userId,
+        'name': name,
+        'avatarUrl': avatarUrl,
+        'joinedAt': toApiDate(joinedAt),
+      };
 
   RideParticipant toEntity() => RideParticipant(
         id: id,

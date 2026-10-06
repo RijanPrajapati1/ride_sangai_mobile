@@ -1,6 +1,7 @@
 import { currentUser } from '../middlewares/authenticate.js';
 import type { adminSchemas } from '../schemas/admin.schema.js';
 import type { AdminService } from '../services/admin.service.js';
+import type { FeedbackService } from '../services/feedback.service.js';
 import type { GroupService } from '../services/group.service.js';
 import type { PlaceService } from '../services/place.service.js';
 import type { PostService } from '../services/post.service.js';
@@ -16,9 +17,25 @@ export class AdminController {
     private readonly postService: PostService,
     private readonly groupService: GroupService,
     private readonly placeService: PlaceService,
+    private readonly feedbackService: FeedbackService,
   ) {}
 
   stats = async () => this.admin.stats();
+
+  analytics = async (request: Req<S['analytics']>) => this.admin.analytics(request.query.days);
+
+  topUsers = async (request: Req<S['topUsers']>) =>
+    this.admin.topUsers(request.query.metric, request.query.limit);
+
+  feedback = async (request: Req<S['feedback']>) => this.feedbackService.list(request.query);
+
+  removeFeedback = async (request: Req<S['removeFeedback']>, reply: Rep<S['removeFeedback']>) => {
+    await this.feedbackService.remove(currentUser(request), request.params.id);
+    return reply.status(204).send();
+  };
+
+  updateFeedback = async (request: Req<S['updateFeedback']>) =>
+    this.feedbackService.update(currentUser(request), request.params.id, request.body);
 
   users = async (request: Req<S['users']>) => this.admin.listUsers(currentUser(request), request.query);
 

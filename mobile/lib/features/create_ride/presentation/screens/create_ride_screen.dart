@@ -7,6 +7,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/ride_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_date_picker_field.dart';
@@ -15,6 +16,7 @@ import '../../../../shared/widgets/app_text_field.dart';
 import '../../../../shared/widgets/app_time_picker_field.dart';
 import '../../../../shared/widgets/chip_input_field.dart';
 import '../../../../shared/widgets/section_header.dart';
+import '../../../rides/domain/entities/ride.dart';
 import '../providers/create_ride_providers.dart';
 import '../widgets/cover_image_picker.dart';
 
@@ -73,19 +75,32 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
 
     setState(() => _isSubmitting = true);
     final date = DateTime(_date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute);
-    final ride = await ref.read(createRideControllerProvider).submit(
-          title: _titleController.text.trim(),
-          description: _descriptionController.text.trim(),
-          date: date,
-          meetingPoint: _locationController.text.trim(),
-          rideType: _rideType,
-          difficulty: _difficulty,
-          distanceKm: double.parse(_distanceController.text.trim()),
-          durationMinutes: int.parse(_durationController.text.trim()),
-          maxParticipants: int.parse(_maxParticipantsController.text.trim()),
-          requirements: _requirements,
-          imageUrl: _imageUrl,
-        );
+    final Ride ride;
+    try {
+      ride = await ref.read(createRideControllerProvider).submit(
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            date: date,
+            meetingPoint: _locationController.text.trim(),
+            rideType: _rideType,
+            difficulty: _difficulty,
+            distanceKm: double.parse(_distanceController.text.trim()),
+            durationMinutes: int.parse(_durationController.text.trim()),
+            maxParticipants: int.parse(_maxParticipantsController.text.trim()),
+            requirements: _requirements,
+            imageUrl: _imageUrl,
+          );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      final message = error is AppException
+          ? error.message
+          : error is FormatException
+              ? 'Please enter whole numbers for duration and participants.'
+              : 'Something went wrong. Please try again.';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      return;
+    }
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);

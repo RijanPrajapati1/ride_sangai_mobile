@@ -1,4 +1,5 @@
 import { Type } from 'typebox';
+import { TOP_USER_METRICS } from '../constants/enums.js';
 import { paginationQuery } from '../utils/pagination.js';
 import {
   ActivityCategorySchema,
@@ -15,6 +16,12 @@ import {
   errorResponses,
 } from './common.schema.js';
 import { Banner } from './home.schema.js';
+import {
+  AdminFeedback,
+  FeedbackCategorySchema,
+  FeedbackStatusSchema,
+  UpdateFeedbackBody,
+} from './feedback.schema.js';
 import { CommunityPost } from './post.schema.js';
 import { Group } from './group.schema.js';
 import { Place } from './place.schema.js';
@@ -23,7 +30,7 @@ import { UserProfile } from './user.schema.js';
 
 export const AdminStats = Type.Object({
   riders: Type.Integer(),
-  admins: Type.Integer(),
+  superadmins: Type.Integer(),
   rides: Type.Integer(),
   upcomingRides: Type.Integer(),
   pendingRequests: Type.Integer(),
@@ -32,6 +39,63 @@ export const AdminStats = Type.Object({
   groups: Type.Integer(),
   places: Type.Integer(),
   newRidersLast7Days: Type.Integer(),
+});
+
+const Breakdown = Type.Array(Type.Object({ key: Type.String(), count: Type.Integer() }));
+
+export const Analytics = Type.Object({
+  days: Type.Integer({ description: 'Length of the window in days, ending today (UTC).' }),
+  totals: Type.Object({
+    signups: Type.Integer(),
+    rides: Type.Integer(),
+    joinRequests: Type.Integer(),
+    posts: Type.Integer(),
+    comments: Type.Integer(),
+    messages: Type.Integer(),
+    places: Type.Integer(),
+    feedback: Type.Integer(),
+  }),
+  daily: Type.Array(
+    Type.Object({
+      date: Type.String({ format: 'date', description: 'UTC day, YYYY-MM-DD.' }),
+      signups: Type.Integer(),
+      rides: Type.Integer(),
+      joinRequests: Type.Integer(),
+      posts: Type.Integer(),
+      comments: Type.Integer(),
+      messages: Type.Integer(),
+      places: Type.Integer(),
+      feedback: Type.Integer(),
+    }),
+  ),
+  activeUsers: Type.Object(
+    { last24Hours: Type.Integer(), last7Days: Type.Integer(), last30Days: Type.Integer() },
+    { description: 'Distinct users whose session was used in the window.' },
+  ),
+  ridesByCategory: Breakdown,
+  ridesByDifficulty: Breakdown,
+  requestsByStatus: Breakdown,
+  placesByCategory: Breakdown,
+  feedbackByStatus: Breakdown,
+  feedbackAverageRating: Nullable(Type.Number()),
+  feedbackRatings: Type.Integer({ description: 'How many feedback items have a rating.' }),
+});
+
+export const TopUserMetricSchema = Type.Enum(TOP_USER_METRICS);
+
+export const TopUser = Type.Object({
+  rank: Type.Integer(),
+  id: Uuid,
+  name: Type.String(),
+  email: Type.String(),
+  avatarUrl: Type.String(),
+  joinedAt: Timestamp,
+  followers: Type.Integer(),
+  ridesOrganized: Type.Integer(),
+  ridesJoined: Type.Integer(),
+  posts: Type.Integer(),
+  likesReceived: Type.Integer(),
+  places: Type.Integer(),
 });
 
 export const AdminUser = Type.Object({
@@ -76,7 +140,7 @@ export const UpdateBannerBody = Type.Partial(Type.Object(bannerFields), {
   minProperties: 1,
 });
 
-const tags = ['Admin'];
+const tags = ['Superadmin'];
 const PageQuery = Type.Object(paginationQuery);
 
 export const adminSchemas = {
@@ -191,5 +255,50 @@ export const adminSchemas = {
     summary: 'Moderation log, newest first',
     querystring: PageQuery,
     response: { 200: Paginated(AuditEntry), ...errorResponses(400, 401, 403) },
+  },
+  analytics: {
+    tags,
+    summary: 'Activity over time, active users and breakdowns',
+    querystring: Type.Object({
+      days: Type.Optional(
+        Type.Integer({ minimum: 7, maximum: 365, default: 30, description: 'Window length (7–365).' }),
+      ),
+    }),
+    response: { 200: Analytics, ...errorResponses(400, 401, 403) },
+  },
+  topUsers: {
+    tags,
+    summary: 'Leaderboard of the most active riders',
+    querystring: Type.Object({
+      metric: Type.Optional(TopUserMetricSchema),
+      limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 10 })),
+    }),
+    response: {
+      200: Type.Object({ metric: TopUserMetricSchema, items: Type.Array(TopUser) }),
+      ...errorResponses(400, 401, 403),
+    },
+  },
+  feedback: {
+    tags,
+    summary: 'Feedback from riders, newest first',
+    querystring: Type.Object({
+      status: Type.Optional(FeedbackStatusSchema),
+      category: Type.Optional(FeedbackCategorySchema),
+      ...paginationQuery,
+    }),
+    response: { 200: Paginated(AdminFeedback), ...errorResponses(400, 401, 403) },
+  },
+  updateFeedback: {
+    tags,
+    summary: 'Change a feedback item’s status or internal note',
+    params: IdParams,
+    body: UpdateFeedbackBody,
+    response: { 200: AdminFeedback, ...errorResponses(400, 401, 403, 404) },
+  },
+  removeFeedback: {
+    tags,
+    summary: 'Delete a feedback item (spam or tests)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
   },
 };

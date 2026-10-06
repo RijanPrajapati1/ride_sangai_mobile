@@ -38,8 +38,7 @@ class CreateRideController {
       requirements: requirements,
       imageUrl: imageUrl,
     );
-    _ref.invalidate(upcomingRidesProvider);
-    _ref.invalidate(organizedRidesProvider);
+    invalidateRideLists(_ref);
     return ride;
   }
 }

@@ -87,10 +87,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: AppDimensions.spaceMd),
                 AppTextField(
                   label: 'Password',
-                  hint: 'At least 6 characters',
+                  hint: 'At least 8 characters',
                   controller: _passwordController,
                   obscureText: _obscure,
-                  validator: Validators.password,
+                  validator: Validators.newPassword,
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),

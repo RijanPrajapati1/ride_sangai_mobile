@@ -1,7 +1,7 @@
 import type { InjectOptions } from 'fastify';
 import { describe, expect, it } from 'vitest';
 import { useTestApp } from './helpers/context.js';
-import { registerAdmin, registerUser, type TestUser } from './helpers/factories.js';
+import { registerSuperadmin, registerUser, type TestUser } from './helpers/factories.js';
 
 const ctx = useTestApp();
 const inject = (options: InjectOptions) => ctx.app.inject(options);
@@ -184,7 +184,7 @@ describe('explore places', () => {
   it('saves places idempotently, lists them, and lets admins remove places', async () => {
     const local = await registerUser(ctx.app);
     const visitor = await registerUser(ctx.app);
-    const admin = await registerAdmin(ctx.app, ctx.prisma);
+    const admin = await registerSuperadmin(ctx.app, ctx.prisma);
     const place = await share(local);
 
     await inject({ method: 'PUT', url: `/api/v1/places/${place.id}/save`, headers: visitor.headers });
@@ -227,11 +227,17 @@ describe('explore places', () => {
     expect(coords.statusCode).toBe(400);
 
     expect(
-      (await inject({ method: 'GET', url: '/api/v1/admin/stats', headers: admin.headers })).json().places,
+      (await inject({ method: 'GET', url: '/api/v1/superadmin/stats', headers: admin.headers })).json()
+        .places,
     ).toBe(1);
     expect(
-      (await inject({ method: 'DELETE', url: `/api/v1/admin/places/${place.id}`, headers: admin.headers }))
-        .statusCode,
+      (
+        await inject({
+          method: 'DELETE',
+          url: `/api/v1/superadmin/places/${place.id}`,
+          headers: admin.headers,
+        })
+      ).statusCode,
     ).toBe(204);
     const gone = await inject({ method: 'GET', url: `/api/v1/places/${place.id}`, headers: visitor.headers });
     expect(gone.json().error.message).toBe('This place could not be found.');

@@ -6,6 +6,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../shared/widgets/app_app_bar.dart';
 import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/loading_widget.dart';
@@ -38,6 +39,47 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  static String _message(Object error) =>
+      error is AppException ? error.message : 'Something went wrong. Please try again.';
+
+  /// Saves one or more toggles and shows the server's message if it fails.
+  Future<void> _save(BuildContext context, Future<void> Function() change) async {
+    try {
+      await change();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_message(e))));
+      }
+    }
+  }
+
+  Future<void> _setThemeMode(WidgetRef ref, ThemeMode mode) async {
+    await ref.read(themeModeProvider.notifier).setThemeMode(mode);
+    // Keep the account's dark-mode preference in sync (best effort: the theme
+    // is applied locally either way).
+    try {
+      await ref.read(profileControllerProvider).setPreferences(darkModeEnabled: mode == ThemeMode.dark);
+    } on AppException {
+      // Ignored: offline or server error; the local theme still changed.
+    }
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+    final password = await showDialog<String>(
+      context: context,
+      builder: (context) => const _DeleteAccountDialog(),
+    );
+    if (password == null || !context.mounted) return;
+    try {
+      await ref.read(profileControllerProvider).deleteAccount(password);
+      if (context.mounted) context.go(RouteNames.login);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_message(e))));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preferencesAsync = ref.watch(userPreferencesProvider);
@@ -48,7 +90,7 @@ class SettingsScreen extends ConsumerWidget {
       appBar: const AppAppBar(title: 'Settings'),
       body: preferencesAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(userPreferencesProvider)),
+        error: (e, st) => AppErrorWidget(message: _message(e), onRetry: () => ref.invalidate(userPreferencesProvider)),
         data: (prefs) => ListView(
           children: [
             const _SectionLabel('Account'),
@@ -63,7 +105,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Privacy'),
               trailing: Switch(
                 value: prefs.publicProfile,
-                onChanged: (v) => controller.updatePreferences(prefs.copyWith(publicProfile: v)),
+                onChanged: (v) => _save(context, () => controller.setPreferences(publicProfile: v)),
               ),
               subtitle: const Text('Make my profile visible to other riders'),
             ),
@@ -72,7 +114,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Show riding stats'),
               trailing: Switch(
                 value: prefs.showRidingStats,
-                onChanged: (v) => controller.updatePreferences(prefs.copyWith(showRidingStats: v)),
+                onChanged: (v) => _save(context, () => controller.setPreferences(showRidingStats: v)),
               ),
             ),
             const Divider(height: 1),
@@ -81,19 +123,19 @@ class SettingsScreen extends ConsumerWidget {
               secondary: const Icon(Icons.alarm),
               title: const Text('Ride reminders'),
               value: prefs.pushRideReminders,
-              onChanged: (v) => controller.updatePreferences(prefs.copyWith(pushRideReminders: v)),
+              onChanged: (v) => _save(context, () => controller.setPreferences(pushRideReminders: v)),
             ),
             SwitchListTile(
               secondary: const Icon(Icons.chat_bubble_outline),
               title: const Text('Messages'),
               value: prefs.pushMessages,
-              onChanged: (v) => controller.updatePreferences(prefs.copyWith(pushMessages: v)),
+              onChanged: (v) => _save(context, () => controller.setPreferences(pushMessages: v)),
             ),
             SwitchListTile(
               secondary: const Icon(Icons.groups_outlined),
               title: const Text('Community activity'),
               value: prefs.pushCommunityActivity,
-              onChanged: (v) => controller.updatePreferences(prefs.copyWith(pushCommunityActivity: v)),
+              onChanged: (v) => _save(context, () => controller.setPreferences(pushCommunityActivity: v)),
             ),
             const Divider(height: 1),
             const _SectionLabel('Appearance'),
@@ -106,8 +148,7 @@ class SettingsScreen extends ConsumerWidget {
                   ButtonSegment(value: ThemeMode.dark, label: Text('Dark'), icon: Icon(Icons.dark_mode_outlined)),
                 ],
                 selected: {themeMode},
-                onSelectionChanged: (selection) =>
-                    ref.read(themeModeProvider.notifier).setThemeMode(selection.first),
+                onSelectionChanged: (selection) => _setThemeMode(ref, selection.first),
               ),
             ),
             const Divider(height: 1),
@@ -121,13 +162,20 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.rate_review_outlined),
+              title: const Text('Send feedback'),
+              subtitle: const Text('Report a bug or share an idea'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(RouteNames.feedback),
+            ),
+            ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('About Biker Sync'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => showAboutDialog(
                 context: context,
                 applicationName: AppConstants.appName,
-                applicationVersion: '1.0.0',
+                applicationVersion: AppConstants.appVersion,
                 applicationLegalese: AppConstants.appTagline,
               ),
             ),
@@ -139,6 +187,16 @@ class SettingsScreen extends ConsumerWidget {
                 style: OutlinedButton.styleFrom(foregroundColor: AppColors.error, side: const BorderSide(color: AppColors.error)),
                 icon: const Icon(Icons.logout),
                 label: const Text('Log Out'),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.spaceSm),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
+              child: TextButton.icon(
+                onPressed: () => _confirmDeleteAccount(context, ref),
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
+                icon: const Icon(Icons.delete_forever_outlined),
+                label: const Text('Delete Account'),
               ),
             ),
             const SizedBox(height: AppDimensions.spaceXl),
@@ -162,6 +220,60 @@ class _SectionLabel extends StatelessWidget {
         label.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700),
       ),
+    );
+  }
+}
+
+/// Asks for the password before permanently deleting the account. Pops the
+/// entered password, or null when cancelled.
+class _DeleteAccountDialog extends StatefulWidget {
+  const _DeleteAccountDialog();
+
+  @override
+  State<_DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Delete account?'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'This permanently removes your account and everything you own: rides, posts, groups and messages. '
+            'Enter your password to confirm.',
+          ),
+          const SizedBox(height: AppDimensions.spaceMd),
+          TextField(
+            controller: _passwordController,
+            obscureText: true,
+            autofocus: true,
+            decoration: const InputDecoration(labelText: 'Password'),
+            onChanged: (_) => setState(() {}),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        TextButton(
+          onPressed: _passwordController.text.isEmpty
+              ? null
+              : () => Navigator.of(context).pop(_passwordController.text),
+          style: TextButton.styleFrom(foregroundColor: AppColors.error),
+          child: const Text('Delete'),
+        ),
+      ],
     );
   }
 }

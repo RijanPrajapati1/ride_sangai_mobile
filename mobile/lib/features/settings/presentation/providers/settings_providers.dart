@@ -13,8 +13,9 @@ class ThemeModeController extends StateNotifier<ThemeMode> {
     final saved = ref.read(sharedPreferencesProvider).getString(AppConstants.themeModeKey);
     return switch (saved) {
       'dark' => ThemeMode.dark,
-      'light' => ThemeMode.light,
-      _ => ThemeMode.system,
+      'system' => ThemeMode.system,
+      // First launch: start in light mode. Users can pick Dark or System in Settings.
+      _ => ThemeMode.light,
     };
   }
 

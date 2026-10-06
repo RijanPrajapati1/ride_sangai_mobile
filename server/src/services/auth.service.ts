@@ -1,5 +1,6 @@
 import type { FastifyBaseLogger } from 'fastify';
 import type { AppConfig } from '../config/env.js';
+import type { UserRole } from '../constants/enums.js';
 import type { Db, UnitOfWork } from '../db/prisma.js';
 import type { RealtimeHub } from '../realtime/hub.js';
 import type { AuthRepository, AuthUserRecord } from '../repositories/auth.repository.js';
@@ -21,7 +22,8 @@ export interface AuthUserDto {
   name: string;
   email: string;
   avatarUrl: string;
-  isAdmin: boolean;
+  role: UserRole;
+  isSuperadmin: boolean;
 }
 
 export interface AuthResult {
@@ -47,7 +49,8 @@ export function toAuthUser(
     name: user.name,
     email: user.email,
     avatarUrl: user.avatarUrl,
-    isAdmin: user.role === 'admin',
+    role: user.role,
+    isSuperadmin: user.role === 'superadmin',
   };
 }
 

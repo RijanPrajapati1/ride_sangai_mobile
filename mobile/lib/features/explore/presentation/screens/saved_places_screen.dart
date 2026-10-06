@@ -8,6 +8,7 @@ import '../../../../shared/widgets/app_error_widget.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../providers/explore_providers.dart';
+import '../utils/error_message.dart';
 import '../widgets/place_card.dart';
 
 /// The rider's "want to go" list.
@@ -21,7 +22,7 @@ class SavedPlacesScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Saved places')),
       body: savedAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(savedPlacesProvider)),
+        error: (e, st) => AppErrorWidget(message: errorMessage(e), onRetry: () => ref.invalidate(savedPlacesProvider)),
         data: (places) {
           if (places.isEmpty) {
             return EmptyState(
@@ -43,7 +44,15 @@ class SavedPlacesScreen extends ConsumerWidget {
                 return PlaceCard(
                   place: place,
                   onTap: () => context.push(RouteNames.placeDetailsPath(place.id)),
-                  onToggleSave: () => ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: true),
+                  onToggleSave: () async {
+                    try {
+                      await ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: true);
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(e))));
+                      }
+                    }
+                  },
                 );
               },
             ),

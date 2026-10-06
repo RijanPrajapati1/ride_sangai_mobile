@@ -13,9 +13,17 @@ class Validators {
     return null;
   }
 
+  /// For signing in: older accounts may predate the current length rule.
   static String? password(String? value) {
     if (value == null || value.isEmpty) return 'Password is required';
-    if (value.length < 6) return 'Password must be at least 6 characters';
+    return null;
+  }
+
+  /// For choosing a password. Matches the server's rule (8–128 characters).
+  static String? newPassword(String? value) {
+    if (value == null || value.isEmpty) return 'Password is required';
+    if (value.length < 8) return 'Password must be at least 8 characters';
+    if (value.length > 128) return 'Password must be at most 128 characters';
     return null;
   }
 

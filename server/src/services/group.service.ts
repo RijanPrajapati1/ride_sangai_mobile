@@ -127,7 +127,7 @@ export class GroupService {
   private async assertCanManage(groupId: string, actor: Actor) {
     const group = await this.repo.findBasic(groupId);
     if (!group) throw GROUP_NOT_FOUND();
-    if (group.ownerId !== actor.id && actor.role !== 'admin')
+    if (group.ownerId !== actor.id && actor.role !== 'superadmin')
       throw forbidden('Only the group owner can do that.', 'NOT_GROUP_OWNER');
     return group;
   }

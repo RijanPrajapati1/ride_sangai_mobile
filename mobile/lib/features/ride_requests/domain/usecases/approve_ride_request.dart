@@ -1,3 +1,4 @@
+import '../entities/ride_request.dart';
 import '../repositories/ride_request_repository.dart';
 
 class ApproveRideRequest {
@@ -5,5 +6,5 @@ class ApproveRideRequest {
 
   const ApproveRideRequest(this._repository);
 
-  Future<void> call(String requestId) => _repository.approve(requestId);
+  Future<RideRequest> call(String requestId) => _repository.approve(requestId);
 }

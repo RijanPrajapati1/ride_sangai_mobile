@@ -11,7 +11,9 @@ import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../providers/community_providers.dart';
 import '../widgets/comment_tile.dart';
+import '../widgets/community_action_helpers.dart';
 import '../widgets/community_post_card.dart';
+import '../widgets/post_composer_sheet.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -36,9 +38,19 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     final text = _commentController.text.trim();
     if (text.isEmpty || _submitting) return;
     setState(() => _submitting = true);
-    _commentController.clear();
-    await ref.read(communityActionsControllerProvider).addComment(postId: widget.postId, text: text);
+    final ok = await runCommunityAction(
+      context,
+      () => ref.read(communityActionsControllerProvider).addComment(postId: widget.postId, text: text),
+    );
+    if (ok) _commentController.clear();
     if (mounted) setState(() => _submitting = false);
+  }
+
+  Future<void> _deletePost(String postId) async {
+    if (!await confirmCommunityDelete(context, what: 'post')) return;
+    if (!mounted) return;
+    final ok = await runCommunityAction(context, () => ref.read(communityActionsControllerProvider).deletePost(postId));
+    if (ok && mounted) context.pop();
   }
 
   @override
@@ -64,12 +76,17 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   CommunityPostCard(
                     post: post,
                     onTap: () {},
-                    onLike: () => actions.toggleLike(post.id, isCurrentlyLiked: post.isLiked),
+                    onLike: () => runCommunityAction(
+                      context,
+                      () => actions.toggleLike(post.id, isCurrentlyLiked: post.isLiked),
+                    ),
                     onComment: () {},
                     onAuthorTap: () => context.push(RouteNames.userProfilePath(post.userId)),
                     onShare: () => ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Link copied to clipboard')),
                     ),
+                    onEdit: post.isMine ? () => showPostComposerSheet(context, post: post) : null,
+                    onDelete: post.isMine ? () => _deletePost(post.id) : null,
                   ),
                   const SizedBox(height: AppDimensions.spaceMd),
                   Text('Comments', style: Theme.of(context).textTheme.titleLarge),
@@ -88,7 +105,24 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                           message: 'Be the first to share your thoughts.',
                         );
                       }
-                      return Column(children: [for (final c in comments) CommentTile(comment: c)]);
+                      return Column(
+                        children: [
+                          for (final c in comments)
+                            CommentTile(
+                              comment: c,
+                              onLike: () => runCommunityAction(context, () => actions.toggleCommentLike(c)),
+                              // The comment's author and the post's author may delete it.
+                              onDelete: c.isMine || post.isMine
+                                  ? () async {
+                                      if (!await confirmCommunityDelete(context, what: 'comment')) return;
+                                      if (context.mounted) {
+                                        await runCommunityAction(context, () => actions.deleteComment(c));
+                                      }
+                                    }
+                                  : null,
+                            ),
+                        ],
+                      );
                     },
                   ),
                 ],
@@ -111,7 +145,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                         controller: _commentController,
                         textInputAction: TextInputAction.send,
                         onSubmitted: (_) => _submitComment(),
-                        decoration: const InputDecoration(hintText: 'Add a comment…'),
+                        maxLength: 1000,
+                        decoration: const InputDecoration(hintText: 'Add a comment…', counterText: ''),
                       ),
                     ),
                     const SizedBox(width: 8),

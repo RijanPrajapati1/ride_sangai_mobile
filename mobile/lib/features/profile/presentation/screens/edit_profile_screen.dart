@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme/app_dimensions.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/enums/ride_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_app_bar.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -22,15 +22,15 @@ class EditProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsync = ref.watch(profileProvider(AppConstants.currentUserId));
+    final profileAsync = ref.watch(currentUserProfileProvider);
 
     return Scaffold(
       appBar: const AppAppBar(title: 'Edit Profile'),
       body: profileAsync.when(
         loading: () => const LoadingWidget(),
         error: (e, st) => AppErrorWidget(
-          message: e.toString(),
-          onRetry: () => ref.invalidate(profileProvider(AppConstants.currentUserId)),
+          message: e is AppException ? e.message : e.toString(),
+          onRetry: () => ref.invalidate(currentUserProfileProvider),
         ),
         data: (profile) => _EditProfileForm(profile: profile),
       ),
@@ -90,7 +90,15 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
       preferredRideType: _preferredRideType,
       cyclingInterests: _interests,
     );
-    await ref.read(profileControllerProvider).updateProfile(updated);
+    try {
+      await ref.read(profileControllerProvider).updateProfile(updated);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      final message = e is AppException ? e.message : 'Could not save your profile. Please try again.';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      return;
+    }
     if (!mounted) return;
     setState(() => _isSaving = false);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated')));
@@ -122,13 +130,12 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
             label: 'Bio',
             controller: _bioController,
             maxLines: 3,
-            validator: (v) => Validators.required(v, field: 'Bio'),
+            validator: (v) => (v?.length ?? 0) > 500 ? 'Bio must be 500 characters or less' : null,
           ),
           const SizedBox(height: AppDimensions.spaceMd),
           AppTextField(
             label: 'Location',
             controller: _locationController,
-            validator: (v) => Validators.required(v, field: 'Location'),
             prefixIcon: const Icon(Icons.location_on_outlined),
           ),
           const SizedBox(height: AppDimensions.spaceMd),

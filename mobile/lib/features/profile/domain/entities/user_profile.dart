@@ -16,6 +16,16 @@ class UserProfile {
   final int followingCount;
   final bool isFollowing;
 
+  /// This is the signed-in user's own profile.
+  final bool isMe;
+
+  /// The rider turned their public profile off: bio, location, interests and
+  /// stats are hidden from others.
+  final bool isPrivate;
+
+  /// The rider hides their riding stats: they are reported as 0 to others.
+  final bool statsHidden;
+
   const UserProfile({
     required this.id,
     required this.name,
@@ -31,6 +41,9 @@ class UserProfile {
     required this.followersCount,
     required this.followingCount,
     this.isFollowing = false,
+    this.isMe = false,
+    this.isPrivate = false,
+    this.statsHidden = false,
   });
 
   UserProfile copyWith({
@@ -59,6 +72,9 @@ class UserProfile {
       followersCount: followersCount ?? this.followersCount,
       followingCount: followingCount,
       isFollowing: isFollowing ?? this.isFollowing,
+      isMe: isMe,
+      isPrivate: isPrivate,
+      statsHidden: statsHidden,
     );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/config/app_config.dart';
 
 /// Wraps [Image.network] with a graceful gradient+icon fallback so a failed
-/// or missing dummy image URL never breaks the layout.
+/// or missing image URL never breaks the layout.
 class AppNetworkImage extends StatelessWidget {
   final String? url;
   final double? width;
@@ -30,7 +31,7 @@ class AppNetworkImage extends StatelessWidget {
     final child = url == null || url!.isEmpty
         ? placeholder
         : Image.network(
-            url!,
+            AppConfig.mediaUrl(url!),
             width: width,
             height: height,
             fit: fit,

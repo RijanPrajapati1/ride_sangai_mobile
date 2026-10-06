@@ -73,11 +73,14 @@ class RideJoinActionBar extends StatelessWidget {
         );
       case RideJoinStatus.declined:
       case RideJoinStatus.none:
+        if (ride.hasStarted) {
+          return const AppButton(label: 'Ride Started', onPressed: null);
+        }
         if (ride.isFull) {
           return const AppButton(label: 'Ride Full', onPressed: null);
         }
         return AppButton(
-          label: 'Request to Join',
+          label: ride.joinStatus == RideJoinStatus.declined ? 'Ask Again' : 'Request to Join',
           icon: Icons.pedal_bike,
           isLoading: isLoading,
           onPressed: onRequestToJoin,

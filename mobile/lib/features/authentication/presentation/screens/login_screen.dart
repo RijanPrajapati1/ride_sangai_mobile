@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_logo.dart';
 import '../../../../shared/widgets/app_text_field.dart';
-import '../../data/datasources/auth_local_datasource.dart';
 import '../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -45,12 +43,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  void _fillDemo() {
-    _emailController.text = AuthLocalDataSource.demoEmail;
-    _passwordController.text = AuthLocalDataSource.demoPassword;
-    _submit();
-  }
-
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
@@ -64,12 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
-                  child: const Icon(Icons.pedal_bike, color: AppColors.primary, size: 32),
-                ),
+                const AppLogo(size: 64),
                 const SizedBox(height: AppDimensions.spaceLg),
                 Text('Welcome back', style: Theme.of(context).textTheme.displayLarge),
                 const SizedBox(height: 6),
@@ -108,12 +95,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: AppDimensions.spaceSm),
                 AppButton(label: 'Log In', onPressed: _submit, isLoading: authState.isLoading),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppOutlinedButton(
-                  label: 'Try Demo Login',
-                  icon: Icons.flash_on_outlined,
-                  onPressed: authState.isLoading ? null : _fillDemo,
-                ),
                 const SizedBox(height: AppDimensions.spaceLg),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

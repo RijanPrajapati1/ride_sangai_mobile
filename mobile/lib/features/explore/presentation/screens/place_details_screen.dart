@@ -20,6 +20,7 @@ import '../../../../shared/widgets/app_network_image.dart';
 import '../../../../shared/widgets/loading_widget.dart';
 import '../../domain/entities/place.dart';
 import '../providers/explore_providers.dart';
+import '../utils/error_message.dart';
 import '../widgets/place_map.dart';
 import '../widgets/rating_stars.dart';
 import '../widgets/review_tile.dart';
@@ -38,7 +39,7 @@ class PlaceDetailsScreen extends ConsumerWidget {
         loading: () => const LoadingWidget(),
         error: (e, st) => Scaffold(
           appBar: AppBar(),
-          body: AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(placeDetailsProvider(placeId))),
+          body: AppErrorWidget(message: errorMessage(e), onRetry: () => ref.invalidate(placeDetailsProvider(placeId))),
         ),
         data: (place) => _PlaceDetailsContent(place: place),
       ),
@@ -76,19 +77,37 @@ class _PlaceDetailsContent extends ConsumerWidget {
             worthIt: draft.worthIt,
             text: draft.text,
             visitedOn: DateTime.now(),
+            photos: draft.photos,
           );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thanks! Your review is up.')));
       }
     } catch (e) {
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      if (context.mounted) _showError(context, e);
+    }
+  }
+
+  void _showError(BuildContext context, Object error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(error))));
+  }
+
+  Future<void> _toggleSave(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved);
+    } catch (e) {
+      if (context.mounted) _showError(context, e);
     }
   }
 
   Future<void> _deleteReview(BuildContext context, WidgetRef ref) async {
-    await ref.read(exploreActionsControllerProvider).deleteReview(place.id);
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your review was removed')));
+    try {
+      await ref.read(exploreActionsControllerProvider).deleteReview(place.id);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your review was removed')));
+      }
+    } catch (e) {
+      if (context.mounted) _showError(context, e);
     }
   }
 
@@ -109,8 +128,12 @@ class _PlaceDetailsContent extends ConsumerWidget {
       ),
     );
     if (confirmed != true) return;
-    await ref.read(exploreActionsControllerProvider).deletePlace(place.id);
-    if (context.mounted) context.pop();
+    try {
+      await ref.read(exploreActionsControllerProvider).deletePlace(place.id);
+      if (context.mounted) context.pop();
+    } catch (e) {
+      if (context.mounted) _showError(context, e);
+    }
   }
 
   @override
@@ -131,7 +154,7 @@ class _PlaceDetailsContent extends ConsumerWidget {
             IconButton(
               tooltip: place.isSaved ? 'Remove from saved' : 'Save',
               icon: Icon(place.isSaved ? Icons.bookmark : Icons.bookmark_border),
-              onPressed: () => ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved),
+              onPressed: () => _toggleSave(context, ref),
             ),
             if (place.isMine)
               IconButton(
@@ -189,8 +212,7 @@ class _PlaceDetailsContent extends ConsumerWidget {
                       iconSize: 26,
                       padding: const EdgeInsets.all(12),
                       icon: Icon(place.isSaved ? Icons.bookmark : Icons.bookmark_add_outlined, color: AppColors.primary),
-                      onPressed: () =>
-                          ref.read(exploreActionsControllerProvider).toggleSave(place.id, isCurrentlySaved: place.isSaved),
+                      onPressed: () => _toggleSave(context, ref),
                     ),
                   ],
                 ),
@@ -271,7 +293,7 @@ class _PlaceDetailsContent extends ConsumerWidget {
                   ),
                 reviewsAsync.when(
                   loading: () => const SizedBox(height: 80, child: LoadingWidget()),
-                  error: (e, st) => AppErrorWidget(message: e.toString()),
+                  error: (e, st) => AppErrorWidget(message: errorMessage(e)),
                   data: (reviews) {
                     if (reviews.isEmpty) {
                       return Padding(

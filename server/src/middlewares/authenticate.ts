@@ -28,6 +28,8 @@ export default fp(
 
     app.addHook('onRequest', async (request) => {
       if (request.is404) return;
+      // CORS preflights never carry a token; @fastify/cors answers them.
+      if (request.method === 'OPTIONS') return;
       const config = request.routeOptions.config;
       const mode = config.auth ?? 'required';
       if (mode === 'none') return;

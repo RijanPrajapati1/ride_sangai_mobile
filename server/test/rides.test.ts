@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { useTestApp } from './helpers/context.js';
-import { daysFromNow, registerAdmin, registerUser, type TestUser } from './helpers/factories.js';
+import { daysFromNow, registerSuperadmin, registerUser, type TestUser } from './helpers/factories.js';
 
 const ctx = useTestApp();
 
@@ -271,7 +271,7 @@ describe('rides', () => {
   it('notifies participants when the organizer edits or cancels, and lets admins remove rides', async () => {
     const org = await registerUser(ctx.app);
     const rider = await registerUser(ctx.app);
-    const admin = await registerAdmin(ctx.app, ctx.prisma);
+    const admin = await registerSuperadmin(ctx.app, ctx.prisma);
     const ride = await createRide(org);
     const request = (
       await ctx.app.inject({

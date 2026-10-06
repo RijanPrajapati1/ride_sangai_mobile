@@ -33,7 +33,7 @@ class MyRidesScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            const _UpcomingTab(),
+            _RideListTab(provider: myUpcomingRidesProvider, emptyMessage: 'You have no upcoming rides yet.'),
             _RideListTab(provider: pastRidesProvider, emptyMessage: 'Rides you complete will show up here.'),
             _RideListTab(provider: organizedRidesProvider, emptyMessage: 'Rides you organize will show up here.'),
             _RideListTab(provider: joinedRidesProvider, emptyMessage: 'Rides you join will show up here.'),
@@ -41,36 +41,6 @@ class MyRidesScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _UpcomingTab extends ConsumerWidget {
-  const _UpcomingTab();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final organizedAsync = ref.watch(organizedRidesProvider);
-    final joinedAsync = ref.watch(joinedRidesProvider);
-
-    if (organizedAsync.isLoading || joinedAsync.isLoading) return const LoadingWidget();
-    if (organizedAsync.hasError) {
-      return AppErrorWidget(message: organizedAsync.error.toString(), onRetry: () => ref.invalidate(organizedRidesProvider));
-    }
-    if (joinedAsync.hasError) {
-      return AppErrorWidget(message: joinedAsync.error.toString(), onRetry: () => ref.invalidate(joinedRidesProvider));
-    }
-
-    final now = DateTime.now();
-    final combined = <String, Ride>{};
-    for (final ride in organizedAsync.value ?? const <Ride>[]) {
-      if (ride.date.isAfter(now)) combined[ride.id] = ride;
-    }
-    for (final ride in joinedAsync.value ?? const <Ride>[]) {
-      combined[ride.id] = ride;
-    }
-    final rides = combined.values.toList()..sort((a, b) => a.date.compareTo(b.date));
-
-    return _RideList(rides: rides, emptyMessage: 'You have no upcoming rides yet.');
   }
 }
 
@@ -86,7 +56,10 @@ class _RideListTab extends ConsumerWidget {
     return ridesAsync.when(
       loading: () => const LoadingWidget(),
       error: (e, st) => AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(provider)),
-      data: (rides) => _RideList(rides: rides, emptyMessage: emptyMessage),
+      data: (rides) => RefreshIndicator(
+        onRefresh: () => ref.refresh(provider.future),
+        child: _RideList(rides: rides, emptyMessage: emptyMessage),
+      ),
     );
   }
 }

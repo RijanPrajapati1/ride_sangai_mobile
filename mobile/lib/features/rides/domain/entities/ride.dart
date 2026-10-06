@@ -1,5 +1,22 @@
 import '../../../../core/enums/ride_enums.dart';
 
+/// The signed-in rider's own join request on a ride (`myRequest` in the API).
+class MyRideRequest {
+  final String id;
+  final RideRequestStatus status;
+
+  /// Set when the organizer declined with a reason.
+  final String? declineReason;
+  final DateTime requestedAt;
+
+  const MyRideRequest({
+    required this.id,
+    required this.status,
+    required this.requestedAt,
+    this.declineReason,
+  });
+}
+
 class Ride {
   final String id;
   final String title;
@@ -13,12 +30,19 @@ class Ride {
   final String organizerId;
   final String organizerName;
   final String organizerAvatarUrl;
+
+  /// '' when the ride has no cover image.
   final String imageUrl;
+
+  /// Includes the organizer.
   final int participantCount;
   final int maxParticipants;
   final List<String> requirements;
   final List<String> participantAvatars;
   final RideJoinStatus joinStatus;
+
+  /// The viewer's own request, if they asked to join.
+  final MyRideRequest? myRequest;
 
   const Ride({
     required this.id,
@@ -39,9 +63,14 @@ class Ride {
     this.requirements = const [],
     this.participantAvatars = const [],
     this.joinStatus = RideJoinStatus.none,
+    this.myRequest,
   });
 
   bool get isFull => participantCount >= maxParticipants;
+
+  bool get isOrganizer => joinStatus == RideJoinStatus.organizer;
+
+  bool get hasStarted => !date.isAfter(DateTime.now());
 
   Ride copyWith({
     int? participantCount,
@@ -67,6 +96,7 @@ class Ride {
       requirements: requirements,
       participantAvatars: participantAvatars ?? this.participantAvatars,
       joinStatus: joinStatus ?? this.joinStatus,
+      myRequest: myRequest,
     );
   }
 }

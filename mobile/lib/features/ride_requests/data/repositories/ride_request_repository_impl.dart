@@ -1,27 +1,53 @@
+import '../../../../core/enums/ride_enums.dart';
+import '../../../../core/errors/app_exception.dart';
+import '../../../../core/network/paginated.dart';
 import '../../domain/entities/ride_request.dart';
 import '../../domain/repositories/ride_request_repository.dart';
-import '../datasources/ride_request_local_datasource.dart';
+import '../datasources/ride_request_remote_datasource.dart';
+import '../dto/ride_request_dto.dart';
 
 class RideRequestRepositoryImpl implements RideRequestRepository {
-  final RideRequestLocalDataSource _dataSource;
+  static const _pageSize = 100;
+  static const _maxPages = 5;
 
-  RideRequestRepositoryImpl(this._dataSource);
+  final RideRequestRemoteDataSource _dataSource;
+  final String Function() _currentUserId;
 
-  @override
-  Future<List<RideRequest>> getRequestsForOrganizer(String organizerId) async {
-    final dtos = await _dataSource.getRequestsForOrganizer(organizerId);
-    return dtos.map((d) => d.toEntity()).toList();
+  RideRequestRepositoryImpl(this._dataSource, this._currentUserId);
+
+  /// Follows `nextCursor` until the last page (or [_maxPages]).
+  Future<List<RideRequest>> _all(Future<Paginated<RideRequestDto>> Function(String? cursor) load) async {
+    final items = <RideRequest>[];
+    String? cursor;
+    for (var page = 0; page < _maxPages; page++) {
+      final result = await load(cursor);
+      items.addAll(result.items.map((d) => d.toEntity()));
+      if (!result.hasMore) break;
+      cursor = result.nextCursor;
+    }
+    return items;
   }
 
   @override
-  Future<void> approve(String requestId) => _dataSource.approve(requestId);
-
-  @override
-  Future<void> decline(String requestId) => _dataSource.decline(requestId);
-
-  @override
-  Future<List<RideRequest>> getAllRequests() async {
-    final dtos = await _dataSource.getAllRequests();
-    return dtos.map((d) => d.toEntity()).toList();
+  Future<List<RideRequest>> getRequestsForOrganizer(String organizerId, {RideRequestStatus? status}) async {
+    if (organizerId.isEmpty || organizerId != _currentUserId()) {
+      throw const ForbiddenException("You can only see requests for rides you organize.");
+    }
+    return _all((cursor) => _dataSource.getMyRideRequests(status: status, cursor: cursor, limit: _pageSize));
   }
+
+  @override
+  Future<List<RideRequest>> getRequestsForRide(String rideId, {RideRequestStatus? status}) =>
+      _all((cursor) => _dataSource.getRequestsForRide(rideId, status: status, cursor: cursor, limit: _pageSize));
+
+  @override
+  Future<RideRequest> approve(String requestId) async => (await _dataSource.approve(requestId)).toEntity();
+
+  @override
+  Future<RideRequest> decline(String requestId, {String? reason}) async =>
+      (await _dataSource.decline(requestId, reason: reason)).toEntity();
+
+  @override
+  Future<List<RideRequest>> getAllRequests({RideRequestStatus? status}) =>
+      _all((cursor) => _dataSource.getAllRequests(status: status, cursor: cursor, limit: _pageSize));
 }

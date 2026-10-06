@@ -2,16 +2,25 @@ import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { AdminController } from '../controllers/admin.controller.js';
 import { adminSchemas as s } from '../schemas/admin.schema.js';
 
-/** /api/v1/admin… — every route here requires the admin role. */
+/** /api/v1/superadmin… (the web dashboard) — every route here requires the superadmin role. */
 const adminRoutes: FastifyPluginAsyncTypebox = async (app) => {
   app.addHook('onRoute', (route) => {
-    route.config = { ...(route.config ?? {}), auth: 'required', roles: ['admin'] } as typeof route.config;
+    route.config = {
+      ...(route.config ?? {}),
+      auth: 'required',
+      roles: ['superadmin'],
+    } as typeof route.config;
   });
 
-  const { admin, ride, post, group, place } = app.services;
-  const c = new AdminController(admin, ride, post, group, place);
+  const { admin, ride, post, group, place, feedback } = app.services;
+  const c = new AdminController(admin, ride, post, group, place, feedback);
 
   app.get('/stats', { schema: s.stats }, c.stats);
+  app.get('/analytics', { schema: s.analytics }, c.analytics);
+  app.get('/top-users', { schema: s.topUsers }, c.topUsers);
+  app.get('/feedback', { schema: s.feedback }, c.feedback);
+  app.patch('/feedback/:id', { schema: s.updateFeedback }, c.updateFeedback);
+  app.delete('/feedback/:id', { schema: s.removeFeedback }, c.removeFeedback);
   app.get('/users', { schema: s.users }, c.users);
   app.patch('/users/:id/role', { schema: s.setRole }, c.setRole);
   app.delete('/users/:id', { schema: s.removeUser }, c.removeUser);

@@ -1,5 +1,7 @@
+import '../../../../core/utils/json_parsing.dart';
 import '../../domain/entities/community_post.dart';
 
+/// Matches the API's `CommunityPost`.
 class CommunityPostDto {
   final String id;
   final String userId;
@@ -11,8 +13,9 @@ class CommunityPostDto {
   final int likeCount;
   final int commentCount;
   final bool isLiked;
+  final bool isMine;
 
-  CommunityPostDto({
+  const CommunityPostDto({
     required this.id,
     required this.userId,
     required this.userName,
@@ -23,22 +26,39 @@ class CommunityPostDto {
     this.likeCount = 0,
     this.commentCount = 0,
     this.isLiked = false,
+    this.isMine = false,
   });
 
-  CommunityPostDto copyWith({int? likeCount, int? commentCount, bool? isLiked}) {
+  factory CommunityPostDto.fromJson(Map<String, dynamic> json) {
+    final image = json['imageUrl'] as String?;
     return CommunityPostDto(
-      id: id,
-      userId: userId,
-      userName: userName,
-      userAvatarUrl: userAvatarUrl,
-      time: time,
-      text: text,
-      imageUrl: imageUrl,
-      likeCount: likeCount ?? this.likeCount,
-      commentCount: commentCount ?? this.commentCount,
-      isLiked: isLiked ?? this.isLiked,
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      userAvatarUrl: json['userAvatarUrl'] as String? ?? '',
+      time: parseDate(json['time']),
+      text: json['text'] as String,
+      imageUrl: image == null || image.isEmpty ? null : image,
+      likeCount: json['likeCount'] as int? ?? 0,
+      commentCount: json['commentCount'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
+      isMine: json['isMine'] as bool? ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'userId': userId,
+        'userName': userName,
+        'userAvatarUrl': userAvatarUrl,
+        'time': toApiDate(time),
+        'text': text,
+        'imageUrl': imageUrl,
+        'likeCount': likeCount,
+        'commentCount': commentCount,
+        'isLiked': isLiked,
+        'isMine': isMine,
+      };
 
   CommunityPost toEntity() => CommunityPost(
         id: id,
@@ -51,5 +71,6 @@ class CommunityPostDto {
         likeCount: likeCount,
         commentCount: commentCount,
         isLiked: isLiked,
+        isMine: isMine,
       );
 }

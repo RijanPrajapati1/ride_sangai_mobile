@@ -6,6 +6,7 @@ import { AdminRepository } from '../repositories/admin.repository.js';
 import { AuthRepository } from '../repositories/auth.repository.js';
 import { BannerRepository } from '../repositories/banner.repository.js';
 import { ConversationRepository } from '../repositories/conversation.repository.js';
+import { FeedbackRepository } from '../repositories/feedback.repository.js';
 import { GroupRepository } from '../repositories/group.repository.js';
 import { NotificationRepository } from '../repositories/notification.repository.js';
 import { PlaceRepository } from '../repositories/place.repository.js';
@@ -18,6 +19,7 @@ import { PasswordHasher } from '../utils/password.js';
 import { AdminService } from './admin.service.js';
 import { AuthService } from './auth.service.js';
 import { ConversationService } from './conversation.service.js';
+import { FeedbackService } from './feedback.service.js';
 import { GroupService } from './group.service.js';
 import { HomeService } from './home.service.js';
 import { NotificationService, type PushSender } from './notification.service.js';
@@ -59,6 +61,7 @@ export function createServices(deps: ServiceDependencies) {
     admin: new AdminRepository(prisma),
     upload: new UploadRepository(prisma),
     place: new PlaceRepository(prisma),
+    feedback: new FeedbackRepository(prisma),
   };
 
   const passwords = new PasswordHasher(config.auth.hash);
@@ -83,6 +86,7 @@ export function createServices(deps: ServiceDependencies) {
     repositories.upload,
     new LocalDiskStorage(config.uploads.dir, config.publicUrl),
   );
+  const feedback = new FeedbackService(uow, repositories.feedback);
   const admin = new AdminService(uow, repositories.admin, user, repositories.banner);
   const home = new HomeService(
     ride,
@@ -107,6 +111,7 @@ export function createServices(deps: ServiceDependencies) {
     post,
     conversation,
     group,
+    feedback,
     home,
     admin,
     upload,
