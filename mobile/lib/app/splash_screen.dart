@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants/app_constants.dart';
+import '../shared/widgets/app_logo.dart';
 import 'theme/app_colors.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -14,15 +15,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.pedal_bike, color: Colors.white, size: 48),
-            ),
+            const AppLogo(size: 96),
             const SizedBox(height: 20),
             const Text(
               AppConstants.appName,

@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_logo.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../providers/auth_providers.dart';
 
@@ -57,12 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
-                  child: const Icon(Icons.pedal_bike, color: AppColors.primary, size: 32),
-                ),
+                const AppLogo(size: 64),
                 const SizedBox(height: AppDimensions.spaceLg),
                 Text('Welcome back', style: Theme.of(context).textTheme.displayLarge),
                 const SizedBox(height: 6),
