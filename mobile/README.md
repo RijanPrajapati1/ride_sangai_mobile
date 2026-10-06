@@ -13,7 +13,7 @@ Start the server first (see [`../server/README.md`](../server/README.md)), then:
 | Real phone on your Wi-Fi | `flutter run --dart-define=API_BASE_URL=http://<your-computer-ip>:4000/api/v1` |
 | Release build | `flutter build apk --dart-define=API_BASE_URL=https://api.example.com/api/v1` |
 
-The seeded database has no demo riders: create a rider account with **Register** in the app. The only seeded account is the superadmin, `superadmin@ridesangai.app` / `SuperAdmin@123` (change it outside local development).
+The seeded database has no demo riders: create a rider account with **Register** in the app. The only seeded account is the superadmin, `admin@gmail.com` / `Test@1234` (change it outside local development).
 
 ### Roles
 

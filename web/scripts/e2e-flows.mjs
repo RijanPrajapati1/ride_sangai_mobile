@@ -6,8 +6,8 @@ import { chromium } from 'playwright-core';
 const base = process.argv[2] ?? 'http://localhost:3100';
 const shots = process.argv[3];
 if (shots) mkdirSync(shots, { recursive: true });
-const email = process.env.SA_EMAIL ?? 'superadmin@ridesangai.app';
-const password = process.env.SA_PASSWORD ?? 'SuperAdmin@123';
+const email = process.env.SA_EMAIL ?? 'admin@gmail.com';
+const password = process.env.SA_PASSWORD ?? 'Test@1234';
 const rider = { email: process.env.RIDER_EMAIL ?? 'aarav@riders.test', password: process.env.RIDER_PASSWORD ?? 'Rider@1234' };
 
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true });

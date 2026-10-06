@@ -20,6 +20,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // Dev only: let devices on the local network (e.g. http://192.168.x.x:3000)
+  // load dev assets; otherwise the page never hydrates.
+  allowedDevOrigins: ['192.168.*.*', '10.*.*.*'],
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },

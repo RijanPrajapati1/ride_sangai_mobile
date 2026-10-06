@@ -5,8 +5,8 @@
  *   npm run db:seed        (safe to run again: nothing is duplicated)
  *
  * The superadmin login comes from `.env`:
- *   SEED_SUPERADMIN_EMAIL     (default superadmin@ridesangai.app)
- *   SEED_SUPERADMIN_PASSWORD  (default SuperAdmin@123 — required in production)
+ *   SEED_SUPERADMIN_EMAIL     (default admin@gmail.com)
+ *   SEED_SUPERADMIN_PASSWORD  (default Test@1234 — required in production)
  *   SEED_SUPERADMIN_NAME      (default Super Admin)
  */
 import { loadConfig, loadDotEnv } from '../src/config/env.js';
@@ -18,7 +18,7 @@ loadDotEnv();
 const config = loadConfig();
 const prisma = createPrisma(config.db, 'ride-sangai-seed');
 
-const DEV_PASSWORD = 'SuperAdmin@123';
+const DEV_PASSWORD = 'Test@1234';
 
 const SAFETY_TIPS = {
   cycling: 'Always wear a certified helmet and run lights after dark.',
@@ -35,7 +35,7 @@ const NOUNS = {
 } as const;
 
 function superadminLogin() {
-  const email = (process.env.SEED_SUPERADMIN_EMAIL ?? 'superadmin@ridesangai.app').trim().toLowerCase();
+  const email = (process.env.SEED_SUPERADMIN_EMAIL ?? 'admin@gmail.com').trim().toLowerCase();
   const password = process.env.SEED_SUPERADMIN_PASSWORD ?? '';
   if (config.isProduction && password.length < 12) {
     throw new Error('Set SEED_SUPERADMIN_PASSWORD (12+ characters) before seeding a production database.');

@@ -25,7 +25,7 @@ The API must be running (see `../server/README.md`). Seeded superadmin login
 
 | Email | Password |
 | --- | --- |
-| `superadmin@ridesangai.app` | `SuperAdmin@123` |
+| `admin@gmail.com` | `Test@1234` |
 
 ### Scripts
 

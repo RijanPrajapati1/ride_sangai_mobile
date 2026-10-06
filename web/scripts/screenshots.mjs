@@ -7,8 +7,8 @@ import { chromium } from 'playwright-core';
 const out = process.argv[2] ?? './screenshots';
 const prefix = process.argv[3] ?? '';
 const base = process.argv[4] ?? 'http://localhost:3100';
-const email = process.env.SA_EMAIL ?? 'superadmin@ridesangai.app';
-const password = process.env.SA_PASSWORD ?? 'SuperAdmin@123';
+const email = process.env.SA_EMAIL ?? 'admin@gmail.com';
+const password = process.env.SA_PASSWORD ?? 'Test@1234';
 mkdirSync(out, { recursive: true });
 
 const PAGES = [
