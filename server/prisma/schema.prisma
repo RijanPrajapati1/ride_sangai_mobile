@@ -343,6 +343,9 @@ model Ride {
   meetingPoint     String           @map("meeting_point") @db.VarChar(200)
   distanceKm       Float            @map("distance_km")
   durationMinutes  Int              @map("duration_minutes")
+  /// startsAt + durationMinutes. Trigger-maintained (the default is only a
+  /// placeholder so inserts don't need to send it); never write it directly.
+  endsAt           DateTime         @default(now()) @map("ends_at") @db.Timestamptz(3)
   /// Includes the organizer.
   maxParticipants  Int              @map("max_participants")
   /// The organizer (1) plus approved riders. Trigger-maintained.
@@ -355,6 +358,7 @@ model Ride {
   requests         RideRequest[]
 
   @@index([startsAt, id])
+  @@index([endsAt, startsAt, id])
   @@index([category, startsAt, id])
   @@index([organizerId, startsAt, id])
   @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "rides_title_trgm_idx")

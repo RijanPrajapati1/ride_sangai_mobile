@@ -1,3 +1,4 @@
+import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/utils/json_parsing.dart';
 import '../../domain/entities/ride_participant.dart';
 
@@ -8,6 +9,7 @@ class RideParticipantDto {
   final String userId;
   final String name;
   final String avatarUrl;
+  final RideJoinStatus status;
   final DateTime joinedAt;
 
   const RideParticipantDto({
@@ -16,6 +18,7 @@ class RideParticipantDto {
     required this.userId,
     required this.name,
     required this.avatarUrl,
+    required this.status,
     required this.joinedAt,
   });
 
@@ -25,6 +28,7 @@ class RideParticipantDto {
         userId: json['userId'] as String,
         name: json['name'] as String? ?? '',
         avatarUrl: json['avatarUrl'] as String? ?? '',
+        status: enumByName(RideJoinStatus.values, json['status'], RideJoinStatus.approved),
         joinedAt: parseDate(json['joinedAt']),
       );
 
@@ -34,6 +38,7 @@ class RideParticipantDto {
         'userId': userId,
         'name': name,
         'avatarUrl': avatarUrl,
+        'status': status.name,
         'joinedAt': toApiDate(joinedAt),
       };
 
@@ -42,6 +47,7 @@ class RideParticipantDto {
         userId: userId,
         name: name,
         avatarUrl: avatarUrl,
+        status: status,
         joinedAt: joinedAt,
       );
 }

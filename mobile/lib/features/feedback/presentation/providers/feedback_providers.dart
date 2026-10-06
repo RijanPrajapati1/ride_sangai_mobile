@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/network/network_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../../../core/utils/platform_name.dart';
 import '../../data/datasources/feedback_remote_datasource.dart';
 import '../../data/repositories/feedback_repository_impl.dart';
@@ -9,7 +9,7 @@ import '../../domain/entities/user_feedback.dart';
 import '../../domain/repositories/feedback_repository.dart';
 
 final feedbackRemoteDataSourceProvider = Provider<FeedbackRemoteDataSource>((ref) {
-  return FeedbackRemoteDataSource(ref.watch(apiClientProvider));
+  return FeedbackRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {

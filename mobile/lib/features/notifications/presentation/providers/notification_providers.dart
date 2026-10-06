@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/network_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../data/datasources/notification_remote_datasource.dart';
 import '../../data/repositories/notification_repository_impl.dart';
 import '../../domain/entities/notification_item.dart';
@@ -9,7 +9,7 @@ import '../../domain/usecases/get_notifications.dart';
 import '../../domain/usecases/mark_notification_as_read.dart';
 
 final notificationRemoteDataSourceProvider = Provider<NotificationRemoteDataSource>((ref) {
-  return NotificationRemoteDataSource(ref.watch(apiClientProvider));
+  return NotificationRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {

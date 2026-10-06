@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/app_exception.dart';
+import '../../../../core/network/api_client.dart';
 import '../../../../core/network/network_providers.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
@@ -142,4 +143,14 @@ final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
 /// hard-coded id when asking for "my" profile, rides or requests.
 final currentUserIdProvider = Provider<String>((ref) {
   return ref.watch(authControllerProvider.select((auth) => auth.user?.id ?? ''));
+});
+
+/// API client for feature data. A new instance is created whenever the
+/// signed-in user changes, so every repository and cached query built on it
+/// refetches instead of showing the previous account's data (e.g. rides still
+/// marked as "organizer" after switching users). Auth itself uses
+/// [apiClientProvider] directly to avoid a provider cycle.
+final sessionApiClientProvider = Provider<ApiClient>((ref) {
+  ref.watch(currentUserIdProvider);
+  return ApiClient(ref.watch(dioProvider));
 });

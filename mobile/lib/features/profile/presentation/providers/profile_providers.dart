@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/dashboard_category_provider.dart';
-import '../../../../core/network/network_providers.dart';
 import '../../../../core/network/paginated.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../data/datasources/user_remote_datasource.dart';
@@ -15,7 +14,7 @@ import '../../domain/usecases/get_profile.dart';
 import '../../domain/usecases/update_profile.dart';
 
 final userRemoteDataSourceProvider = Provider<UserRemoteDataSource>((ref) {
-  return UserRemoteDataSource(ref.watch(apiClientProvider));
+  return UserRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {

@@ -72,6 +72,11 @@ class Ride {
 
   bool get hasStarted => !date.isAfter(DateTime.now());
 
+  bool get hasEnded => !date.add(Duration(minutes: durationMinutes)).isAfter(DateTime.now());
+
+  /// Started but not finished; such rides still show up as upcoming.
+  bool get isInProgress => hasStarted && !hasEnded;
+
   Ride copyWith({
     int? participantCount,
     List<String>? participantAvatars,

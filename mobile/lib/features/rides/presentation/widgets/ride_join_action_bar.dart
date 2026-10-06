@@ -74,7 +74,7 @@ class RideJoinActionBar extends StatelessWidget {
       case RideJoinStatus.declined:
       case RideJoinStatus.none:
         if (ride.hasStarted) {
-          return const AppButton(label: 'Ride Started', onPressed: null);
+          return AppButton(label: ride.hasEnded ? 'Ride Ended' : 'Ride In Progress', onPressed: null);
         }
         if (ride.isFull) {
           return const AppButton(label: 'Ride Full', onPressed: null);

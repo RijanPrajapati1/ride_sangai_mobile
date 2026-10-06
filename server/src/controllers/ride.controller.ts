@@ -31,7 +31,7 @@ export class RideController {
   };
 
   participants = async (request: Req<S['participants']>) =>
-    this.rides.participants(request.params.id, request.query);
+    this.rides.participants(request.params.id, currentUser(request), request.query);
 
   join = async (request: Req<S['join']>, reply: Rep<S['join']>) =>
     reply

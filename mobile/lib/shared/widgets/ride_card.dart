@@ -129,6 +129,6 @@ class RideCard extends StatelessWidget {
         RideJoinStatus.approved => 'Joined',
         RideJoinStatus.pending => 'Requested',
         RideJoinStatus.declined => 'Declined',
-        RideJoinStatus.none => null,
+        RideJoinStatus.none => ride.isInProgress ? 'In progress' : null,
       };
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/network_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../data/datasources/message_remote_datasource.dart';
 import '../../data/repositories/message_repository_impl.dart';
 import '../../domain/entities/conversation.dart';
@@ -10,7 +10,7 @@ import '../../domain/usecases/get_conversations.dart';
 import '../../domain/usecases/send_message.dart';
 
 final messageRemoteDataSourceProvider = Provider<MessageRemoteDataSource>((ref) {
-  return MessageRemoteDataSource(ref.watch(apiClientProvider));
+  return MessageRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final messageRepositoryProvider = Provider<MessageRepository>((ref) {

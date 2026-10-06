@@ -52,6 +52,7 @@ export type RideMinAggregateOutputType = {
   meetingPoint: string | null
   distanceKm: number | null
   durationMinutes: number | null
+  endsAt: Date | null
   maxParticipants: number | null
   participantCount: number | null
   imageUrl: string | null
@@ -72,6 +73,7 @@ export type RideMaxAggregateOutputType = {
   meetingPoint: string | null
   distanceKm: number | null
   durationMinutes: number | null
+  endsAt: Date | null
   maxParticipants: number | null
   participantCount: number | null
   imageUrl: string | null
@@ -92,6 +94,7 @@ export type RideCountAggregateOutputType = {
   meetingPoint: number
   distanceKm: number
   durationMinutes: number
+  endsAt: number
   maxParticipants: number
   participantCount: number
   imageUrl: number
@@ -129,6 +132,7 @@ export type RideMinAggregateInputType = {
   meetingPoint?: true
   distanceKm?: true
   durationMinutes?: true
+  endsAt?: true
   maxParticipants?: true
   participantCount?: true
   imageUrl?: true
@@ -149,6 +153,7 @@ export type RideMaxAggregateInputType = {
   meetingPoint?: true
   distanceKm?: true
   durationMinutes?: true
+  endsAt?: true
   maxParticipants?: true
   participantCount?: true
   imageUrl?: true
@@ -169,6 +174,7 @@ export type RideCountAggregateInputType = {
   meetingPoint?: true
   distanceKm?: true
   durationMinutes?: true
+  endsAt?: true
   maxParticipants?: true
   participantCount?: true
   imageUrl?: true
@@ -277,6 +283,7 @@ export type RideGroupByOutputType = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt: Date
   maxParticipants: number
   participantCount: number
   imageUrl: string
@@ -321,6 +328,7 @@ export type RideWhereInput = {
   meetingPoint?: Prisma.StringFilter<"Ride"> | string
   distanceKm?: Prisma.FloatFilter<"Ride"> | number
   durationMinutes?: Prisma.IntFilter<"Ride"> | number
+  endsAt?: Prisma.DateTimeFilter<"Ride"> | Date | string
   maxParticipants?: Prisma.IntFilter<"Ride"> | number
   participantCount?: Prisma.IntFilter<"Ride"> | number
   imageUrl?: Prisma.StringFilter<"Ride"> | string
@@ -344,6 +352,7 @@ export type RideOrderByWithRelationInput = {
   meetingPoint?: Prisma.SortOrder
   distanceKm?: Prisma.SortOrder
   durationMinutes?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   participantCount?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -370,6 +379,7 @@ export type RideWhereUniqueInput = Prisma.AtLeast<{
   meetingPoint?: Prisma.StringFilter<"Ride"> | string
   distanceKm?: Prisma.FloatFilter<"Ride"> | number
   durationMinutes?: Prisma.IntFilter<"Ride"> | number
+  endsAt?: Prisma.DateTimeFilter<"Ride"> | Date | string
   maxParticipants?: Prisma.IntFilter<"Ride"> | number
   participantCount?: Prisma.IntFilter<"Ride"> | number
   imageUrl?: Prisma.StringFilter<"Ride"> | string
@@ -393,6 +403,7 @@ export type RideOrderByWithAggregationInput = {
   meetingPoint?: Prisma.SortOrder
   distanceKm?: Prisma.SortOrder
   durationMinutes?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   participantCount?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -422,6 +433,7 @@ export type RideScalarWhereWithAggregatesInput = {
   meetingPoint?: Prisma.StringWithAggregatesFilter<"Ride"> | string
   distanceKm?: Prisma.FloatWithAggregatesFilter<"Ride"> | number
   durationMinutes?: Prisma.IntWithAggregatesFilter<"Ride"> | number
+  endsAt?: Prisma.DateTimeWithAggregatesFilter<"Ride"> | Date | string
   maxParticipants?: Prisma.IntWithAggregatesFilter<"Ride"> | number
   participantCount?: Prisma.IntWithAggregatesFilter<"Ride"> | number
   imageUrl?: Prisma.StringWithAggregatesFilter<"Ride"> | string
@@ -442,6 +454,7 @@ export type RideCreateInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -465,6 +478,7 @@ export type RideUncheckedCreateInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -486,6 +500,7 @@ export type RideUpdateInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -509,6 +524,7 @@ export type RideUncheckedUpdateInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -531,6 +547,7 @@ export type RideCreateManyInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -551,6 +568,7 @@ export type RideUpdateManyMutationInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -572,6 +590,7 @@ export type RideUncheckedUpdateManyInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -603,6 +622,7 @@ export type RideCountOrderByAggregateInput = {
   meetingPoint?: Prisma.SortOrder
   distanceKm?: Prisma.SortOrder
   durationMinutes?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   participantCount?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -631,6 +651,7 @@ export type RideMaxOrderByAggregateInput = {
   meetingPoint?: Prisma.SortOrder
   distanceKm?: Prisma.SortOrder
   durationMinutes?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   participantCount?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -651,6 +672,7 @@ export type RideMinOrderByAggregateInput = {
   meetingPoint?: Prisma.SortOrder
   distanceKm?: Prisma.SortOrder
   durationMinutes?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   participantCount?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
@@ -763,6 +785,7 @@ export type RideCreateWithoutOrganizerInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -784,6 +807,7 @@ export type RideUncheckedCreateWithoutOrganizerInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -835,6 +859,7 @@ export type RideScalarWhereInput = {
   meetingPoint?: Prisma.StringFilter<"Ride"> | string
   distanceKm?: Prisma.FloatFilter<"Ride"> | number
   durationMinutes?: Prisma.IntFilter<"Ride"> | number
+  endsAt?: Prisma.DateTimeFilter<"Ride"> | Date | string
   maxParticipants?: Prisma.IntFilter<"Ride"> | number
   participantCount?: Prisma.IntFilter<"Ride"> | number
   imageUrl?: Prisma.StringFilter<"Ride"> | string
@@ -855,6 +880,7 @@ export type RideCreateWithoutRequestsInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -877,6 +903,7 @@ export type RideUncheckedCreateWithoutRequestsInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -913,6 +940,7 @@ export type RideUpdateWithoutRequestsInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -935,6 +963,7 @@ export type RideUncheckedUpdateWithoutRequestsInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -955,6 +984,7 @@ export type RideCreateManyOrganizerInput = {
   meetingPoint: string
   distanceKm: number
   durationMinutes: number
+  endsAt?: Date | string
   maxParticipants: number
   participantCount?: number
   imageUrl?: string
@@ -975,6 +1005,7 @@ export type RideUpdateWithoutOrganizerInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -996,6 +1027,7 @@ export type RideUncheckedUpdateWithoutOrganizerInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1017,6 +1049,7 @@ export type RideUncheckedUpdateManyWithoutOrganizerInput = {
   meetingPoint?: Prisma.StringFieldUpdateOperationsInput | string
   distanceKm?: Prisma.FloatFieldUpdateOperationsInput | number
   durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  endsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   participantCount?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1069,6 +1102,7 @@ export type RideSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   meetingPoint?: boolean
   distanceKm?: boolean
   durationMinutes?: boolean
+  endsAt?: boolean
   maxParticipants?: boolean
   participantCount?: boolean
   imageUrl?: boolean
@@ -1093,6 +1127,7 @@ export type RideSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   meetingPoint?: boolean
   distanceKm?: boolean
   durationMinutes?: boolean
+  endsAt?: boolean
   maxParticipants?: boolean
   participantCount?: boolean
   imageUrl?: boolean
@@ -1115,6 +1150,7 @@ export type RideSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   meetingPoint?: boolean
   distanceKm?: boolean
   durationMinutes?: boolean
+  endsAt?: boolean
   maxParticipants?: boolean
   participantCount?: boolean
   imageUrl?: boolean
@@ -1137,6 +1173,7 @@ export type RideSelectScalar = {
   meetingPoint?: boolean
   distanceKm?: boolean
   durationMinutes?: boolean
+  endsAt?: boolean
   maxParticipants?: boolean
   participantCount?: boolean
   imageUrl?: boolean
@@ -1146,7 +1183,7 @@ export type RideSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RideOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "title" | "description" | "rideType" | "category" | "difficulty" | "startsAt" | "meetingPoint" | "distanceKm" | "durationMinutes" | "maxParticipants" | "participantCount" | "imageUrl" | "requirements" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ride"]>
+export type RideOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "title" | "description" | "rideType" | "category" | "difficulty" | "startsAt" | "meetingPoint" | "distanceKm" | "durationMinutes" | "endsAt" | "maxParticipants" | "participantCount" | "imageUrl" | "requirements" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ride"]>
 export type RideInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   requests?: boolean | Prisma.Ride$requestsArgs<ExtArgs>
@@ -1180,6 +1217,11 @@ export type $RidePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     meetingPoint: string
     distanceKm: number
     durationMinutes: number
+    /**
+     * startsAt + durationMinutes. Trigger-maintained (the default is only a
+     * placeholder so inserts don't need to send it); never write it directly.
+     */
+    endsAt: Date
     /**
      * Includes the organizer.
      */
@@ -1629,6 +1671,7 @@ export interface RideFieldRefs {
   readonly meetingPoint: Prisma.FieldRef<"Ride", 'String'>
   readonly distanceKm: Prisma.FieldRef<"Ride", 'Float'>
   readonly durationMinutes: Prisma.FieldRef<"Ride", 'Int'>
+  readonly endsAt: Prisma.FieldRef<"Ride", 'DateTime'>
   readonly maxParticipants: Prisma.FieldRef<"Ride", 'Int'>
   readonly participantCount: Prisma.FieldRef<"Ride", 'Int'>
   readonly imageUrl: Prisma.FieldRef<"Ride", 'String'>

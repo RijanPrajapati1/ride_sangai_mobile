@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../core/enums/ride_enums.dart';
-import '../../../../core/network/network_providers.dart';
 import '../../data/datasources/ride_remote_datasource.dart';
 import '../../data/repositories/ride_repository_impl.dart';
 import '../../domain/entities/ride.dart';
@@ -14,7 +13,7 @@ import '../../domain/usecases/request_to_join_ride.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 
 final rideRemoteDataSourceProvider = Provider<RideRemoteDataSource>((ref) {
-  return RideRemoteDataSource(ref.watch(apiClientProvider));
+  return RideRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final rideRepositoryProvider = Provider<RideRepository>((ref) {

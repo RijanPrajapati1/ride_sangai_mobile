@@ -203,6 +203,7 @@ export const RideScalarFieldEnum = {
   meetingPoint: 'meetingPoint',
   distanceKm: 'distanceKm',
   durationMinutes: 'durationMinutes',
+  endsAt: 'endsAt',
   maxParticipants: 'maxParticipants',
   participantCount: 'participantCount',
   imageUrl: 'imageUrl',

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/network_providers.dart';
 import '../../../rides/presentation/providers/ride_providers.dart';
 import '../../data/datasources/ride_request_remote_datasource.dart';
 import '../../data/repositories/ride_request_repository_impl.dart';
@@ -11,7 +10,7 @@ import '../../domain/usecases/decline_ride_request.dart';
 import '../../../authentication/presentation/providers/auth_providers.dart';
 
 final rideRequestRemoteDataSourceProvider = Provider<RideRequestRemoteDataSource>((ref) {
-  return RideRequestRemoteDataSource(ref.watch(apiClientProvider));
+  return RideRequestRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final rideRequestRepositoryProvider = Provider<RideRequestRepository>((ref) {

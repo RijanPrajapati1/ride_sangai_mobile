@@ -211,20 +211,36 @@ export class RideRepository {
   }
 
   /** Approved riders in the order they were approved. */
-  findParticipantsPage(rideId: string, after: [Date, string] | null, limit: number) {
+  /**
+   * Requests shown on the participants list, oldest request first. Approved
+   * and pending are public; declined ones are listed only when
+   * [declinedVisibleTo] is 'all' (the organizer) or that rider's own id.
+   */
+  findParticipantsPage(
+    rideId: string,
+    declinedVisibleTo: 'all' | string,
+    after: [Date, string] | null,
+    limit: number,
+  ) {
+    const declined: Prisma.RideRequestWhereInput =
+      declinedVisibleTo === 'all'
+        ? { status: 'declined' }
+        : { status: 'declined', userId: declinedVisibleTo };
     return this.prisma.rideRequest.findMany({
       where: {
         rideId,
-        status: 'approved',
+        AND: [{ OR: [{ status: { in: ['approved', 'pending'] } }, declined] }],
         ...(after
-          ? { OR: [{ decidedAt: { gt: after[0] } }, { decidedAt: after[0], id: { gt: after[1] } }] }
+          ? { OR: [{ requestedAt: { gt: after[0] } }, { requestedAt: after[0], id: { gt: after[1] } }] }
           : {}),
       },
-      orderBy: [{ decidedAt: 'asc' }, { id: 'asc' }],
+      orderBy: [{ requestedAt: 'asc' }, { id: 'asc' }],
       take: limit + 1,
       select: {
         id: true,
         rideId: true,
+        status: true,
+        declineReason: true,
         decidedAt: true,
         requestedAt: true,
         user: { select: { id: true, name: true, avatarUrl: true } },

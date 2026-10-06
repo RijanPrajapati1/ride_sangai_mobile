@@ -156,11 +156,11 @@ export class RideService {
     };
   }
 
-  /** Discovery: upcoming rides, soonest first. */
+  /** Discovery: rides that haven't ended yet (upcoming or in progress), soonest first. */
   async discover(viewerId: string, query: RideFilters & { limit?: number; cursor?: string }) {
     const limit = pageLimit(query.limit);
     const where: Prisma.RideWhereInput = {
-      AND: [{ startsAt: { gt: new Date() } }, this.repo.filterWhere(query)],
+      AND: [{ endsAt: { gt: new Date() } }, this.repo.filterWhere(query)],
     };
     const rows = await this.repo.findPage(where, {
       direction: 'asc',
@@ -183,14 +183,14 @@ export class RideService {
     };
     const byScope: Record<MyRidesScope, { where: Prisma.RideWhereInput; direction: 'asc' | 'desc' }> = {
       upcoming: {
-        where: { startsAt: { gt: now }, OR: [{ organizerId: viewerId }, { requests: active }] },
+        where: { endsAt: { gt: now }, OR: [{ organizerId: viewerId }, { requests: active }] },
         direction: 'asc',
       },
       organized: { where: { organizerId: viewerId }, direction: 'asc' },
-      joined: { where: { startsAt: { gt: now }, requests: active }, direction: 'asc' },
+      joined: { where: { endsAt: { gt: now }, requests: active }, direction: 'asc' },
       past: {
         where: {
-          startsAt: { lte: now },
+          endsAt: { lte: now },
           OR: [{ organizerId: viewerId }, { requests: { some: { userId: viewerId, status: 'approved' } } }],
         },
         direction: 'desc',
@@ -223,9 +223,9 @@ export class RideService {
     const now = new Date();
     const when =
       query.when === 'upcoming'
-        ? { startsAt: { gt: now } }
+        ? { endsAt: { gt: now } }
         : query.when === 'past'
-          ? { startsAt: { lte: now } }
+          ? { endsAt: { lte: now } }
           : {};
     const rows = await this.repo.findPage(
       { AND: [when, this.repo.filterWhere(query)] },
@@ -241,23 +241,49 @@ export class RideService {
     return toRideDto(ride, mine.get(ride.id), viewerId);
   }
 
-  async participants(rideId: string, query: { limit?: number; cursor?: string }) {
-    if (!(await this.repo.findById(rideId))) throw RIDE_NOT_FOUND();
+  /**
+   * The organizer (first page only), then riders in request order with their
+   * status. Declined requests, and their reasons, are visible only to whoever
+   * manages the ride and to the declined rider themselves.
+   */
+  async participants(rideId: string, viewer: Actor, query: { limit?: number; cursor?: string }) {
+    const ride = await this.repo.findById(rideId);
+    if (!ride) throw RIDE_NOT_FOUND();
+    const canManage = ride.organizerId === viewer.id || viewer.role === 'superadmin';
     const limit = pageLimit(query.limit);
-    const rows = await this.repo.findParticipantsPage(rideId, decodeTimeCursor(query.cursor), limit);
-    return toPage(
+    const rows = await this.repo.findParticipantsPage(
+      rideId,
+      canManage ? 'all' : viewer.id,
+      decodeTimeCursor(query.cursor),
+      limit,
+    );
+    const page = toPage(
       rows,
       limit,
-      (row) => timeCursor(row.decidedAt ?? row.requestedAt, row.id),
+      (row) => timeCursor(row.requestedAt, row.id),
       (row) => ({
         id: row.id,
         rideId: row.rideId,
         userId: row.user.id,
         name: row.user.name,
         avatarUrl: row.user.avatarUrl,
+        status: row.status,
+        declineReason: row.status === 'declined' ? row.declineReason : null,
         joinedAt: row.decidedAt ?? row.requestedAt,
       }),
     );
+    if (query.cursor) return page;
+    const organizer = {
+      id: ride.id,
+      rideId: ride.id,
+      userId: ride.organizer.id,
+      name: ride.organizer.name,
+      avatarUrl: ride.organizer.avatarUrl,
+      status: 'organizer' as const,
+      declineReason: null,
+      joinedAt: ride.createdAt,
+    };
+    return { ...page, items: [organizer, ...page.items] };
   }
 
   // --- Organizer actions -------------------------------------------------------

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/network_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../data/datasources/community_remote_datasource.dart';
 import '../../data/repositories/community_repository_impl.dart';
 import '../../domain/entities/comment.dart';
@@ -11,7 +11,7 @@ import '../../domain/usecases/get_community_posts.dart';
 import '../../domain/usecases/like_post.dart';
 
 final communityRemoteDataSourceProvider = Provider<CommunityRemoteDataSource>((ref) {
-  return CommunityRemoteDataSource(ref.watch(apiClientProvider));
+  return CommunityRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final communityRepositoryProvider = Provider<CommunityRepository>((ref) {

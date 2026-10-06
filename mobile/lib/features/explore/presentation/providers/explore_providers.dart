@@ -4,7 +4,7 @@ import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/place_category.dart';
 import '../../../../core/location/location_service.dart';
-import '../../../../core/network/network_providers.dart';
+import '../../../authentication/presentation/providers/auth_providers.dart';
 import '../../data/datasources/place_remote_datasource.dart';
 import '../../data/repositories/place_repository_impl.dart';
 import '../../domain/entities/place.dart';
@@ -15,7 +15,7 @@ import '../../domain/usecases/submit_place_review.dart';
 import '../../domain/usecases/toggle_save_place.dart';
 
 final placeRemoteDataSourceProvider = Provider<PlaceRemoteDataSource>((ref) {
-  return PlaceRemoteDataSource(ref.watch(apiClientProvider));
+  return PlaceRemoteDataSource(ref.watch(sessionApiClientProvider));
 });
 
 final placeRepositoryProvider = Provider<PlaceRepository>((ref) {

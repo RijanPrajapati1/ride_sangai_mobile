@@ -59,7 +59,7 @@ export class AdminRepository {
       this.prisma.user.count({ where: { role: 'user' } }),
       this.prisma.user.count({ where: { role: 'superadmin' } }),
       this.prisma.ride.count(),
-      this.prisma.ride.count({ where: { startsAt: { gt: now } } }),
+      this.prisma.ride.count({ where: { endsAt: { gt: now } } }),
       this.prisma.rideRequest.count({ where: { status: 'pending' } }),
       this.prisma.post.count(),
       this.prisma.comment.count(),

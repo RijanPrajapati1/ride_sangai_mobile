@@ -46,6 +46,33 @@ describe('rides', () => {
     });
   });
 
+  it('keeps a ride listed as upcoming until it ends, not just until it starts', async () => {
+    const org = await registerUser(ctx.app);
+    const ride = await createRide(org, { durationMinutes: 120, title: 'In progress ride' });
+    const listed = async (url: string) =>
+      (await ctx.app.inject({ method: 'GET', url, headers: org.headers }))
+        .json()
+        .items.some((r: { id: string }) => r.id === ride.id);
+
+    // Started 30 minutes ago, 2 hours long: still on discover and My Rides upcoming.
+    const startedAt = new Date(Date.now() - 30 * 60_000);
+    await ctx.prisma.ride.update({ where: { id: ride.id }, data: { startsAt: startedAt } });
+    const row = await ctx.prisma.ride.findUniqueOrThrow({ where: { id: ride.id } });
+    expect(row.endsAt.getTime()).toBe(startedAt.getTime() + 120 * 60_000);
+    expect(await listed('/api/v1/rides?limit=100')).toBe(true);
+    expect(await listed('/api/v1/me/rides?scope=upcoming')).toBe(true);
+    expect(await listed('/api/v1/me/rides?scope=past')).toBe(false);
+
+    // Started 3 hours ago: over, so it moves to past.
+    await ctx.prisma.ride.update({
+      where: { id: ride.id },
+      data: { startsAt: new Date(Date.now() - 3 * 60 * 60_000) },
+    });
+    expect(await listed('/api/v1/rides?limit=100')).toBe(false);
+    expect(await listed('/api/v1/me/rides?scope=upcoming')).toBe(false);
+    expect(await listed('/api/v1/me/rides?scope=past')).toBe(true);
+  });
+
   it('rejects rides in the past', async () => {
     const org = await registerUser(ctx.app);
     const res = await ctx.app.inject({
@@ -173,12 +200,34 @@ describe('rides', () => {
     expect(asC.joinStatus).toBe('declined');
     expect(asC.myRequest.declineReason).toBe('This ride is at capacity for now');
 
-    const participants = await ctx.app.inject({
-      method: 'GET',
-      url: `/api/v1/rides/${ride.id}/participants`,
-      headers: c.headers,
-    });
-    expect(participants.json().items.map((p: { userId: string }) => p.userId)).toEqual([a.id, b.id]);
+    // Organizer first, then riders in request order. Declined rows (with the
+    // reason) are visible to the organizer and to the declined rider only.
+    const participantsFor = async (headers: Record<string, string>) =>
+      (await ctx.app.inject({ method: 'GET', url: `/api/v1/rides/${ride.id}/participants`, headers }))
+        .json()
+        .items.map((p: { userId: string; status: string; declineReason: string | null }) => [
+          p.userId,
+          p.status,
+          p.declineReason,
+        ]);
+    const reason = 'This ride is at capacity for now';
+    expect(await participantsFor(org.headers)).toEqual([
+      [org.id, 'organizer', null],
+      [a.id, 'approved', null],
+      [b.id, 'approved', null],
+      [c.id, 'declined', reason],
+    ]);
+    expect(await participantsFor(c.headers)).toEqual([
+      [org.id, 'organizer', null],
+      [a.id, 'approved', null],
+      [b.id, 'approved', null],
+      [c.id, 'declined', reason],
+    ]);
+    expect(await participantsFor(a.headers)).toEqual([
+      [org.id, 'organizer', null],
+      [a.id, 'approved', null],
+      [b.id, 'approved', null],
+    ]);
 
     // A leaves → a seat frees up → C re-requests (row resets to pending, reason cleared).
     expect(
@@ -193,6 +242,12 @@ describe('rides', () => {
     });
     expect(re.statusCode).toBe(201);
     expect(re.json()).toMatchObject({ id: rc.id, status: 'pending', declineReason: null });
+    // Pending requests are public; A (who left) is gone.
+    expect(await participantsFor(b.headers)).toEqual([
+      [org.id, 'organizer', null],
+      [b.id, 'approved', null],
+      [c.id, 'pending', null],
+    ]);
     expect(
       (await ctx.app.inject({ method: 'GET', url: `/api/v1/rides/${ride.id}`, headers: c.headers })).json()
         .participantCount,

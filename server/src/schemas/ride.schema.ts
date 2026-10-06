@@ -78,6 +78,13 @@ export const RideParticipant = Type.Object({
   userId: Uuid,
   name: Type.String(),
   avatarUrl: Type.String(),
+  status: Type.Union([
+    Type.Literal('organizer'),
+    Type.Literal('approved'),
+    Type.Literal('pending'),
+    Type.Literal('declined'),
+  ]),
+  declineReason: Nullable(Type.String()),
   joinedAt: Timestamp,
 });
 export const RideParticipantPage = Paginated(RideParticipant);
@@ -193,7 +200,9 @@ export const rideSchemas = {
   },
   participants: {
     tags,
-    summary: 'Approved riders',
+    summary: 'Organizer and riders with their request status',
+    description:
+      'The organizer comes first on the first page (status `organizer`), then riders in request order with status `approved`, `pending` or `declined`. Declined rows (with `declineReason`) are returned only to the organizer or a superadmin, and to the declined rider for their own request.',
     params: IdParams,
     querystring: PageQuery,
     response: { 200: RideParticipantPage, ...errorResponses(401, 404) },
