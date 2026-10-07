@@ -53,6 +53,10 @@ class HomeScreen extends ConsumerWidget {
                 avatarUrl: profile.avatarUrl,
                 unreadNotifications: unreadNotifications,
                 unreadMessages: unreadMessages,
+                category: category,
+                onCategoryChanged: (picked) => ref
+                    .read(selectedDashboardCategoryProvider.notifier)
+                    .select(picked),
                 onAvatarTap: () => context.go(RouteNames.profile),
                 onNotificationsTap: () =>
                     context.push(RouteNames.notifications),

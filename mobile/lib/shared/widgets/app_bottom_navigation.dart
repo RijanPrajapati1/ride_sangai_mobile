@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_colors_ext.dart';
-import '../../app/theme/app_dimensions.dart';
 
 class AppBottomNavItem {
   final IconData icon;
@@ -18,9 +17,7 @@ class AppBottomNavItem {
   });
 }
 
-/// Bottom nav with a notch left of center for the shell's floating category
-/// switcher (see [AppShell]) — pair with `floatingActionButtonLocation:
-/// FloatingActionButtonLocation.centerDocked`.
+/// The shell's bottom nav (see [AppShell]).
 class AppBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -36,13 +33,7 @@ class AppBottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      // Must differ from the scaffold background, or the notch Material cuts
-      // for the FAB has no contrast against it and never reads as a curve.
       color: context.appColors.surface,
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 10,
-      // A visible elevation lets Material's shadow trace the notch's curve,
-      // instead of a straight border that would cut across it and hide it.
       elevation: 6,
       padding: EdgeInsets.zero,
       child: SafeArea(
@@ -50,7 +41,7 @@ class AppBottomNavigation extends StatelessWidget {
           height: 62,
           child: Row(
             children: [
-              for (var i = 0; i < items.length; i++) ...[
+              for (var i = 0; i < items.length; i++)
                 Expanded(
                   child: _NavItem(
                     item: items[i],
@@ -58,8 +49,6 @@ class AppBottomNavigation extends StatelessWidget {
                     onTap: () => onTap(i),
                   ),
                 ),
-                if (i == 1) const SizedBox(width: AppDimensions.spaceXxl),
-              ],
             ],
           ),
         ),
