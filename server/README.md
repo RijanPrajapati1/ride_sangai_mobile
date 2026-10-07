@@ -206,7 +206,7 @@ All settings live in `.env`; `.env.example` explains each one. Production requir
 
 ## Deployment
 
-- **Docker:** run `docker build -t ride-sangai-api .`. The image applies migrations when it starts (`npm run start:prod`). `docker compose up --build` runs it together with Postgres.
+- **Docker:** run `docker build -t yatrix-api .`. The image applies migrations when it starts (`npm run start:prod`). `docker compose up --build` runs it together with Postgres.
 - **Bare metal or PM2:** run `npm ci && npm run build`, then `npm run start:prod`. If you run several instances, set `REALTIME_PG_FANOUT=true`. Background jobs are safe to run on every instance because each claims its work atomically.
 - **Timezones:** every database session runs in UTC, so the server's own timezone setting (for example Asia/Kathmandu) never shifts stored times.
 - **Shutdown:** on `SIGTERM` or `SIGINT`, the server stops accepting connections, finishes in-flight requests, then closes the database pool.

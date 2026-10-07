@@ -16,7 +16,7 @@ import { PasswordHasher } from '../src/utils/password.js';
 
 loadDotEnv();
 const config = loadConfig();
-const prisma = createPrisma(config.db, 'ride-sangai-seed');
+const prisma = createPrisma(config.db, 'yatrix-seed');
 
 const DEV_PASSWORD = 'Test@1234';
 

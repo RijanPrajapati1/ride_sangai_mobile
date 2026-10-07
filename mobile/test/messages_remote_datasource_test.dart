@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/features/messages/data/datasources/message_remote_datasource.dart';
-import 'package:ride_sangai/features/messages/data/dto/conversation_dto.dart';
-import 'package:ride_sangai/features/messages/data/dto/message_dto.dart';
-import 'package:ride_sangai/features/messages/data/repositories/message_repository_impl.dart';
-import 'package:ride_sangai/features/messages/presentation/providers/message_providers.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/features/messages/data/datasources/message_remote_datasource.dart';
+import 'package:yatrix/features/messages/data/dto/conversation_dto.dart';
+import 'package:yatrix/features/messages/data/dto/message_dto.dart';
+import 'package:yatrix/features/messages/data/repositories/message_repository_impl.dart';
+import 'package:yatrix/features/messages/presentation/providers/message_providers.dart';
 
 import 'explore_fakes.dart' show FakeAdapter, apiError, fakeApiClient, page;
 

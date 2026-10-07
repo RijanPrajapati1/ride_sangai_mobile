@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/app/providers/app_providers.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/features/authentication/domain/entities/auth_user.dart';
-import 'package:ride_sangai/features/authentication/domain/repositories/auth_repository.dart';
-import 'package:ride_sangai/features/authentication/presentation/providers/auth_providers.dart';
-import 'package:ride_sangai/features/profile/domain/entities/user_preferences.dart';
-import 'package:ride_sangai/features/profile/domain/repositories/user_repository.dart';
-import 'package:ride_sangai/features/profile/presentation/providers/profile_providers.dart';
-import 'package:ride_sangai/features/settings/presentation/screens/settings_screen.dart';
+import 'package:yatrix/app/providers/app_providers.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/features/authentication/domain/entities/auth_user.dart';
+import 'package:yatrix/features/authentication/domain/repositories/auth_repository.dart';
+import 'package:yatrix/features/authentication/presentation/providers/auth_providers.dart';
+import 'package:yatrix/features/profile/domain/entities/user_preferences.dart';
+import 'package:yatrix/features/profile/domain/repositories/user_repository.dart';
+import 'package:yatrix/features/profile/presentation/providers/profile_providers.dart';
+import 'package:yatrix/features/settings/presentation/screens/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignedOutAuthRepository implements AuthRepository {

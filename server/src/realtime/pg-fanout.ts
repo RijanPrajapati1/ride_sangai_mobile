@@ -2,7 +2,7 @@ import type { FastifyBaseLogger } from 'fastify';
 import pg from 'pg';
 import type { RealtimeEvent, RealtimeHub } from './hub.js';
 
-const CHANNEL = 'ride_sangai_realtime';
+const CHANNEL = 'yatrix_realtime';
 /** Postgres NOTIFY payloads must stay under 8000 bytes. */
 const MAX_PAYLOAD_BYTES = 7_800;
 
@@ -39,7 +39,7 @@ export class PgFanout {
   private async connect(): Promise<void> {
     const client = new pg.Client({
       connectionString: this.connectionString,
-      application_name: 'ride-sangai-realtime',
+      application_name: 'yatrix-realtime',
     });
     client.on('notification', (message) => {
       if (message.channel !== CHANNEL || !message.payload) return;

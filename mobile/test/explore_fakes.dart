@@ -3,18 +3,18 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ride_sangai/core/enums/dashboard_category.dart';
-import 'package:ride_sangai/core/enums/place_category.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/network/api_client.dart';
-import 'package:ride_sangai/core/network/dio_factory.dart';
-import 'package:ride_sangai/core/storage/token_storage.dart';
-import 'package:ride_sangai/core/utils/geo.dart';
-import 'package:ride_sangai/features/explore/data/dto/place_dto.dart';
-import 'package:ride_sangai/features/explore/data/dto/place_review_dto.dart';
-import 'package:ride_sangai/features/explore/domain/entities/place.dart';
-import 'package:ride_sangai/features/explore/domain/entities/place_review.dart';
-import 'package:ride_sangai/features/explore/domain/repositories/place_repository.dart';
+import 'package:yatrix/core/enums/dashboard_category.dart';
+import 'package:yatrix/core/enums/place_category.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/network/api_client.dart';
+import 'package:yatrix/core/network/dio_factory.dart';
+import 'package:yatrix/core/storage/token_storage.dart';
+import 'package:yatrix/core/utils/geo.dart';
+import 'package:yatrix/features/explore/data/dto/place_dto.dart';
+import 'package:yatrix/features/explore/data/dto/place_review_dto.dart';
+import 'package:yatrix/features/explore/domain/entities/place.dart';
+import 'package:yatrix/features/explore/domain/entities/place_review.dart';
+import 'package:yatrix/features/explore/domain/repositories/place_repository.dart';
 
 /// Shared helpers for the Explore tests (not a test file itself).
 

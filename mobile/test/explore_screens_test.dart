@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/app/providers/app_providers.dart';
-import 'package:ride_sangai/app/theme/app_theme.dart';
-import 'package:ride_sangai/core/location/location_service.dart';
-import 'package:ride_sangai/features/explore/presentation/providers/explore_providers.dart';
-import 'package:ride_sangai/features/explore/presentation/screens/explore_screen.dart';
-import 'package:ride_sangai/features/explore/presentation/screens/place_details_screen.dart';
-import 'package:ride_sangai/features/explore/presentation/screens/saved_places_screen.dart';
-import 'package:ride_sangai/features/explore/presentation/screens/share_place_screen.dart';
+import 'package:yatrix/app/providers/app_providers.dart';
+import 'package:yatrix/app/theme/app_theme.dart';
+import 'package:yatrix/core/location/location_service.dart';
+import 'package:yatrix/features/explore/presentation/providers/explore_providers.dart';
+import 'package:yatrix/features/explore/presentation/screens/explore_screen.dart';
+import 'package:yatrix/features/explore/presentation/screens/place_details_screen.dart';
+import 'package:yatrix/features/explore/presentation/screens/saved_places_screen.dart';
+import 'package:yatrix/features/explore/presentation/screens/share_place_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'explore_fakes.dart';

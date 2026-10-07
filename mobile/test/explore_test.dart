@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/enums/dashboard_category.dart';
-import 'package:ride_sangai/core/enums/place_category.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/utils/geo.dart';
-import 'package:ride_sangai/features/explore/data/datasources/place_remote_datasource.dart';
-import 'package:ride_sangai/features/explore/data/dto/place_dto.dart';
-import 'package:ride_sangai/features/explore/data/dto/place_review_dto.dart';
-import 'package:ride_sangai/features/explore/data/repositories/place_repository_impl.dart';
-import 'package:ride_sangai/features/explore/domain/repositories/place_repository.dart';
-import 'package:ride_sangai/features/explore/domain/usecases/submit_place_review.dart';
-import 'package:ride_sangai/features/explore/domain/usecases/toggle_save_place.dart';
+import 'package:yatrix/core/enums/dashboard_category.dart';
+import 'package:yatrix/core/enums/place_category.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/utils/geo.dart';
+import 'package:yatrix/features/explore/data/datasources/place_remote_datasource.dart';
+import 'package:yatrix/features/explore/data/dto/place_dto.dart';
+import 'package:yatrix/features/explore/data/dto/place_review_dto.dart';
+import 'package:yatrix/features/explore/data/repositories/place_repository_impl.dart';
+import 'package:yatrix/features/explore/domain/repositories/place_repository.dart';
+import 'package:yatrix/features/explore/domain/usecases/submit_place_review.dart';
+import 'package:yatrix/features/explore/domain/usecases/toggle_save_place.dart';
 
 import 'explore_fakes.dart';
 

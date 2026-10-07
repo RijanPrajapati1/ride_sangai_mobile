@@ -13,7 +13,7 @@ const PNG = Buffer.from(
 );
 
 function multipart(fields: Record<string, string>, file?: { name: string; data: Buffer; type: string }) {
-  const boundary = '----ridesangai';
+  const boundary = '----yatrix';
   const parts: Buffer[] = [];
   for (const [key, value] of Object.entries(fields)) {
     parts.push(

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/app/app.dart';
-import 'package:ride_sangai/app/providers/app_providers.dart';
-import 'package:ride_sangai/core/constants/app_constants.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/features/authentication/domain/entities/auth_user.dart';
-import 'package:ride_sangai/features/authentication/domain/repositories/auth_repository.dart';
-import 'package:ride_sangai/features/authentication/presentation/providers/auth_providers.dart';
+import 'package:yatrix/app/app.dart';
+import 'package:yatrix/app/providers/app_providers.dart';
+import 'package:yatrix/core/constants/app_constants.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/features/authentication/domain/entities/auth_user.dart';
+import 'package:yatrix/features/authentication/domain/repositories/auth_repository.dart';
+import 'package:yatrix/features/authentication/presentation/providers/auth_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Signed out, and every login attempt is rejected like the server would.

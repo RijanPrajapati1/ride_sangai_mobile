@@ -179,10 +179,10 @@ export function loadConfig(env: Env = process.env): AppConfig {
       accessTokenSecret,
       accessTokenTtlSeconds: r.int('JWT_ACCESS_TTL_SECONDS', 900, { min: 60, max: 86_400 }),
       refreshTokenTtlDays: r.int('REFRESH_TOKEN_TTL_DAYS', 30, { min: 1, max: 365 }),
-      issuer: r.string('JWT_ISSUER', 'ride-sangai'),
+      issuer: r.string('JWT_ISSUER', 'yatrix'),
       sessionCacheTtlMs: r.int('AUTH_SESSION_CACHE_TTL_MS', isTest ? 0 : 5_000, { min: 0, max: 60_000 }),
       passwordResetTtlMinutes: r.int('PASSWORD_RESET_TTL_MINUTES', 30, { min: 5, max: 1_440 }),
-      passwordResetUrl: r.string('PASSWORD_RESET_URL', 'ridesangai://reset-password?token={token}'),
+      passwordResetUrl: r.string('PASSWORD_RESET_URL', 'yatrix://reset-password?token={token}'),
       hash: {
         // OWASP-recommended argon2id baseline; tests use cheap params to stay fast.
         memoryCostKib: r.int('PASSWORD_HASH_MEMORY_KIB', isTest ? 1024 : 19_456, { min: 1024 }),

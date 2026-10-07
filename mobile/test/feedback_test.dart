@@ -5,15 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/network/api_client.dart';
-import 'package:ride_sangai/features/feedback/data/datasources/feedback_remote_datasource.dart';
-import 'package:ride_sangai/features/feedback/data/dto/feedback_dto.dart';
-import 'package:ride_sangai/features/feedback/data/repositories/feedback_repository_impl.dart';
-import 'package:ride_sangai/features/feedback/domain/entities/user_feedback.dart';
-import 'package:ride_sangai/features/feedback/domain/repositories/feedback_repository.dart';
-import 'package:ride_sangai/features/feedback/presentation/providers/feedback_providers.dart';
-import 'package:ride_sangai/features/feedback/presentation/screens/feedback_screen.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/network/api_client.dart';
+import 'package:yatrix/features/feedback/data/datasources/feedback_remote_datasource.dart';
+import 'package:yatrix/features/feedback/data/dto/feedback_dto.dart';
+import 'package:yatrix/features/feedback/data/repositories/feedback_repository_impl.dart';
+import 'package:yatrix/features/feedback/domain/entities/user_feedback.dart';
+import 'package:yatrix/features/feedback/domain/repositories/feedback_repository.dart';
+import 'package:yatrix/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:yatrix/features/feedback/presentation/screens/feedback_screen.dart';
 
 class _FakeAdapter implements HttpClientAdapter {
   final ({int status, Object? body}) Function(RequestOptions options) handler;

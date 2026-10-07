@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/network/api_client.dart';
-import 'package:ride_sangai/core/network/dio_factory.dart';
-import 'package:ride_sangai/core/storage/token_storage.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/network/api_client.dart';
+import 'package:yatrix/core/network/dio_factory.dart';
+import 'package:yatrix/core/storage/token_storage.dart';
 
 /// Answers requests from a handler instead of the network, and records them.
 class FakeAdapter implements HttpClientAdapter {

@@ -5,7 +5,7 @@ import type { AppConfig } from '../config/env.js';
  * Creates the node-postgres pool every database query goes through
  * (pool size, statement timeout, application name).
  */
-export function createPool(config: AppConfig['db'], applicationName = 'ride-sangai-api'): pg.Pool {
+export function createPool(config: AppConfig['db'], applicationName = 'yatrix-api'): pg.Pool {
   const pool = new pg.Pool({
     connectionString: config.url,
     max: config.poolMax,

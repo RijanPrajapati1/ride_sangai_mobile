@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808672285963",
+    "project_id": "yatrix-73d2a",
+    "storage_bucket": "yatrix-73d2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808672285963:android:36b81ef5ee57e754ecfe0e",
+        "android_client_info": {
+          "package_name": "yatrix.mobile.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjxF_4mncGDNIAixOHCt_q0ZZq_RnIJqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

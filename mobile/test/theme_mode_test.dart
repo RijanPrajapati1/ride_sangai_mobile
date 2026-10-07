@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/app/providers/app_providers.dart';
-import 'package:ride_sangai/core/constants/app_constants.dart';
-import 'package:ride_sangai/features/settings/presentation/providers/settings_providers.dart';
+import 'package:yatrix/app/providers/app_providers.dart';
+import 'package:yatrix/core/constants/app_constants.dart';
+import 'package:yatrix/features/settings/presentation/providers/settings_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<ProviderContainer> containerWith(Map<String, Object> saved) async {

@@ -3,9 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:ride_sangai/app/app.dart';
-import 'package:ride_sangai/app/providers/app_providers.dart';
-import 'package:ride_sangai/core/constants/app_constants.dart';
+import 'package:yatrix/app/app.dart';
+import 'package:yatrix/app/providers/app_providers.dart';
+import 'package:yatrix/core/constants/app_constants.dart';
 
 void main() {
   testWidgets('App boots to the splash screen', (WidgetTester tester) async {

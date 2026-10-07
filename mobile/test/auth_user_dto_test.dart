@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/features/authentication/data/dto/auth_user_dto.dart';
-import 'package:ride_sangai/features/authentication/domain/entities/auth_user.dart';
+import 'package:yatrix/features/authentication/data/dto/auth_user_dto.dart';
+import 'package:yatrix/features/authentication/domain/entities/auth_user.dart';
 
 void main() {
   Map<String, dynamic> userJson(Map<String, dynamic> extra) =>

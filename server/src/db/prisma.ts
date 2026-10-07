@@ -10,7 +10,7 @@ export { Prisma, PrismaClient };
 export type Db = PrismaClient | Prisma.TransactionClient;
 
 /** Creates the Prisma client on top of our own node-postgres pool (see `db.ts`). */
-export function createPrisma(config: AppConfig['db'], applicationName = 'ride-sangai-api'): PrismaClient {
+export function createPrisma(config: AppConfig['db'], applicationName = 'yatrix-api'): PrismaClient {
   const pool = createPool(config, applicationName);
   return new PrismaClient({ adapter: new PrismaPg(pool, { disposeExternalPool: true }) });
 }

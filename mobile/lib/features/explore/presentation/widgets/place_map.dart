@@ -54,7 +54,7 @@ class PlaceMap extends StatelessWidget {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.ridesangai.app',
+          userAgentPackageName: 'yatrix.mobile.com',
         ),
         MarkerLayer(
           markers: [

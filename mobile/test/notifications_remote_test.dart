@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/app/router/route_names.dart';
-import 'package:ride_sangai/core/enums/notification_type.dart';
-import 'package:ride_sangai/core/network/api_client.dart';
-import 'package:ride_sangai/features/notifications/data/datasources/notification_remote_datasource.dart';
-import 'package:ride_sangai/features/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:ride_sangai/features/notifications/domain/entities/notification_item.dart';
-import 'package:ride_sangai/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:yatrix/app/router/route_names.dart';
+import 'package:yatrix/core/enums/notification_type.dart';
+import 'package:yatrix/core/network/api_client.dart';
+import 'package:yatrix/features/notifications/data/datasources/notification_remote_datasource.dart';
+import 'package:yatrix/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:yatrix/features/notifications/domain/entities/notification_item.dart';
+import 'package:yatrix/features/notifications/presentation/screens/notifications_screen.dart';
 
 class _FakeAdapter implements HttpClientAdapter {
   final ({int status, Object? body}) Function(RequestOptions options) handler;

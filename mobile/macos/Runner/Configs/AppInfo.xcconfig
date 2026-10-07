@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = ride_sangai
+PRODUCT_NAME = Yatrix
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.ridesangai.rideSangai
+PRODUCT_BUNDLE_IDENTIFIER = yatrix.mobile.com
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.ridesangai. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.yatrix. All rights reserved.

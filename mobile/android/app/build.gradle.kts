@@ -1,11 +1,13 @@
 plugins {
     id("com.android.application")
+    // Google services Gradle plugin (Firebase config from google-services.json).
+    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.ridesangai.ride_sangai"
+    namespace = "yatrix.mobile.com"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -15,8 +17,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.ridesangai.ride_sangai"
+        // Must match the package registered in Firebase (google-services.json).
+        applicationId = "yatrix.mobile.com"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

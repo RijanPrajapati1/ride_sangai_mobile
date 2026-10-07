@@ -1,4 +1,4 @@
-package com.ridesangai.ride_sangai
+package yatrix.mobile.com
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/config/app_config.dart';
+import 'package:yatrix/core/config/app_config.dart';
 
 void main() {
   tearDown(() => debugDefaultTargetPlatformOverride = null);

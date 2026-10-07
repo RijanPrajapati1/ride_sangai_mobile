@@ -3,10 +3,10 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/network/api_client.dart';
-import 'package:ride_sangai/features/community/data/datasources/community_remote_datasource.dart';
-import 'package:ride_sangai/features/community/data/repositories/community_repository_impl.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/network/api_client.dart';
+import 'package:yatrix/features/community/data/datasources/community_remote_datasource.dart';
+import 'package:yatrix/features/community/data/repositories/community_repository_impl.dart';
 
 class _FakeAdapter implements HttpClientAdapter {
   final ({int status, Object? body}) Function(RequestOptions options) handler;

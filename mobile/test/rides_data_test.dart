@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ride_sangai/core/enums/dashboard_category.dart';
-import 'package:ride_sangai/core/enums/ride_enums.dart';
-import 'package:ride_sangai/core/errors/app_exception.dart';
-import 'package:ride_sangai/core/network/paginated.dart';
-import 'package:ride_sangai/features/ride_requests/data/dto/ride_request_dto.dart';
-import 'package:ride_sangai/features/rides/data/datasources/ride_remote_datasource.dart';
-import 'package:ride_sangai/features/rides/data/dto/ride_dto.dart';
-import 'package:ride_sangai/features/rides/data/dto/ride_participant_dto.dart';
-import 'package:ride_sangai/features/rides/data/repositories/ride_repository_impl.dart';
+import 'package:yatrix/core/enums/dashboard_category.dart';
+import 'package:yatrix/core/enums/ride_enums.dart';
+import 'package:yatrix/core/errors/app_exception.dart';
+import 'package:yatrix/core/network/paginated.dart';
+import 'package:yatrix/features/ride_requests/data/dto/ride_request_dto.dart';
+import 'package:yatrix/features/rides/data/datasources/ride_remote_datasource.dart';
+import 'package:yatrix/features/rides/data/dto/ride_dto.dart';
+import 'package:yatrix/features/rides/data/dto/ride_participant_dto.dart';
+import 'package:yatrix/features/rides/data/repositories/ride_repository_impl.dart';
 
 Map<String, dynamic> rideJson({String id = 'r1', Map<String, dynamic>? myRequest}) => {
       'id': id,

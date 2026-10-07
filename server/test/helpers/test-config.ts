@@ -30,7 +30,7 @@ export function testDatabaseUrl(): string {
 let uploadDir: string | undefined;
 
 export function testConfig(overrides: Record<string, string> = {}): AppConfig {
-  uploadDir ??= mkdtempSync(path.join(tmpdir(), 'ride-sangai-uploads-'));
+  uploadDir ??= mkdtempSync(path.join(tmpdir(), 'yatrix-uploads-'));
   return loadConfig({
     ...process.env,
     NODE_ENV: 'test',
