@@ -12,6 +12,7 @@ import '../../../../core/location/location_service.dart';
 import '../../../../core/utils/geo.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_dropdown.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../../../shared/widgets/section_header.dart';
@@ -131,115 +132,124 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
             const SizedBox(height: AppDimensions.spaceMd),
             PlacePhotoPicker(photos: _photos, onChanged: (photos) => setState(() => _photos = photos)),
             const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'The place'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            AppTextField(
-              label: 'Name',
-              hint: 'e.g. Taudaha Lake',
-              controller: _nameController,
-              validator: (v) => Validators.required(v, field: 'Name'),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppDropdown<PlaceCategory>(
-              label: 'Category',
-              value: _category,
-              items: PlaceCategory.values,
-              labelBuilder: (c) => c.label,
-              onChanged: (c) => setState(() => _category = c ?? _category),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'What makes it special?',
-              hint: 'The view, the story, how to get there…',
-              controller: _descriptionController,
-              maxLines: 4,
-              validator: (v) => Validators.required(v, field: 'Description'),
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Location'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            AppTextField(
-              label: 'Area',
-              hint: 'e.g. Near Kirtipur, Kathmandu',
-              controller: _locationController,
-              prefixIcon: const Icon(Icons.location_on_outlined),
-              validator: (v) => Validators.required(v, field: 'Area'),
-            ),
-            const SizedBox(height: AppDimensions.spaceSm),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-              child: SizedBox(
-                height: 240,
-                child: PlaceMap(
-                  controller: _mapController,
-                  center: _pin ?? location.point,
-                  zoom: 12,
-                  userLocation: location.isApproximate ? null : location.point,
-                  pickedPoint: _pin,
-                  onMapTap: (point) => setState(() => _pin = point),
-                ),
+            // Every field sits on one white card so the form reads as a
+            // single unit against the grey page background.
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'The place'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  AppTextField(
+                    label: 'Name',
+                    hint: 'e.g. Taudaha Lake',
+                    controller: _nameController,
+                    validator: (v) => Validators.required(v, field: 'Name'),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppDropdown<PlaceCategory>(
+                    label: 'Category',
+                    value: _category,
+                    items: PlaceCategory.values,
+                    labelBuilder: (c) => c.label,
+                    onChanged: (c) => setState(() => _category = c ?? _category),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'What makes it special?',
+                    hint: 'The view, the story, how to get there…',
+                    controller: _descriptionController,
+                    maxLines: 4,
+                    validator: (v) => Validators.required(v, field: 'Description'),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'Location'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  AppTextField(
+                    label: 'Area',
+                    hint: 'e.g. Near Kirtipur, Kathmandu',
+                    controller: _locationController,
+                    prefixIcon: const Icon(Icons.location_on_outlined),
+                    validator: (v) => Validators.required(v, field: 'Area'),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                    child: SizedBox(
+                      height: 240,
+                      child: PlaceMap(
+                        controller: _mapController,
+                        center: _pin ?? location.point,
+                        zoom: 12,
+                        userLocation: location.isApproximate ? null : location.point,
+                        pickedPoint: _pin,
+                        onMapTap: (point) => setState(() => _pin = point),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceXs),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _pin == null
+                              ? 'Tap the map to drop a pin'
+                              : 'Pinned at ${_pin!.latitude.toStringAsFixed(5)}, ${_pin!.longitude.toStringAsFixed(5)}',
+                          style: theme.textTheme.bodySmall?.copyWith(color: _pin == null ? AppColors.secondary : null),
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: _locating ? null : _useMyLocation,
+                        icon: _locating
+                            ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.my_location, size: 18),
+                        label: const Text("I'm here"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'Good for'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final activity in DashboardCategory.values)
+                        FilterChip(
+                          avatar: Icon(activity.icon, size: 16),
+                          label: Text(activity.label),
+                          selected: _activities.contains(activity),
+                          onSelected: (selected) => setState(() {
+                            selected ? _activities.add(activity) : _activities.remove(activity);
+                          }),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'Tips for visitors'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  AppTextField(
+                    label: 'Best time to go',
+                    hint: 'e.g. Sunrise, October to December',
+                    controller: _bestTimeController,
+                    prefixIcon: const Icon(Icons.wb_sunny_outlined),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'Entry fee',
+                    hint: 'e.g. Free, or Rs 100',
+                    controller: _entryFeeController,
+                    prefixIcon: const Icon(Icons.confirmation_number_outlined),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'Local tips',
+                    hint: 'Road condition, parking, food nearby…',
+                    controller: _tipsController,
+                    maxLines: 3,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: AppDimensions.spaceXs),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _pin == null
-                        ? 'Tap the map to drop a pin'
-                        : 'Pinned at ${_pin!.latitude.toStringAsFixed(5)}, ${_pin!.longitude.toStringAsFixed(5)}',
-                    style: theme.textTheme.bodySmall?.copyWith(color: _pin == null ? AppColors.secondary : null),
-                  ),
-                ),
-                TextButton.icon(
-                  onPressed: _locating ? null : _useMyLocation,
-                  icon: _locating
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.my_location, size: 18),
-                  label: const Text("I'm here"),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Good for'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final activity in DashboardCategory.values)
-                  FilterChip(
-                    avatar: Icon(activity.icon, size: 16),
-                    label: Text(activity.label),
-                    selected: _activities.contains(activity),
-                    onSelected: (selected) => setState(() {
-                      selected ? _activities.add(activity) : _activities.remove(activity);
-                    }),
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Tips for visitors'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            AppTextField(
-              label: 'Best time to go',
-              hint: 'e.g. Sunrise, October to December',
-              controller: _bestTimeController,
-              prefixIcon: const Icon(Icons.wb_sunny_outlined),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'Entry fee',
-              hint: 'e.g. Free, or Rs 100',
-              controller: _entryFeeController,
-              prefixIcon: const Icon(Icons.confirmation_number_outlined),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'Local tips',
-              hint: 'Road condition, parking, food nearby…',
-              controller: _tipsController,
-              maxLines: 3,
             ),
             const SizedBox(height: AppDimensions.spaceLg),
             AppButton(label: 'Share place', icon: Icons.send_outlined, isLoading: _isSubmitting, onPressed: _submit),

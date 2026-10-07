@@ -18,6 +18,7 @@ class AppTheme {
     final textPrimary = tokens.textPrimary;
     final textSecondary = tokens.textSecondary;
     final border = tokens.border;
+    final inputBorder = isDark ? AppColors.inputBorderDark : AppColors.inputBorder;
 
     // Seed a full Material scheme from our brand color so every slot
     // (tertiary, containers, outline, etc.) stays harmonious with the brand
@@ -114,20 +115,29 @@ class AppTheme {
           side: WidgetStatePropertyAll(BorderSide(color: border)),
         ),
       ),
+      // Fields are outlined in grey with a transparent body, so they sit
+      // cleanly on both white cards and the grey page background.
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: tokens.surfaceAlt,
+        filled: false,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.spaceMd,
           vertical: AppDimensions.spaceMd,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: inputBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: inputBorder),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          borderSide: BorderSide(color: border),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),

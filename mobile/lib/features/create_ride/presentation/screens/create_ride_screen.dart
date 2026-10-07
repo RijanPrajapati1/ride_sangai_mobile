@@ -10,6 +10,7 @@ import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_date_picker_field.dart';
 import '../../../../shared/widgets/app_dropdown.dart';
 import '../../../../shared/widgets/app_text_field.dart';
@@ -121,108 +122,117 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
           children: [
             CoverImagePicker(imageUrl: _imageUrl, onChanged: (url) => setState(() => _imageUrl = url)),
             const SizedBox(height: AppDimensions.spaceLg),
-            SectionHeader(title: '${_category.activitySingular} details'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            AppTextField(
-              label: '${_category.activitySingular} title',
-              hint: 'e.g. Kathmandu Sunrise Ride',
-              controller: _titleController,
-              validator: (v) => Validators.required(v, field: 'Title'),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'Description',
-              hint: 'Tell riders what to expect',
-              controller: _descriptionController,
-              maxLines: 4,
-              validator: (v) => Validators.required(v, field: 'Description'),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'Meeting location',
-              hint: 'e.g. Ratna Park, Kathmandu',
-              controller: _locationController,
-              validator: (v) => Validators.required(v, field: 'Meeting location'),
-              prefixIcon: const Icon(Icons.location_on_outlined),
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Schedule'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            Row(
-              children: [
-                Expanded(
-                  child: AppDatePickerField(
-                    label: 'Date',
-                    value: _date,
-                    onChanged: (d) => setState(() => _date = d),
+            // Every field sits on one white card so the form reads as a
+            // single unit against the grey page background.
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SectionHeader(padding: EdgeInsets.zero, title: '${_category.activitySingular} details'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  AppTextField(
+                    label: '${_category.activitySingular} title',
+                    hint: 'e.g. Kathmandu Sunrise Ride',
+                    controller: _titleController,
+                    validator: (v) => Validators.required(v, field: 'Title'),
                   ),
-                ),
-                const SizedBox(width: AppDimensions.spaceSm),
-                Expanded(
-                  child: AppTimePickerField(
-                    label: 'Start time',
-                    value: _time,
-                    onChanged: (t) => setState(() => _time = t),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'Description',
+                    hint: 'Tell riders what to expect',
+                    controller: _descriptionController,
+                    maxLines: 4,
+                    validator: (v) => Validators.required(v, field: 'Description'),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            const SectionHeader(title: 'Details'),
-            const SizedBox(height: AppDimensions.spaceSm),
-            AppDropdown<RideType>(
-              label: 'Type',
-              value: _rideType,
-              items: _category.rideTypes,
-              labelBuilder: (t) => t.label,
-              onChanged: (t) => setState(() => _rideType = t ?? _rideType),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppDropdown<RideDifficulty>(
-              label: 'Difficulty',
-              value: _difficulty,
-              items: RideDifficulty.values,
-              labelBuilder: (d) => d.label,
-              onChanged: (d) => setState(() => _difficulty = d ?? _difficulty),
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            Row(
-              children: [
-                Expanded(
-                  child: AppTextField(
-                    label: 'Distance (km)',
-                    hint: '20',
-                    controller: _distanceController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    validator: (v) => Validators.number(v, field: 'Distance'),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'Meeting location',
+                    hint: 'e.g. Ratna Park, Kathmandu',
+                    controller: _locationController,
+                    validator: (v) => Validators.required(v, field: 'Meeting location'),
+                    prefixIcon: const Icon(Icons.location_on_outlined),
                   ),
-                ),
-                const SizedBox(width: AppDimensions.spaceSm),
-                Expanded(
-                  child: AppTextField(
-                    label: 'Duration (min)',
-                    hint: '90',
-                    controller: _durationController,
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'Schedule'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppDatePickerField(
+                          label: 'Date',
+                          value: _date,
+                          onChanged: (d) => setState(() => _date = d),
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.spaceSm),
+                      Expanded(
+                        child: AppTimePickerField(
+                          label: 'Start time',
+                          value: _time,
+                          onChanged: (t) => setState(() => _time = t),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SectionHeader(padding: EdgeInsets.zero, title: 'Details'),
+                  const SizedBox(height: AppDimensions.spaceSm),
+                  AppDropdown<RideType>(
+                    label: 'Type',
+                    value: _rideType,
+                    items: _category.rideTypes,
+                    labelBuilder: (t) => t.label,
+                    onChanged: (t) => setState(() => _rideType = t ?? _rideType),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppDropdown<RideDifficulty>(
+                    label: 'Difficulty',
+                    value: _difficulty,
+                    items: RideDifficulty.values,
+                    labelBuilder: (d) => d.label,
+                    onChanged: (d) => setState(() => _difficulty = d ?? _difficulty),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField(
+                          label: 'Distance (km)',
+                          hint: '20',
+                          controller: _distanceController,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          validator: (v) => Validators.number(v, field: 'Distance'),
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.spaceSm),
+                      Expanded(
+                        child: AppTextField(
+                          label: 'Duration (min)',
+                          hint: '90',
+                          controller: _durationController,
+                          keyboardType: TextInputType.number,
+                          validator: (v) => Validators.number(v, field: 'Duration'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  AppTextField(
+                    label: 'Maximum participants',
+                    controller: _maxParticipantsController,
                     keyboardType: TextInputType.number,
-                    validator: (v) => Validators.number(v, field: 'Duration'),
+                    validator: (v) => Validators.number(v, field: 'Maximum participants'),
+                    prefixIcon: const Icon(Icons.groups_outlined),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimensions.spaceMd),
-            AppTextField(
-              label: 'Maximum participants',
-              controller: _maxParticipantsController,
-              keyboardType: TextInputType.number,
-              validator: (v) => Validators.number(v, field: 'Maximum participants'),
-              prefixIcon: const Icon(Icons.groups_outlined),
-            ),
-            const SizedBox(height: AppDimensions.spaceLg),
-            ChipInputField(
-              label: 'Requirements',
-              hint: 'e.g. Helmet, front & rear lights',
-              values: _requirements,
-              onChanged: (r) => setState(() => _requirements = r),
+                  const SizedBox(height: AppDimensions.spaceLg),
+                  ChipInputField(
+                    label: 'Requirements',
+                    hint: 'e.g. Helmet, front & rear lights',
+                    values: _requirements,
+                    onChanged: (r) => setState(() => _requirements = r),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: AppDimensions.spaceXl),
             AppButton(label: 'Create ${_category.activitySingular}', onPressed: _submit, isLoading: _isSubmitting),

@@ -7,12 +7,21 @@ class SectionHeader extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
 
-  const SectionHeader({super.key, required this.title, this.actionLabel, this.onAction});
+  /// Defaults to the screen gutter; pass [EdgeInsets.zero] inside a card.
+  final EdgeInsetsGeometry padding;
+
+  const SectionHeader({
+    super.key,
+    required this.title,
+    this.actionLabel,
+    this.onAction,
+    this.padding = const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceMd),
+      padding: padding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

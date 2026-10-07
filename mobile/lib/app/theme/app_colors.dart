@@ -20,6 +20,11 @@ class AppColors {
   static const textMuted = Color(0xFF9AA6AD);
 
   static const border = Color(0xFFE4E9EB);
+
+  /// Outline of text fields and dropdowns; darker than [border] so empty
+  /// fields stay visible on white cards.
+  static const inputBorder = Color(0xFFC9D2D6);
+  static const inputBorderDark = Color(0xFF3B4A50);
   static const divider = Color(0xFFEDF1F2);
 
   static const success = Color(0xFF2FB170);
