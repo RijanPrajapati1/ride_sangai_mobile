@@ -1,6 +1,6 @@
-# Ride Sangai — Superadmin dashboard
+# Yatrix — Superadmin dashboard
 
-The web dashboard the Ride Sangai platform team uses to run the community: platform
+The web dashboard the Yatrix platform team uses to run the community: platform
 health and analytics, rider management, content moderation (posts, rides, join
 requests, places, groups), the feedback inbox, home-screen banners and the
 moderation audit log.
@@ -42,8 +42,8 @@ The API must be running (see `../server/README.md`). Seeded superadmin login
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `API_URL` | `http://localhost:4000/api/v1` | Base URL of the Ride Sangai API. **Server-side only** — never exposed to the browser. |
-| `APP_ORIGIN` | _(unset)_ | Public origin of the dashboard, e.g. `https://admin.ridesangai.app`. Used by the CSRF check. When unset, the request's `X-Forwarded-Host`/`Host` header is used. Set it in production behind a proxy. |
+| `API_URL` | `http://localhost:4000/api/v1` | Base URL of the Yatrix API. **Server-side only** — never exposed to the browser. |
+| `APP_ORIGIN` | _(unset)_ | Public origin of the dashboard, e.g. `https://admin.yatrix.app`. Used by the CSRF check. When unset, the request's `X-Forwarded-Host`/`Host` header is used. Set it in production behind a proxy. |
 
 ## Pages
 
@@ -62,7 +62,7 @@ The API must be running (see `../server/README.md`). Seeded superadmin login
 ## Security model
 
 ```
-Browser ──(cookies, same-origin)──▶ Next.js BFF ──(Authorization: Bearer)──▶ Ride Sangai API
+Browser ──(cookies, same-origin)──▶ Next.js BFF ──(Authorization: Bearer)──▶ Yatrix API
 ```
 
 - **No tokens in the browser.** `POST /api/auth/login` (route handler) calls the

@@ -68,7 +68,7 @@ export function FeedbackScreen() {
 
   return (
     <>
-      <PageHeader title="Feedback" description="Bug reports, ideas and praise sent from the Ride Sangai app." />
+      <PageHeader title="Feedback" description="Bug reports, ideas and praise sent from the Yatrix app." />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Segmented
           ariaLabel="Status"

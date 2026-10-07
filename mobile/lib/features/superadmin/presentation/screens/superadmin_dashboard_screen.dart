@@ -119,7 +119,7 @@ class SuperadminDashboardScreen extends ConsumerWidget {
                               final confirmed = await _confirm(
                                 context,
                                 title: 'Remove ${user.name}?',
-                                message: 'This rider will be removed from Biker Sync.',
+                                message: 'This rider will be removed from Yatrix.',
                               );
                               if (confirmed && context.mounted) await runOrShowError(context, () => actions.removeUser(user.id));
                             },

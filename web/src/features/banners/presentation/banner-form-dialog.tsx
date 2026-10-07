@@ -147,7 +147,7 @@ export function BannerFormDialog({
       {open && (
         <DialogContent
           title={banner ? 'Edit banner' : 'New banner'}
-          description="Banners appear on the home screen of the Ride Sangai app."
+          description="Banners appear on the home screen of the Yatrix app."
           className="max-w-2xl"
         >
           <BannerForm key={banner?.id ?? 'new'} banner={banner} onDone={() => onOpenChange(false)} />

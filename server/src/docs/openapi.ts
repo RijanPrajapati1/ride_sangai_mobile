@@ -41,7 +41,7 @@ const MOBILE_TAGS = [
     name: 'Uploads',
     description: 'Upload an image and store the returned URL on a profile, ride, post or place.',
   },
-  { name: 'Feedback', description: 'Send feedback about the app to the Ride Sangai team.' },
+  { name: 'Feedback', description: 'Send feedback about the app to the Yatrix team.' },
   { name: 'Health', description: 'Liveness and readiness probes. No token needed.' },
 ];
 
@@ -56,7 +56,7 @@ const SUPERADMIN_TAGS = [
 function mobileOverview(config: AppConfig): string {
   const minutes = Math.round(config.auth.accessTokenTtlSeconds / 60);
   return [
-    'The API behind the **Ride Sangai** app: group rides, treks, hikes and motorbike meetups, community posts, chats, groups and places to explore.',
+    'The API behind the **Yatrix** app: group rides, treks, hikes and motorbike meetups, community posts, chats, groups and places to explore.',
     '',
     '### Quick start',
     '1. Open **Auth → POST /api/v1/auth/register** (or **login**), press **Try it out**, then **Execute**.',
@@ -80,7 +80,7 @@ function mobileOverview(config: AppConfig): string {
 
 function superadminOverview(): string {
   return [
-    'Endpoints for the **Ride Sangai superadmin dashboard** (the `web/` app). Every route requires an account with the `superadmin` role.',
+    'Endpoints for the **Yatrix superadmin dashboard** (the `web/` app). Every route requires an account with the `superadmin` role.',
     '',
     '### Quick start',
     '1. **Auth → POST /api/v1/auth/login** with a superadmin account (created by `npm run db:seed`).',
@@ -110,7 +110,7 @@ export function documentFor(full: OpenApiDocument, variant: DocsVariant, config:
     ...full,
     info: {
       ...full.info,
-      title: variant === 'superadmin' ? 'Ride Sangai · Superadmin API' : 'Ride Sangai · Mobile API',
+      title: variant === 'superadmin' ? 'Yatrix · Superadmin API' : 'Yatrix · Mobile API',
       description: variant === 'superadmin' ? superadminOverview() : mobileOverview(config),
     },
     tags,

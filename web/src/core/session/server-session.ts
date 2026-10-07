@@ -31,7 +31,7 @@ export const SESSION_ENDED: ApiErrorBody = {
 };
 
 export const API_UNREACHABLE: ApiErrorBody = {
-  error: { code: 'API_UNREACHABLE', message: 'The Ride Sangai API could not be reached. Try again shortly.' },
+  error: { code: 'API_UNREACHABLE', message: 'The Yatrix API could not be reached. Try again shortly.' },
 };
 
 export function apiUrl(path: string): string {

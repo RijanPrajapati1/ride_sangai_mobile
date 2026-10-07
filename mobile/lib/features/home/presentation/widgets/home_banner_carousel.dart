@@ -34,7 +34,7 @@ List<HomeBanner> homeBannersFor(DashboardCategory category, {VoidCallback? onInv
     HomeBanner(
       icon: Icons.group_add_outlined,
       title: 'Ride with friends',
-      subtitle: 'Invite friends to Biker Sync and plan your next ${category.activitySingular.toLowerCase()} together.',
+      subtitle: 'Invite friends to Yatrix and plan your next ${category.activitySingular.toLowerCase()} together.',
       ctaLabel: 'Invite friends',
       gradient: const [AppColors.primary, AppColors.primaryDark],
       onTap: onInvite,

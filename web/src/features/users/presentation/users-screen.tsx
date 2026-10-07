@@ -38,7 +38,7 @@ export function UsersScreen() {
 
   return (
     <>
-      <PageHeader title="Users" description="Everyone with a Ride Sangai account. Promote teammates or remove abusive accounts." />
+      <PageHeader title="Users" description="Everyone with a Yatrix account. Promote teammates or remove abusive accounts." />
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <Segmented
           ariaLabel="Role"
@@ -61,7 +61,7 @@ export function UsersScreen() {
           q ? (
             <EmptyState icon={UserRound} title="No matches" description={`Nobody matches “${q}”. Try part of a name or email.`} />
           ) : role === 'user' ? (
-            <EmptyState icon={UsersRound} title="No riders yet" description="People who sign up in the Ride Sangai app will appear here." />
+            <EmptyState icon={UsersRound} title="No riders yet" description="People who sign up in the Yatrix app will appear here." />
           ) : (
             <EmptyState icon={ShieldCheck} title="No superadmins" description="Promote a rider to give them access to this dashboard." />
           )

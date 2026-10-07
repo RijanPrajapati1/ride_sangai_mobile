@@ -1,7 +1,7 @@
 class AppConstants {
   AppConstants._();
 
-  static const String appName = 'Biker Sync';
+  static const String appName = 'Yatrix';
   static const String appTagline = 'Ride together. Discover more.';
 
   static const String onboardingCompleteKey = 'onboarding_complete';

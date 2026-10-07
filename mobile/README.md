@@ -1,4 +1,4 @@
-# Ride Sangai (mobile)
+# Yatrix (mobile)
 
 Flutter app for group rides, treks and meetups. State management is Riverpod; each feature follows clean architecture (`data` → `domain` → `presentation`).
 

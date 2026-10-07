@@ -23,7 +23,7 @@ export function Brand({ subtitle = 'Superadmin' }: { subtitle?: string }) {
     <div className="flex items-center gap-2.5">
       <BrandMark />
       <div className="leading-tight">
-        <div className="text-[15px] font-semibold tracking-tight text-foreground">Ride Sangai</div>
+        <div className="text-[15px] font-semibold tracking-tight text-foreground">Yatrix</div>
         <div className="text-[11px] font-medium tracking-wide text-muted uppercase">{subtitle}</div>
       </div>
     </div>

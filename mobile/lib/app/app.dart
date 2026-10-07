@@ -6,8 +6,8 @@ import '../features/settings/presentation/providers/settings_providers.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
-class BikerSyncApp extends ConsumerWidget {
-  const BikerSyncApp({super.key});
+class YatrixApp extends ConsumerWidget {
+  const YatrixApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

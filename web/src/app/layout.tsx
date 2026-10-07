@@ -11,8 +11,8 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: { default: 'Ride Sangai Admin', template: '%s · Ride Sangai Admin' },
-  description: 'Superadmin dashboard for the Ride Sangai community.',
+  title: { default: 'Yatrix Admin', template: '%s · Yatrix Admin' },
+  description: 'Superadmin dashboard for the Yatrix community.',
   robots: { index: false, follow: false },
 };
 

@@ -46,7 +46,7 @@ export function OverviewScreen() {
     <>
       <PageHeader
         title="Overview"
-        description="How the Ride Sangai community is doing right now."
+        description="How the Yatrix community is doing right now."
       />
 
       <section aria-label="Key numbers" className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">

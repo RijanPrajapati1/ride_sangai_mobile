@@ -1,6 +1,6 @@
-# Ride Sangai API
+# Yatrix API
 
-Backend for the Ride Sangai (Biker Sync) mobile app. It covers group rides, treks, hikes and motorbike meetups, plus join requests, community posts, direct messages, groups, Explore (places shared by locals, with reviews), notifications and an admin dashboard.
+Backend for the Yatrix mobile app. It covers group rides, treks, hikes and motorbike meetups, plus join requests, community posts, direct messages, groups, Explore (places shared by locals, with reviews), notifications and an admin dashboard.
 
 **Stack:** Node.js 22 · TypeScript · [Fastify 5](https://fastify.dev) · [Prisma 7](https://www.prisma.io) · PostgreSQL · TypeBox (validation and OpenAPI) · Argon2id · JWT · WebSockets · Vitest
 

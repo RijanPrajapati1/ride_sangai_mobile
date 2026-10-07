@@ -170,7 +170,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('About Biker Sync'),
+              title: const Text('About Yatrix'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => showAboutDialog(
                 context: context,

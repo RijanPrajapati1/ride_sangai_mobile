@@ -2,7 +2,7 @@ import 'server-only';
 
 const DEFAULT_API_URL = 'http://localhost:4000/api/v1';
 
-/** Base URL of the Ride Sangai API, without a trailing slash. Server-side only. */
+/** Base URL of the Yatrix API, without a trailing slash. Server-side only. */
 export const API_URL = (process.env.API_URL || DEFAULT_API_URL).replace(/\/+$/, '');
 
 /** Optional public origin of the dashboard, used for the CSRF Origin check. */

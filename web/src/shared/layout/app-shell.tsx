@@ -137,7 +137,7 @@ export function AppShell({
           </Button>
           <div className="lg:hidden">
             <Link href="/" aria-label="Overview" className="flex items-center gap-2 text-[15px] font-semibold">
-              Ride Sangai
+              Yatrix
             </Link>
           </div>
           <div className="ml-auto flex items-center gap-1.5">

@@ -19,7 +19,7 @@ const stopJobs = config.jobs.enabled ? startJobs(app) : () => undefined;
 
 app.log.info(
   { env: config.env, docs: config.docs.enabled ? `${config.publicUrl}/docs` : 'disabled' },
-  `Ride Sangai API listening on ${config.host}:${config.port}`,
+  `Yatrix API listening on ${config.host}:${config.port}`,
 );
 
 // Migrations are applied by `prisma migrate deploy` (see `npm start` / `npm run db:migrate`).

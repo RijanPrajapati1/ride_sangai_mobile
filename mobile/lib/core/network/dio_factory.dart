@@ -27,7 +27,7 @@ class DioFactory {
         'Accept': 'application/json',
         // Browsers don't allow setting User-Agent; the server shows it in the
         // "signed-in devices" list.
-        if (!kIsWeb) 'User-Agent': 'RideSangai/1.0 (${defaultTargetPlatform.name})',
+        if (!kIsWeb) 'User-Agent': 'Yatrix/1.0 (${defaultTargetPlatform.name})',
       },
     );
 

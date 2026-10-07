@@ -61,7 +61,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Join Biker Sync', style: Theme.of(context).textTheme.displayLarge),
+                Text('Join Yatrix', style: Theme.of(context).textTheme.displayLarge),
                 const SizedBox(height: 6),
                 Text(
                   'Create a profile and start discovering rides near you.',

@@ -62,7 +62,7 @@ function jsonInit(opts: RequestOptions): RequestInit {
 }
 
 /**
- * Calls the Ride Sangai API through the BFF proxy (`/api/backend/*`). Used by
+ * Calls the Yatrix API through the BFF proxy (`/api/backend/*`). Used by
  * feature repositories. The browser never sees tokens: the session lives in
  * httpOnly cookies that only the Next.js server reads.
  */

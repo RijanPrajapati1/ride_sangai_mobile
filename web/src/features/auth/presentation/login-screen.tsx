@@ -73,7 +73,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
           <div className="flex items-center gap-3">
             <BrandMark className="size-10" />
             <div>
-              <div className="text-lg font-semibold">Ride Sangai</div>
+              <div className="text-lg font-semibold">Yatrix</div>
               <div className="text-xs tracking-wider text-white/60 uppercase">Superadmin</div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
         <div className="flex flex-1 items-center justify-center px-4 pb-16 sm:px-6">
           <div className="w-full max-w-sm">
             <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
-            <p className="mt-1.5 text-sm text-muted">Use your Ride Sangai superadmin account.</p>
+            <p className="mt-1.5 text-sm text-muted">Use your Yatrix superadmin account.</p>
 
             {notice && !login.isError && (
               <div className="mt-6 flex items-start gap-2.5 rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm text-muted">
@@ -127,7 +127,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
                     name="email"
                     type="email"
                     autoComplete="username"
-                    placeholder="you@ridesangai.app"
+                    placeholder="you@yatrix.app"
                     className="h-11 pl-9"
                     aria-invalid={!!fieldErrors.email}
                     autoFocus
@@ -161,7 +161,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
               </Button>
             </form>
             <p className="mt-8 text-center text-xs text-subtle">
-              Riders manage their own rides and posts in the Ride Sangai app. This dashboard is for the platform team.
+              Riders manage their own rides and posts in the Yatrix app. This dashboard is for the platform team.
             </p>
           </div>
         </div>

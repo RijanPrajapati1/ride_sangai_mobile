@@ -1,5 +1,5 @@
 // =============================================================================
-// Ride Sangai — data model
+// Yatrix — data model
 //
 // Conventions
 //   * Models/fields are camelCase in code and snake_case in Postgres (@map).

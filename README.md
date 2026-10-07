@@ -1,4 +1,4 @@
-# Ride Sangai
+# Yatrix
 
 Group rides, treks, hikes and motorbike meetups. Find a ride, ask to join, chat with other riders and groups, and explore hidden places that locals share and review.
 

@@ -17,7 +17,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-        child: const BikerSyncApp(),
+        child: const YatrixApp(),
       ),
     );
 

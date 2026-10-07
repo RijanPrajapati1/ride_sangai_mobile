@@ -42,7 +42,7 @@ void main() {
         sharedPreferencesProvider.overrideWithValue(prefs),
         authRepositoryProvider.overrideWithValue(RejectingAuthRepository()),
       ],
-      child: const BikerSyncApp(),
+      child: const YatrixApp(),
     ));
     await tester.pumpAndSettle();
     expect(find.text('Log In'), findsOneWidget);

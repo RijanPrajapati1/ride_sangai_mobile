@@ -38,7 +38,7 @@ export async function handleLogin(req: NextRequest) {
       headers: {
         'content-type': 'application/json',
         accept: 'application/json',
-        'user-agent': req.headers.get('user-agent')?.slice(0, 300) ?? 'ride-sangai-web',
+        'user-agent': req.headers.get('user-agent')?.slice(0, 300) ?? 'yatrix-web',
       },
       body: JSON.stringify(input),
     });
@@ -59,7 +59,7 @@ export async function handleLogin(req: NextRequest) {
       {
         error: {
           code: 'NOT_SUPERADMIN',
-          message: 'This account does not have superadmin access. Use the Ride Sangai app instead.',
+          message: 'This account does not have superadmin access. Use the Yatrix app instead.',
         },
       },
       403,

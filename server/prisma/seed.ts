@@ -78,7 +78,7 @@ async function seedBanners() {
       {
         category,
         title: 'Ride with friends',
-        subtitle: `Invite friends to Ride Sangai and plan your next ${singular} together.`,
+        subtitle: `Invite friends to Yatrix and plan your next ${singular} together.`,
         ctaLabel: 'Invite friends',
         icon: 'group_add_outlined',
         theme: 'primary',

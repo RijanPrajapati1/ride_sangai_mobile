@@ -19,7 +19,7 @@ export default fp(
       openapi: {
         openapi: '3.1.0',
         info: {
-          title: 'Ride Sangai API',
+          title: 'Yatrix API',
           version: '1.0.0',
           description: 'Mobile app and superadmin dashboard API. Pick a definition at the top of /docs.',
         },
