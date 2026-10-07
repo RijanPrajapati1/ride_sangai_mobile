@@ -22,13 +22,11 @@ npm start                     # build, apply migrations, start on http://localho
 - Health checks: `GET /health` (liveness) and `GET /health/ready` (checks the database)
 - For development with auto-reload, use `npm run dev`.
 
-**Demo accounts** (loaded by `npm run db:seed`; these are the logins the app's demo uses):
+**Starter account** (created by `npm run db:seed`, which also adds the default home banners; riders, rides and posts come from real use):
 
 | Email | Password | Who |
 | --- | --- | --- |
-| `demo@bikersync.app` | `biker123` | Alex Shrestha, a rider ("Try Demo Login") |
-| `admin@gmail.com` | `Test@1234` | Admin |
-| `aarav@`, `priya@`, `bibek@`, `anita@`, `suresh@`, `kabita@`, `nischal@`, `roshani@`, `dipesh@`, `sabina@bikersync.app` | `biker123` | The other riders |
+| `admin@gmail.com` | `Test@1234` | Superadmin (change with `SEED_SUPERADMIN_EMAIL` / `SEED_SUPERADMIN_PASSWORD`) |
 
 If you don't have a local Postgres, `docker compose up -d db` starts one on `localhost:5432` that matches `.env.example`.
 

@@ -32,14 +32,12 @@ flutter run
 The app still runs on its built-in dummy data, so the two aren't connected yet. Connecting them means swapping only the app's data layer:
 
 - The API uses the app's own field names and enum values.
-- The server is seeded with the same demo riders, rides, posts, chats and groups.
-
-Both use the same demo logins: `demo@bikersync.app` / `biker123` for a rider and `admin@gmail.com` / `Test@1234` for the admin.
+- The seed creates the superadmin account (`admin@gmail.com` / `Test@1234`) and the default home banners; riders sign up in the app.
 
 ## Repository layout
 
 ```
-ride_sangai/
+yatrix/
 ├── mobile/    Flutter app (lib/, android/, ios/, …)
 └── server/    API (src/, prisma/, test/, …)
 ```
