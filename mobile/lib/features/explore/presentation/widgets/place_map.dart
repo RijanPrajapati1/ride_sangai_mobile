@@ -61,16 +61,9 @@ class PlaceMap extends StatelessWidget {
             if (userLocation != null)
               Marker(
                 point: toLatLng(userLocation!),
-                width: 22,
-                height: 22,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.info,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 3),
-                    boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
-                  ),
-                ),
+                width: _UserDot.size,
+                height: _UserDot.size,
+                child: const _UserDot(),
               ),
             for (final place in places)
               Marker(
@@ -89,7 +82,7 @@ class PlaceMap extends StatelessWidget {
                 width: 40,
                 height: 40,
                 alignment: Alignment.topCenter,
-                child: const _Pin(color: AppColors.secondary, icon: Icons.add_location_alt),
+                child: const _Pin(color: AppColors.mapPin),
               ),
           ],
         ),
@@ -115,26 +108,78 @@ class PlaceMap extends StatelessWidget {
   }
 }
 
+/// The rider's position, Google Maps style: a blue dot with a white ring
+/// inside a soft blue halo.
+class _UserDot extends StatelessWidget {
+  static const double size = 56;
+
+  const _UserDot();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.mapUserDot.withValues(alpha: 0.16),
+            border: Border.all(color: AppColors.mapUserDot.withValues(alpha: 0.3)),
+          ),
+        ),
+        Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            color: AppColors.mapUserDot,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A map pin. With an [icon] it marks a place of that category; without one
+/// it is a plain dropped pin (dark dot in the head), like Google Maps.
 class _Pin extends StatelessWidget {
   final Color color;
-  final IconData icon;
+  final IconData? icon;
 
-  const _Pin({required this.color, required this.icon});
+  const _Pin({required this.color, this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        Icon(Icons.location_on, size: 40, color: color),
+        Icon(
+          Icons.location_on,
+          size: 40,
+          color: color,
+          shadows: const [Shadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+        ),
         Positioned(
-          top: 6,
-          child: Container(
-            width: 18,
-            height: 18,
-            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-            child: Icon(icon, size: 12, color: color),
-          ),
+          top: icon == null ? 10 : 6,
+          child: icon == null
+              ? Container(
+                  width: 11,
+                  height: 11,
+                  decoration: BoxDecoration(
+                    color: Color.lerp(color, Colors.black, 0.45),
+                    shape: BoxShape.circle,
+                  ),
+                )
+              : Container(
+                  width: 18,
+                  height: 18,
+                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  child: Icon(icon, size: 12, color: color),
+                ),
         ),
       ],
     );

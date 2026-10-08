@@ -31,12 +31,20 @@ class LocationService {
       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
         return fallback;
       }
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.medium,
-          timeLimit: Duration(seconds: 8),
-        ),
-      );
+      Position? position;
+      try {
+        position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: 8),
+          ),
+        );
+      } catch (_) {
+        // No fresh fix in time (indoors, weak GPS): the phone's last known
+        // position is still far better than the city-centre fallback.
+        position = await Geolocator.getLastKnownPosition();
+      }
+      if (position == null) return fallback;
       return UserLocation(
         point: GeoPoint(position.latitude, position.longitude),
         label: 'Your location',

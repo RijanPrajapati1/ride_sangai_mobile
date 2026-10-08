@@ -44,6 +44,10 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
   final Set<DashboardCategory> _activities = {};
   List<String> _photos = [];
   GeoPoint? _pin;
+
+  /// The rider's exact position from the "I'm here" button, if it worked;
+  /// shown as the blue dot even when the app-wide location was approximate.
+  GeoPoint? _me;
   bool _locating = false;
   bool _isSubmitting = false;
 
@@ -65,6 +69,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
     setState(() {
       _locating = false;
       _pin = location.point;
+      if (!location.isApproximate) _me = location.point;
     });
     try {
       _mapController.move(toLatLng(location.point), 15);
@@ -116,6 +121,18 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
   @override
   Widget build(BuildContext context) {
     final location = ref.watch(currentLocationProvider).value ?? LocationService.fallback;
+    // The map opens before the location resolves (centered on the fallback),
+    // so move to the rider once their real position arrives, unless they
+    // have already started pinning somewhere.
+    ref.listen(currentLocationProvider, (previous, next) {
+      final resolved = next.value;
+      if (resolved == null || resolved.isApproximate || _pin != null) return;
+      try {
+        _mapController.move(toLatLng(resolved.point), 14);
+      } catch (_) {
+        // The map is not on screen yet; it will open at the location.
+      }
+    });
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -181,7 +198,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
                         controller: _mapController,
                         center: _pin ?? location.point,
                         zoom: 12,
-                        userLocation: location.isApproximate ? null : location.point,
+                        userLocation: _me ?? (location.isApproximate ? null : location.point),
                         pickedPoint: _pin,
                         onMapTap: (point) => setState(() => _pin = point),
                       ),

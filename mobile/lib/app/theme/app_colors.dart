@@ -32,6 +32,11 @@ class AppColors {
   static const warning = Color(0xFFF5A623);
   static const info = Color(0xFF3B82F6);
 
+  /// Map markers, in the colors people know from Google Maps: the blue
+  /// "you are here" dot and the red dropped pin.
+  static const mapUserDot = Color(0xFF4285F4);
+  static const mapPin = Color(0xFFEA4335);
+
   static const overlay = Color(0x66000000);
 
   // Dark theme
