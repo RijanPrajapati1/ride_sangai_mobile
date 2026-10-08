@@ -15,9 +15,12 @@ import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_dropdown.dart';
+import '../../../../shared/widgets/app_error_widget.dart';
+import '../../../../shared/widgets/loading_widget.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../providers/explore_providers.dart';
+import '../../domain/entities/place.dart';
 import '../utils/error_message.dart';
 import '../widgets/place_map.dart';
 import '../widgets/place_photo_picker.dart';
@@ -25,7 +28,10 @@ import '../widgets/place_photo_picker.dart';
 /// "Share a place": a rider who knows a spot pins it on the map and tells
 /// others what makes it worth the trip.
 class SharePlaceScreen extends ConsumerStatefulWidget {
-  const SharePlaceScreen({super.key});
+  /// When set, the form edits this place instead of sharing a new one.
+  final Place? place;
+
+  const SharePlaceScreen({super.key, this.place});
 
   @override
   ConsumerState<SharePlaceScreen> createState() => _SharePlaceScreenState();
@@ -51,6 +57,27 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
   GeoPoint? _me;
   bool _locating = false;
   bool _isSubmitting = false;
+
+  bool get _isEditing => widget.place != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final place = widget.place;
+    if (place == null) return;
+    _nameController.text = place.name;
+    _descriptionController.text = place.description;
+    _locationController.text = place.locationName;
+    _bestTimeController.text = place.bestTime ?? '';
+    _entryFeeController.text = place.entryFee ?? '';
+    _tipsController.text = place.tips ?? '';
+    _category = place.category;
+    _activities.addAll(place.activities);
+    _photos = List.of(place.photos);
+    _pin = place.point;
+    // The saved area is the rider's own wording; don't overwrite it.
+    _areaEditedByUser = true;
+  }
 
   /// Once the rider types their own area, a new pin no longer overwrites it.
   bool _areaEditedByUser = false;
@@ -121,6 +148,26 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
 
     setState(() => _isSubmitting = true);
     try {
+      if (_isEditing) {
+        await ref.read(exploreActionsControllerProvider).updatePlace(
+              widget.place!.id,
+              name: _nameController.text,
+              description: _descriptionController.text,
+              category: _category,
+              latitude: _pin!.latitude,
+              longitude: _pin!.longitude,
+              locationName: _locationController.text,
+              photos: _photos,
+              activities: _activities.toList(),
+              bestTime: _bestTimeController.text,
+              tips: _tipsController.text,
+              entryFee: _entryFeeController.text,
+            );
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Place updated.')));
+        context.pop();
+        return;
+      }
       final place = await ref.read(exploreActionsControllerProvider).sharePlace(
             name: _nameController.text,
             description: _descriptionController.text,
@@ -162,7 +209,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Share a place')),
+      appBar: AppBar(title: Text(_isEditing ? 'Edit place' : 'Share a place')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -299,11 +346,31 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
               ),
             ),
             const SizedBox(height: AppDimensions.spaceLg),
-            AppButton(label: 'Share place', icon: Icons.send_outlined, isLoading: _isSubmitting, onPressed: _submit),
+            AppButton(label: _isEditing ? 'Save changes' : 'Share place', icon: _isEditing ? Icons.check : Icons.send_outlined, isLoading: _isSubmitting, onPressed: _submit),
             const SizedBox(height: AppDimensions.spaceLg),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Loads a place and opens it in the form for the rider who shared it.
+class EditPlaceScreen extends ConsumerWidget {
+  final String placeId;
+
+  const EditPlaceScreen({super.key, required this.placeId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final placeAsync = ref.watch(placeDetailsProvider(placeId));
+    return placeAsync.when(
+      loading: () => Scaffold(appBar: AppBar(), body: const LoadingWidget()),
+      error: (e, st) => Scaffold(
+        appBar: AppBar(),
+        body: AppErrorWidget(message: errorMessage(e), onRetry: () => ref.invalidate(placeDetailsProvider(placeId))),
+      ),
+      data: (place) => SharePlaceScreen(place: place),
     );
   }
 }

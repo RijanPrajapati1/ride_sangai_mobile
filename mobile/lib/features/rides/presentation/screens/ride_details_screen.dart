@@ -112,6 +112,7 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
         data: (ride) => _RideDetailsContent(
           ride: ride,
           onCancelRide: ride.isOrganizer && !ride.hasStarted ? () => _cancelRide(ride) : null,
+          onEditRide: ride.isOrganizer && !ride.hasStarted ? () => context.push(RouteNames.editRidePath(ride.id)) : null,
         ),
       ),
       bottomNavigationBar: rideAsync.maybeWhen(
@@ -132,8 +133,9 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
 class _RideDetailsContent extends StatelessWidget {
   final Ride ride;
   final VoidCallback? onCancelRide;
+  final VoidCallback? onEditRide;
 
-  const _RideDetailsContent({required this.ride, this.onCancelRide});
+  const _RideDetailsContent({required this.ride, this.onCancelRide, this.onEditRide});
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +147,14 @@ class _RideDetailsContent extends StatelessWidget {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           iconTheme: const IconThemeData(color: Colors.white),
           actions: [
-            if (onCancelRide != null)
+            if (onCancelRide != null || onEditRide != null)
               PopupMenuButton<String>(
                 iconColor: Colors.white,
-                onSelected: (_) => onCancelRide!(),
-                itemBuilder: (context) => const [PopupMenuItem(value: 'cancel', child: Text('Cancel ride'))],
+                onSelected: (value) => value == 'edit' ? onEditRide?.call() : onCancelRide?.call(),
+                itemBuilder: (context) => [
+                  if (onEditRide != null) const PopupMenuItem(value: 'edit', child: Text('Edit ride')),
+                  if (onCancelRide != null) const PopupMenuItem(value: 'cancel', child: Text('Cancel ride')),
+                ],
               ),
           ],
           flexibleSpace: FlexibleSpaceBar(

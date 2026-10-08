@@ -17,7 +17,10 @@ import '../../../../shared/widgets/app_text_field.dart';
 import '../../../../shared/widgets/app_time_picker_field.dart';
 import '../../../../shared/widgets/chip_input_field.dart';
 import '../../../../shared/widgets/section_header.dart';
+import '../../../../shared/widgets/app_error_widget.dart';
+import '../../../../shared/widgets/loading_widget.dart';
 import '../../../rides/domain/entities/ride.dart';
+import '../../../rides/presentation/providers/ride_providers.dart';
 import '../providers/create_ride_providers.dart';
 import '../widgets/cover_image_picker.dart';
 
@@ -293,6 +296,26 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Loads a ride and opens it in the form for its organizer to edit.
+class EditRideScreen extends ConsumerWidget {
+  final String rideId;
+
+  const EditRideScreen({super.key, required this.rideId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rideAsync = ref.watch(rideDetailsProvider(rideId));
+    return rideAsync.when(
+      loading: () => Scaffold(appBar: AppBar(), body: const LoadingWidget()),
+      error: (e, st) => Scaffold(
+        appBar: AppBar(),
+        body: AppErrorWidget(message: e.toString(), onRetry: () => ref.invalidate(rideDetailsProvider(rideId))),
+      ),
+      data: (ride) => CreateRideScreen(ride: ride),
     );
   }
 }

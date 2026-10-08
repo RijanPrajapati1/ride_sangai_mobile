@@ -158,6 +158,12 @@ class _PlaceDetailsContent extends ConsumerWidget {
             ),
             if (place.isMine)
               IconButton(
+                tooltip: 'Edit place',
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => context.push(RouteNames.editPlacePath(place.id)),
+              ),
+            if (place.isMine)
+              IconButton(
                 tooltip: 'Delete place',
                 icon: const Icon(Icons.delete_outline),
                 onPressed: () => _deletePlace(context, ref),
