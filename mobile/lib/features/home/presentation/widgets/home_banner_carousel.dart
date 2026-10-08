@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/enums/dashboard_category.dart';
+import '../../../../shared/widgets/mountain_backdrop.dart';
 
 class HomeBanner {
   final IconData icon;
@@ -23,44 +26,51 @@ class HomeBanner {
 }
 
 String _safetyTip(DashboardCategory category) => switch (category) {
-      DashboardCategory.cycling => 'Always wear a certified helmet and run lights after dark.',
-      DashboardCategory.trekking => 'Check the weather and share your route before high-altitude treks.',
-      DashboardCategory.hiking => 'Carry enough water and let someone know your hiking plan.',
-      DashboardCategory.riding => 'Wear a certified helmet and check your bike before long rides.',
+      DashboardCategory.cycling => 'Helmet on, lights charged, brakes checked.',
+      DashboardCategory.trekking => 'Climb slowly and share your route before you go.',
+      DashboardCategory.hiking => 'Carry enough water and tell someone your plan.',
+      DashboardCategory.riding => 'Full gear, a checked bike and a safe gap.',
     };
 
-List<HomeBanner> homeBannersFor(DashboardCategory category, {VoidCallback? onInvite, VoidCallback? onChallenge, VoidCallback? onSafety}) {
+/// Every banner leads somewhere real: plan a ride, explore places, or the
+/// safety checklist for the active activity.
+List<HomeBanner> homeBannersFor(
+  DashboardCategory category, {
+  required VoidCallback onCreate,
+  required VoidCallback onExplore,
+  required VoidCallback onSafety,
+}) {
+  final singular = category.activitySingular.toLowerCase();
   return [
     HomeBanner(
-      icon: Icons.group_add_outlined,
-      title: 'Ride with friends',
-      subtitle: 'Invite friends to Yatrix and plan your next ${category.activitySingular.toLowerCase()} together.',
-      ctaLabel: 'Invite friends',
-      gradient: const [AppColors.primary, AppColors.primaryDark],
-      onTap: onInvite,
+      icon: Icons.event_available_rounded,
+      title: 'Plan your next $singular',
+      subtitle: 'Pick a route and a date. Riders nearby can ask to join you.',
+      ctaLabel: 'Create a $singular',
+      gradient: AppColors.heroGradient,
+      onTap: onCreate,
     ),
     HomeBanner(
-      icon: Icons.emoji_events_outlined,
-      title: "This week's challenge",
-      subtitle: 'Join 3 ${category.activityNoun.toLowerCase()} this week to earn the Explorer badge.',
-      ctaLabel: 'View challenge',
-      gradient: const [AppColors.secondary, Color(0xFFCC4E1F)],
-      onTap: onChallenge,
+      icon: Icons.travel_explore_rounded,
+      title: 'Find hidden gems',
+      subtitle: 'Viewpoints, waterfalls and tea stops that locals share.',
+      ctaLabel: 'Explore places',
+      gradient: const [AppColors.info, AppColors.infoDark],
+      onTap: onExplore,
     ),
     HomeBanner(
-      icon: Icons.health_and_safety_outlined,
+      icon: Icons.health_and_safety_rounded,
       title: 'Safety first',
       subtitle: _safetyTip(category),
-      ctaLabel: 'Read safety tips',
-      gradient: const [AppColors.info, Color(0xFF1E4FA6)],
+      ctaLabel: 'See the checklist',
+      gradient: const [AppColors.secondary, AppColors.secondaryDark],
       onTap: onSafety,
     ),
   ];
 }
 
-/// Swipeable promo/engagement banners shown near the top of Home, above the
-/// activity feed — invite friends, a weekly challenge, a category-aware
-/// safety tip.
+/// Swipeable banners near the top of Home: plan a ride, explore places, and
+/// a category-aware safety checklist.
 class HomeBannerCarousel extends StatefulWidget {
   final List<HomeBanner> banners;
 
@@ -86,7 +96,7 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 132,
+          height: 150,
           child: PageView.builder(
             controller: _controller,
             itemCount: widget.banners.length,
@@ -111,7 +121,7 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
               width: active ? 18 : 6,
               height: 6,
               decoration: BoxDecoration(
-                color: active ? AppColors.primary : AppColors.border,
+                color: active ? AppColors.primary : context.appColors.border,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
               ),
             );
@@ -129,55 +139,72 @@ class _BannerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: banner.onTap,
-      borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-      child: Container(
-        padding: const EdgeInsets.all(AppDimensions.spaceMd),
+    final radius = BorderRadius.circular(AppDimensions.radiusLg);
+    return Material(
+      borderRadius: radius,
+      clipBehavior: Clip.antiAlias,
+      child: Ink(
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: banner.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
-          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), shape: BoxShape.circle),
-              child: Icon(banner.icon, color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: AppDimensions.spaceSm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    banner.title,
-                    style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    banner.subtitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 12, height: 1.3),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        banner.ctaLabel,
-                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.arrow_forward, color: Colors.white, size: 14),
-                    ],
-                  ),
-                ],
+        child: InkWell(
+          onTap: banner.onTap,
+          child: Stack(
+            children: [
+              const Positioned.fill(child: MountainBackdrop(height: 0.45)),
+              Positioned(
+                right: -12,
+                top: -10,
+                child: Icon(banner.icon, size: 110, color: Colors.white.withValues(alpha: 0.14)),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(AppDimensions.spaceMd),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      banner.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.titleLg.copyWith(color: Colors.white, fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: 240,
+                      child: Text(
+                        banner.subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodySm.copyWith(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            banner.ctaLabel,
+                            style: AppTextStyles.labelSm.copyWith(color: banner.gradient.last, fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(Icons.arrow_forward_rounded, color: banner.gradient.last, size: 15),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

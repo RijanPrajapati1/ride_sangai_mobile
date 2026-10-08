@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../core/errors/app_exception.dart';
@@ -91,6 +93,7 @@ class _RequestsList extends ConsumerWidget {
               final RideRequest request = filtered[index];
               return RideRequestTile(
                 request: request,
+                onViewProfile: () => context.push(RouteNames.userProfilePath(request.userId)),
                 onApprove: () => _run(
                   context,
                   () => ref.read(rideRequestActionsControllerProvider).approve(request.id, rideId: rideId),

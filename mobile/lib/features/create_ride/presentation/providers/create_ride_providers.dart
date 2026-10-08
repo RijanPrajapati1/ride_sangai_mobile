@@ -41,4 +41,38 @@ class CreateRideController {
     invalidateRideLists(_ref);
     return ride;
   }
+
+  /// Organizer (or superadmin): saves the edited ride and refreshes every view of it.
+  Future<Ride> update(
+    String rideId, {
+    required String title,
+    required String description,
+    required DateTime date,
+    required String meetingPoint,
+    required RideType rideType,
+    required RideDifficulty difficulty,
+    required double distanceKm,
+    required int durationMinutes,
+    required int maxParticipants,
+    required List<String> requirements,
+    String? imageUrl,
+  }) async {
+    final ride = await _ref.read(rideRepositoryProvider).updateRide(
+          rideId,
+          title: title,
+          description: description,
+          date: date,
+          meetingPoint: meetingPoint,
+          rideType: rideType,
+          difficulty: difficulty,
+          distanceKm: distanceKm,
+          durationMinutes: durationMinutes,
+          maxParticipants: maxParticipants,
+          requirements: requirements,
+          imageUrl: imageUrl,
+        );
+    _ref.invalidate(rideDetailsProvider(rideId));
+    invalidateRideLists(_ref);
+    return ride;
+  }
 }

@@ -106,6 +106,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: RouteNames.register, builder: (context, state) => const RegisterScreen()),
       GoRoute(path: RouteNames.forgotPassword, builder: (context, state) => const ForgotPasswordScreen()),
       GoRoute(path: RouteNames.createRide, builder: (context, state) => const CreateRideScreen()),
+      GoRoute(
+        path: RouteNames.editRide,
+        builder: (context, state) => EditRideScreen(rideId: state.pathParameters['id']!),
+      ),
       GoRoute(path: RouteNames.myRides, builder: (context, state) => const MyRidesScreen()),
       GoRoute(
         path: RouteNames.rideDetails,
@@ -137,6 +141,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: RouteNames.explore, builder: (context, state) => const ExploreScreen()),
       GoRoute(path: RouteNames.savedPlaces, builder: (context, state) => const SavedPlacesScreen()),
       GoRoute(path: RouteNames.sharePlace, builder: (context, state) => const SharePlaceScreen()),
+      GoRoute(
+        path: RouteNames.editPlace,
+        builder: (context, state) => EditPlaceScreen(placeId: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: RouteNames.placeDetails,
         builder: (context, state) => PlaceDetailsScreen(placeId: state.pathParameters['id']!),

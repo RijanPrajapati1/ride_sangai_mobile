@@ -16,6 +16,7 @@ class RouteNames {
   static const rideParticipants = '/rides/:id/participants';
   static const rideRequests = '/rides/:id/requests';
   static const createRide = '/create-ride';
+  static const editRide = '/rides/:id/edit';
   static const myRides = '/my-rides';
 
   static const messages = '/messages';
@@ -35,9 +36,12 @@ class RouteNames {
   static const explore = '/explore';
   static const savedPlaces = '/explore/saved';
   static const sharePlace = '/explore/share';
+  static const editPlace = '/places/:id/edit';
   static const placeDetails = '/places/:id';
 
   static String rideDetailsPath(String id) => '/rides/$id';
+  static String editRidePath(String id) => '/rides/$id/edit';
+  static String editPlacePath(String id) => '/places/$id/edit';
   static String rideParticipantsPath(String id) => '/rides/$id/participants';
   static String rideRequestsPath(String id) => '/rides/$id/requests';
   static String conversationPath(String id) => '/messages/$id';

@@ -14,12 +14,16 @@ class RideRequestTile extends StatelessWidget {
   final VoidCallback? onDecline;
   final VoidCallback? onTap;
 
+  /// Opens the requester's profile (tapping their avatar or name).
+  final VoidCallback? onViewProfile;
+
   const RideRequestTile({
     super.key,
     required this.request,
     this.onApprove,
     this.onDecline,
     this.onTap,
+    this.onViewProfile,
   });
 
   @override
@@ -36,13 +40,19 @@ class RideRequestTile extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppAvatar(imageUrl: request.userAvatarUrl, name: request.userName, size: 48),
+                  GestureDetector(
+                    onTap: onViewProfile,
+                    child: AppAvatar(imageUrl: request.userAvatarUrl, name: request.userName, size: 48),
+                  ),
                   const SizedBox(width: AppDimensions.spaceSm),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(request.userName, style: Theme.of(context).textTheme.titleMedium),
+                        GestureDetector(
+                          onTap: onViewProfile,
+                          child: Text(request.userName, style: Theme.of(context).textTheme.titleMedium),
+                        ),
                         const SizedBox(height: 2),
                         Text(request.userBio, style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: 6),

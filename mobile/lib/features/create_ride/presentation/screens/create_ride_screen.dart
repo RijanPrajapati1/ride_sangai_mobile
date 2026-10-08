@@ -22,7 +22,10 @@ import '../providers/create_ride_providers.dart';
 import '../widgets/cover_image_picker.dart';
 
 class CreateRideScreen extends ConsumerStatefulWidget {
-  const CreateRideScreen({super.key});
+  /// When set, the form edits this ride instead of creating a new one.
+  final Ride? ride;
+
+  const CreateRideScreen({super.key, this.ride});
 
   @override
   ConsumerState<CreateRideScreen> createState() => _CreateRideScreenState();
@@ -46,11 +49,35 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
   String? _imageUrl;
   bool _isSubmitting = false;
 
+  bool get _isEditing => widget.ride != null;
+
+  static String _number(num value) => value == value.truncate() ? value.toInt().toString() : value.toString();
+
   @override
   void initState() {
     super.initState();
-    _category = ref.read(selectedDashboardCategoryProvider);
-    _rideType = _category.rideTypes.first;
+    final ride = widget.ride;
+    if (ride == null) {
+      _category = ref.read(selectedDashboardCategoryProvider);
+      _rideType = _category.rideTypes.first;
+      return;
+    }
+    _category = DashboardCategory.values.firstWhere(
+      (c) => c.rideTypes.contains(ride.rideType),
+      orElse: () => ref.read(selectedDashboardCategoryProvider),
+    );
+    _rideType = ride.rideType;
+    _difficulty = ride.difficulty;
+    _titleController.text = ride.title;
+    _descriptionController.text = ride.description;
+    _locationController.text = ride.meetingPoint;
+    _distanceController.text = _number(ride.distanceKm);
+    _durationController.text = ride.durationMinutes.toString();
+    _maxParticipantsController.text = ride.maxParticipants.toString();
+    _date = DateTime(ride.date.year, ride.date.month, ride.date.day);
+    _time = TimeOfDay.fromDateTime(ride.date);
+    _requirements = List.of(ride.requirements);
+    _imageUrl = ride.imageUrl.isEmpty ? null : ride.imageUrl;
   }
 
   @override
@@ -78,19 +105,41 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
     final date = DateTime(_date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute);
     final Ride ride;
     try {
-      ride = await ref.read(createRideControllerProvider).submit(
-            title: _titleController.text.trim(),
-            description: _descriptionController.text.trim(),
-            date: date,
-            meetingPoint: _locationController.text.trim(),
-            rideType: _rideType,
-            difficulty: _difficulty,
-            distanceKm: double.parse(_distanceController.text.trim()),
-            durationMinutes: int.parse(_durationController.text.trim()),
-            maxParticipants: int.parse(_maxParticipantsController.text.trim()),
-            requirements: _requirements,
-            imageUrl: _imageUrl,
-          );
+      final controller = ref.read(createRideControllerProvider);
+      final title = _titleController.text.trim();
+      final description = _descriptionController.text.trim();
+      final meetingPoint = _locationController.text.trim();
+      final distanceKm = double.parse(_distanceController.text.trim());
+      final durationMinutes = int.parse(_durationController.text.trim());
+      final maxParticipants = int.parse(_maxParticipantsController.text.trim());
+      ride = _isEditing
+          ? await controller.update(
+              widget.ride!.id,
+              title: title,
+              description: description,
+              date: date,
+              meetingPoint: meetingPoint,
+              rideType: _rideType,
+              difficulty: _difficulty,
+              distanceKm: distanceKm,
+              durationMinutes: durationMinutes,
+              maxParticipants: maxParticipants,
+              requirements: _requirements,
+              imageUrl: _imageUrl,
+            )
+          : await controller.submit(
+              title: title,
+              description: description,
+              date: date,
+              meetingPoint: meetingPoint,
+              rideType: _rideType,
+              difficulty: _difficulty,
+              distanceKm: distanceKm,
+              durationMinutes: durationMinutes,
+              maxParticipants: maxParticipants,
+              requirements: _requirements,
+              imageUrl: _imageUrl,
+            );
     } catch (error) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
@@ -106,15 +155,19 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
     if (!mounted) return;
     setState(() => _isSubmitting = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('"${ride.title}" was created!')),
+      SnackBar(content: Text('"${ride.title}" was ${_isEditing ? 'updated' : 'created'}!')),
     );
-    context.pushReplacement(RouteNames.rideDetailsPath(ride.id));
+    if (_isEditing) {
+      context.pop();
+    } else {
+      context.pushReplacement(RouteNames.rideDetailsPath(ride.id));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create ${_category.activitySingular}')),
+      appBar: AppBar(title: Text('${_isEditing ? 'Edit' : 'Create'} ${_category.activitySingular}')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -235,7 +288,7 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
               ),
             ),
             const SizedBox(height: AppDimensions.spaceXl),
-            AppButton(label: 'Create ${_category.activitySingular}', onPressed: _submit, isLoading: _isSubmitting),
+            AppButton(label: _isEditing ? 'Save changes' : 'Create ${_category.activitySingular}', onPressed: _submit, isLoading: _isSubmitting),
             const SizedBox(height: AppDimensions.spaceLg),
           ],
         ),

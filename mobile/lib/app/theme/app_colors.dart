@@ -15,6 +15,7 @@ class AppColors {
   static const primaryBright = Color(0xFF1FB6A8);
 
   static const secondary = Color(0xFFFF6B35);
+  static const secondaryDark = Color(0xFFCC4E1F);
   static const secondaryLight = Color(0xFFFFE7DC);
 
   static const background = Color(0xFFF5F7F8);
@@ -38,12 +39,25 @@ class AppColors {
   static const warning = Color(0xFFF5A623);
   static const info = Color(0xFF3B82F6);
 
+  /// Deeper status shades for text and small solid badges on light
+  /// surfaces, where the base colors are too pale to read (about 5:1).
+  static const successDark = Color(0xFF1B7F4D);
+  static const warningDark = Color(0xFFB45309);
+  static const errorDark = Color(0xFFC53030);
+  static const infoDark = Color(0xFF1E4FA6);
+
+  /// Extra accent for decorative tiles (quick actions, banners).
+  static const violet = Color(0xFF7C5CE0);
+
   /// Map markers, in the colors people know from Google Maps: the blue
   /// "you are here" dot and the red dropped pin.
   static const mapUserDot = Color(0xFF4285F4);
   static const mapPin = Color(0xFFEA4335);
 
   static const overlay = Color(0x66000000);
+
+  /// Bottom-of-photo gradient end, so white text on images stays readable.
+  static const scrim = Color(0xB3000000);
 
   // Dark theme
   static const backgroundDark = Color(0xFF0E1518);
