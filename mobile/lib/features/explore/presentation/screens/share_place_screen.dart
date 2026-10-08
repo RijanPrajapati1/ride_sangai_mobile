@@ -9,6 +9,7 @@ import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/place_category.dart';
 import '../../../../core/location/location_service.dart';
+import '../../../../core/location/reverse_geocoder.dart';
 import '../../../../core/utils/geo.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
@@ -51,6 +52,10 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
   bool _locating = false;
   bool _isSubmitting = false;
 
+  /// Once the rider types their own area, a new pin no longer overwrites it.
+  bool _areaEditedByUser = false;
+  int _geocodeRequest = 0;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -59,7 +64,27 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
     _bestTimeController.dispose();
     _entryFeeController.dispose();
     _tipsController.dispose();
+    _mapController.dispose();
     super.dispose();
+  }
+
+  void _setPin(GeoPoint point) {
+    setState(() => _pin = point);
+    _fillArea(point);
+  }
+
+  Future<void> _fillArea(GeoPoint point) async {
+    if (_areaEditedByUser) return;
+    final request = ++_geocodeRequest;
+    final name = await ref.read(reverseGeocoderProvider).areaName(point);
+    // Ignore stale answers from an earlier pin, or if the rider took over.
+    if (!mounted || request != _geocodeRequest || _areaEditedByUser || name == null) return;
+    // Keep a valid cursor: assigning bare text leaves the selection invalid,
+    // which can make the field feel stuck until it is re-tapped.
+    _locationController.value = TextEditingValue(
+      text: name,
+      selection: TextSelection.collapsed(offset: name.length),
+    );
   }
 
   Future<void> _useMyLocation() async {
@@ -76,6 +101,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
     } catch (_) {
       // The map is not on screen yet; it will open at the pin.
     }
+    if (!location.isApproximate) _fillArea(location.point);
     if (location.isApproximate) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Could not get your exact location — tap the map to place the pin.')),
@@ -186,6 +212,10 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
                     label: 'Area',
                     hint: 'e.g. Near Kirtipur, Kathmandu',
                     controller: _locationController,
+                    onChanged: (value) {
+                      _areaEditedByUser = value.trim().isNotEmpty;
+                      _geocodeRequest++; // drop any lookup still in flight
+                    },
                     prefixIcon: const Icon(Icons.location_on_outlined),
                     validator: (v) => Validators.required(v, field: 'Area'),
                   ),
@@ -200,7 +230,7 @@ class _SharePlaceScreenState extends ConsumerState<SharePlaceScreen> {
                         zoom: 12,
                         userLocation: _me ?? (location.isApproximate ? null : location.point),
                         pickedPoint: _pin,
-                        onMapTap: (point) => setState(() => _pin = point),
+                        onMapTap: _setPin,
                       ),
                     ),
                   ),
