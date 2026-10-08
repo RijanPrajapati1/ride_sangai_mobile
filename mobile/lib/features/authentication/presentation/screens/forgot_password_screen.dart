@@ -79,9 +79,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           decoration: BoxDecoration(color: context.appColors.primaryLight, shape: BoxShape.circle),
           child: const Icon(Icons.mark_email_read_outlined, size: 40, color: AppColors.primary),
         ),
-        const SizedBox(height: AppDimensions.spaceLg),
-        Text('Check your inbox', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
-        const SizedBox(height: AppDimensions.spaceXs),
+        const SizedBox(height: AppDimensions.spaceMd),
         Text(
           'We sent a password reset link to ${_emailController.text.trim()}. '
           "It can take a minute; check your spam folder if it doesn't arrive.",

@@ -43,7 +43,7 @@ List<HomeBanner> homeBannersFor(
   final singular = category.activitySingular.toLowerCase();
   return [
     HomeBanner(
-      icon: Icons.event_available_rounded,
+      icon: Icons.route_rounded,
       title: 'Plan your next $singular',
       subtitle: 'Pick a route and a date. Riders nearby can ask to join you.',
       ctaLabel: 'Create a $singular',

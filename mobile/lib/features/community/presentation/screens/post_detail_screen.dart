@@ -82,9 +82,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                     ),
                     onComment: () {},
                     onAuthorTap: () => context.push(RouteNames.userProfilePath(post.userId)),
-                    onShare: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Link copied to clipboard')),
-                    ),
+                    onShare: () => copyPostToClipboard(context, post),
                     onEdit: post.isMine ? () => showPostComposerSheet(context, post: post) : null,
                     onDelete: post.isMine ? () => _deletePost(post.id) : null,
                   ),

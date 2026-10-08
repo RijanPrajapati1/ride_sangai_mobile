@@ -36,7 +36,16 @@ class AppTimePickerField extends StatelessWidget {
               children: [
                 Icon(Icons.access_time, size: 18, color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(width: 10),
-                Text(value == null ? 'Select a time' : value!.format(context)),
+                // Flexible so a long label ellipsizes in a half-width field
+                // instead of overflowing on narrow phones.
+                Flexible(
+                  child: Text(
+                    value == null ? 'Select a time' : value!.format(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: value == null ? Theme.of(context).inputDecorationTheme.hintStyle : null,
+                  ),
+                ),
               ],
             ),
           ),

@@ -41,7 +41,16 @@ class AppDatePickerField extends StatelessWidget {
               children: [
                 Icon(Icons.calendar_today_outlined, size: 18, color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(width: 10),
-                Text(value == null ? 'Select a date' : value!.toWeekdayMonthDay),
+                // Flexible so a long label ellipsizes in a half-width field
+                // instead of overflowing on narrow phones.
+                Flexible(
+                  child: Text(
+                    value == null ? 'Select a date' : value!.toWeekdayMonthDay,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: value == null ? Theme.of(context).inputDecorationTheme.hintStyle : null,
+                  ),
+                ),
               ],
             ),
           ),

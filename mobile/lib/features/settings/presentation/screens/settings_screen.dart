@@ -157,9 +157,7 @@ class SettingsScreen extends ConsumerWidget {
               leading: const Icon(Icons.help_outline),
               title: const Text('Help & Support'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Support articles coming soon')),
-              ),
+              onTap: () => _showHelpSheet(context),
             ),
             ListTile(
               leading: const Icon(Icons.rate_review_outlined),
@@ -276,4 +274,84 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
       ],
     );
   }
+}
+
+const _faqs = [
+  (
+    q: 'How do I join a ride?',
+    a: 'Open the ride and tap Request to Join. The organizer gets your request, '
+        "and you'll get a notification as soon as they approve it.",
+  ),
+  (
+    q: 'How do I create a ride?',
+    a: 'Tap the + button in the middle of the bottom bar. Add a title, meeting point, '
+        'date and time, and riders nearby can ask to join.',
+  ),
+  (
+    q: 'Can I leave a ride after joining?',
+    a: "Yes. Open the ride and tap You're Going · Leave Ride. The organizer is told you're out.",
+  ),
+  (
+    q: 'How do I share a place?',
+    a: 'Tap Share place on Home, or Share a place in Explore. Pin it on the map and add photos and tips.',
+  ),
+  (
+    q: 'Who can see my profile?',
+    a: 'Use the Privacy switch in Settings to choose whether other riders can see your profile, '
+        'and Show riding stats to hide your numbers.',
+  ),
+];
+
+/// Short FAQ with a way to reach the team through the feedback form.
+void _showHelpSheet(BuildContext context) {
+  showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheetContext) => SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.85),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(
+            AppDimensions.spaceMd,
+            0,
+            AppDimensions.spaceMd,
+            AppDimensions.spaceMd,
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceXs),
+              child: Text('Help & Support', style: Theme.of(sheetContext).textTheme.titleLarge),
+            ),
+            const SizedBox(height: AppDimensions.spaceXs),
+            for (final faq in _faqs)
+              ExpansionTile(
+                tilePadding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceXs),
+                childrenPadding: const EdgeInsets.fromLTRB(
+                  AppDimensions.spaceXs,
+                  0,
+                  AppDimensions.spaceXs,
+                  AppDimensions.spaceSm,
+                ),
+                expandedAlignment: Alignment.centerLeft,
+                shape: const Border(),
+                collapsedShape: const Border(),
+                title: Text(faq.q),
+                children: [Text(faq.a, style: Theme.of(sheetContext).textTheme.bodyMedium)],
+              ),
+            const SizedBox(height: AppDimensions.spaceMd),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(sheetContext).pop();
+                context.push(RouteNames.feedback);
+              },
+              icon: const Icon(Icons.mail_outline_rounded),
+              label: const Text('Still stuck? Message the team'),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
