@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_colors_ext.dart';
 import '../../app/theme/app_dimensions.dart';
+import '../../app/theme/app_text_styles.dart';
 
 class AppBottomNavItem {
   final IconData icon;
@@ -43,7 +44,9 @@ class AppBottomNavigation extends StatelessWidget {
       notchMargin: 10,
       // A visible elevation lets Material's shadow trace the notch's curve,
       // instead of a straight border that would cut across it and hide it.
-      elevation: 6,
+      elevation: 8,
+      shadowColor: AppColors.shadow,
+      surfaceTintColor: Colors.transparent,
       padding: EdgeInsets.zero,
       child: SafeArea(
         child: SizedBox(
@@ -81,36 +84,53 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppColors.primary : context.appColors.textMuted;
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(
-                selected ? item.activeIcon : item.icon,
-                color: color,
-                size: 24,
+    final color = selected ? AppColors.primary : context.appColors.textSecondary;
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // The pill behind the active icon makes the current tab obvious
+            // at a glance, not just by a color shift.
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              width: 52,
+              height: 30,
+              decoration: BoxDecoration(
+                color: selected ? AppColors.primary.withValues(alpha: 0.14) : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
               ),
-              if (item.trailingBadge != null)
-                Positioned(right: -6, top: -4, child: item.trailingBadge!),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            item.label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  Icon(
+                    selected ? item.activeIcon : item.icon,
+                    color: color,
+                    size: 24,
+                  ),
+                  if (item.trailingBadge != null)
+                    Positioned(right: 6, top: -2, child: item.trailingBadge!),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 3),
+            Text(
+              item.label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.caption.copyWith(
+                fontSize: 11,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

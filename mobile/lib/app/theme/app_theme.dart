@@ -43,7 +43,7 @@ class AppTheme {
       brightness: brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
-      fontFamily: 'Roboto',
+      fontFamily: AppTextStyles.fontFamily,
       dividerColor: border,
       splashFactory: InkRipple.splashFactory,
       extensions: [tokens],
@@ -53,15 +53,19 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
         iconTheme: IconThemeData(color: textPrimary),
-        titleTextStyle: AppTextStyles.titleLg.copyWith(color: textPrimary),
+        titleTextStyle: AppTextStyles.titleLg.copyWith(color: textPrimary, fontWeight: FontWeight.w800),
       ),
+      // Cards float on a soft shadow; the hairline border keeps their edge
+      // visible in dark mode, where shadows disappear.
       cardTheme: CardThemeData(
         color: surface,
         elevation: AppDimensions.cardElevation,
+        shadowColor: AppColors.shadow,
+        surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-          side: BorderSide(color: border),
+          side: BorderSide(color: isDark ? border : border.withValues(alpha: 0.6)),
         ),
       ),
       textTheme: TextTheme(
@@ -79,6 +83,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
+          disabledBackgroundColor: tokens.surfaceAlt,
+          disabledForegroundColor: tokens.textMuted,
           minimumSize: const Size.fromHeight(AppDimensions.buttonHeight),
           textStyle: AppTextStyles.button,
           elevation: 0,
@@ -115,10 +121,11 @@ class AppTheme {
           side: WidgetStatePropertyAll(BorderSide(color: border)),
         ),
       ),
-      // Fields are outlined in grey with a transparent body, so they sit
-      // cleanly on both white cards and the grey page background.
+      // Fields are white with a grey outline, so they read as tappable on
+      // the grey page background and still sit cleanly on white cards.
       inputDecorationTheme: InputDecorationTheme(
-        filled: false,
+        filled: true,
+        fillColor: surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.spaceMd,
           vertical: AppDimensions.spaceMd,
@@ -176,10 +183,47 @@ class AppTheme {
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        highlightElevation: 6,
+        extendedTextStyle: AppTextStyles.button,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
         ),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 6,
+        shadowColor: AppColors.shadow,
+        textStyle: AppTextStyles.labelLg.copyWith(color: textPrimary, fontWeight: FontWeight.w500),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          side: BorderSide(color: border),
+        ),
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: textSecondary,
+        titleTextStyle: AppTextStyles.labelLg.copyWith(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 15),
+        subtitleTextStyle: AppTextStyles.bodySm.copyWith(color: textSecondary),
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelColor: AppColors.primary,
+        unselectedLabelColor: textSecondary,
+        indicatorColor: AppColors.primary,
+        indicatorSize: TabBarIndicatorSize.label,
+        dividerColor: border,
+        labelStyle: AppTextStyles.labelLg.copyWith(fontWeight: FontWeight.w700),
+        unselectedLabelStyle: AppTextStyles.labelLg.copyWith(fontWeight: FontWeight.w600),
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
     );
   }
 }

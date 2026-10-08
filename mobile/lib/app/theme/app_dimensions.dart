@@ -28,5 +28,5 @@ class AppDimensions {
   static const double buttonHeight = 52;
   static const double inputHeight = 56;
 
-  static const double cardElevation = 0;
+  static const double cardElevation = 2;
 }

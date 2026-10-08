@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_colors_ext.dart';
 import '../../core/config/app_config.dart';
+import 'mountain_backdrop.dart';
 
 /// Wraps [Image.network] with a graceful gradient+icon fallback so a failed
 /// or missing image URL never breaks the layout.
@@ -35,19 +37,10 @@ class AppNetworkImage extends StatelessWidget {
             width: width,
             height: height,
             fit: fit,
+            // A quiet tile while loading; a spinner on every card is noisy.
             loadingBuilder: (context, child, progress) {
               if (progress == null) return child;
-              return SizedBox(
-                width: width,
-                height: height,
-                child: const Center(
-                  child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              );
+              return Container(width: width, height: height, color: context.appColors.surfaceAlt);
             },
             errorBuilder: (context, error, stackTrace) => placeholder,
           );
@@ -70,12 +63,18 @@ class _Fallback extends StatelessWidget {
       height: height,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: AppColors.avatarPlaceholderGradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          colors: AppColors.imagePlaceholderGradient,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
-      child: Icon(icon, color: Colors.white.withValues(alpha: 0.85), size: 32),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const MountainBackdrop(height: 0.55),
+          Center(child: Icon(icon, color: Colors.white.withValues(alpha: 0.9), size: 34)),
+        ],
+      ),
     );
   }
 }

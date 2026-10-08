@@ -4,20 +4,26 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const primary = Color(0xFF1FB6A8);
-  static const primaryDark = Color(0xFF15897E);
+  /// Deep enough that white button labels and teal text links stay readable
+  /// (about 4:1 on white), and still bright on the dark theme.
+  static const primary = Color(0xFF0E9083);
+  static const primaryDark = Color(0xFF0B6F66);
   static const primaryLight = Color(0xFFDFF7F4);
+
+  /// The brighter brand teal from the logo, for gradients and decoration
+  /// only. Too light to carry white text.
+  static const primaryBright = Color(0xFF1FB6A8);
 
   static const secondary = Color(0xFFFF6B35);
   static const secondaryLight = Color(0xFFFFE7DC);
 
-  static const background = Color(0xFFF6F8F9);
+  static const background = Color(0xFFF5F7F8);
   static const surface = Color(0xFFFFFFFF);
-  static const surfaceAlt = Color(0xFFF0F3F4);
+  static const surfaceAlt = Color(0xFFEFF3F4);
 
   static const textPrimary = Color(0xFF16232B);
-  static const textSecondary = Color(0xFF6C7B85);
-  static const textMuted = Color(0xFF9AA6AD);
+  static const textSecondary = Color(0xFF5F6E78);
+  static const textMuted = Color(0xFF8A979F);
 
   static const border = Color(0xFFE4E9EB);
 
@@ -55,9 +61,15 @@ class AppColors {
   static const difficultyModerate = Color(0xFFF5A623);
   static const difficultyHard = Color(0xFFE5484D);
 
-  static const List<Color> heroGradient = [primary, primaryDark];
-  static const List<Color> avatarPlaceholderGradient = [
-    Color(0xFF1FB6A8),
-    Color(0xFFFF6B35),
+  static const List<Color> heroGradient = [primaryBright, primaryDark];
+
+  /// Behind a ride or place that has no photo: a calm teal dusk that the
+  /// [MountainBackdrop] silhouettes sit on.
+  static const List<Color> imagePlaceholderGradient = [
+    Color(0xFF7FD3C9),
+    Color(0xFF1C9C8F),
   ];
+
+  /// Soft shadow under raised cards and floating bars.
+  static const shadow = Color(0x1A16232B);
 }
