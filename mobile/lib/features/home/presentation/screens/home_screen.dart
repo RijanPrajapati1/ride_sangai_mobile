@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/providers/dashboard_category_provider.dart';
 import '../../../../app/router/route_names.dart';
+import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/enums/dashboard_category.dart';
 import '../../../../shared/utils/run_or_show_error.dart';
@@ -25,6 +26,7 @@ import '../widgets/home_banner_carousel.dart';
 import '../widgets/home_header.dart';
 import '../widgets/quick_actions.dart';
 import '../widgets/recommended_riders.dart';
+import '../widgets/safety_checklist_sheet.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -53,16 +55,12 @@ class HomeScreen extends ConsumerWidget {
                 avatarUrl: profile.avatarUrl,
                 unreadNotifications: unreadNotifications,
                 unreadMessages: unreadMessages,
-                category: category,
-                onCategoryChanged: (picked) => ref
-                    .read(selectedDashboardCategoryProvider.notifier)
-                    .select(picked),
                 onAvatarTap: () => context.go(RouteNames.profile),
                 onNotificationsTap: () =>
                     context.push(RouteNames.notifications),
                 onMessagesTap: () => context.push(RouteNames.messages),
               ),
-              loading: () => const SizedBox(height: 96),
+              loading: () => const SizedBox(height: 68),
               error: (e, st) => const SizedBox.shrink(),
             ),
           ),
@@ -78,62 +76,58 @@ class HomeScreen extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: AppDimensions.spaceXl),
                 children: [
-                  const SizedBox(height: AppDimensions.spaceSm),
+                  const SizedBox(height: AppDimensions.spaceXs),
+                  DashboardCategoryChips(
+                    selected: category,
+                    onChanged: (picked) => ref.read(selectedDashboardCategoryProvider.notifier).select(picked),
+                  ),
+                  const SizedBox(height: AppDimensions.spaceMd),
                   HomeBannerCarousel(
                     banners: homeBannersFor(
                       category,
-                      onInvite: () =>
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invite link copied to clipboard'),
-                            ),
-                          ),
-                      onChallenge: () =>
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Challenge details coming soon'),
-                            ),
-                          ),
-                      onSafety: () =>
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Safety guide coming soon'),
-                            ),
-                          ),
+                      onCreate: () => context.push(RouteNames.createRide),
+                      onExplore: () => context.push(RouteNames.explore),
+                      onSafety: () => showSafetyChecklistSheet(context, category),
                     ),
                   ),
-                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SizedBox(height: AppDimensions.spaceMd),
+                  // Creating a ride lives on the center nav button, so these
+                  // are the shortcuts that have no tab of their own.
                   QuickActions(
                     actions: [
                       QuickAction(
-                        icon: Icons.add_circle_outline,
-                        label: 'Create ${category.activitySingular}',
-                        onTap: () => context.push(RouteNames.createRide),
-                      ),
-                      QuickAction(
-                        icon: Icons.route_outlined,
+                        icon: Icons.event_note_rounded,
                         label: 'My ${category.activityNoun}',
+                        color: AppColors.primary,
                         onTap: () => context.push(RouteNames.myRides),
                       ),
                       QuickAction(
-                        icon: Icons.travel_explore,
+                        icon: Icons.travel_explore_rounded,
                         label: 'Explore',
+                        color: AppColors.info,
                         onTap: () => context.push(RouteNames.explore),
                       ),
                       QuickAction(
-                        icon: Icons.chat_bubble_outline,
-                        label: 'Messages',
-                        onTap: () => context.push(RouteNames.messages),
+                        icon: Icons.bookmark_rounded,
+                        label: 'Saved',
+                        color: AppColors.secondary,
+                        onTap: () => context.push(RouteNames.savedPlaces),
+                      ),
+                      QuickAction(
+                        icon: Icons.add_location_alt_rounded,
+                        label: 'Share place',
+                        color: AppColors.violet,
+                        onTap: () => context.push(RouteNames.sharePlace),
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppDimensions.spaceLg),
+                  const SizedBox(height: AppDimensions.spaceMd),
                   SectionHeader(
                     title: 'Featured ${category.activitySingular}',
                     actionLabel: 'See all',
                     onAction: () => context.go(RouteNames.rides),
                   ),
-                  const SizedBox(height: AppDimensions.spaceSm),
+                  const SizedBox(height: AppDimensions.spaceXs),
                   ridesAsync.when(
                     loading: () =>
                         const SizedBox(height: 220, child: LoadingWidget()),
@@ -145,10 +139,13 @@ class HomeScreen extends ConsumerWidget {
                             horizontal: AppDimensions.spaceMd,
                           ),
                           child: EmptyState(
+                            icon: category.icon,
                             title:
                                 'No upcoming ${category.activityNoun.toLowerCase()}',
                             message:
-                                'Check back soon or create your own ${category.activitySingular.toLowerCase()}.',
+                                'Be the first to plan one. Riders nearby can ask to join.',
+                            actionLabel: 'Create a ${category.activitySingular.toLowerCase()}',
+                            onAction: () => context.push(RouteNames.createRide),
                           ),
                         );
                       }
@@ -173,13 +170,17 @@ class HomeScreen extends ConsumerWidget {
                             SectionHeader(
                               title: 'Upcoming ${category.activityNoun}',
                             ),
-                            const SizedBox(height: AppDimensions.spaceSm),
+                            const SizedBox(height: AppDimensions.spaceXs),
                             SizedBox(
-                              height: 268,
+                              height: 262,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppDimensions.spaceMd,
+                                clipBehavior: Clip.none,
+                                padding: const EdgeInsets.fromLTRB(
+                                  AppDimensions.spaceMd,
+                                  2,
+                                  AppDimensions.spaceMd,
+                                  6,
                                 ),
                                 itemCount: upcoming.length,
                                 separatorBuilder: (_, _) => const SizedBox(
@@ -188,9 +189,10 @@ class HomeScreen extends ConsumerWidget {
                                 itemBuilder: (context, index) {
                                   final ride = upcoming[index];
                                   return SizedBox(
-                                    width: 220,
+                                    width: 250,
                                     child: RideCard(
                                       ride: ride,
+                                      compact: true,
                                       onTap: () => context.push(
                                         RouteNames.rideDetailsPath(ride.id),
                                       ),
@@ -206,11 +208,11 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppDimensions.spaceLg),
                   SectionHeader(
-                    title: 'Explore Nearby',
+                    title: 'Explore nearby',
                     actionLabel: 'See all',
                     onAction: () => context.push(RouteNames.explore),
                   ),
-                  const SizedBox(height: AppDimensions.spaceSm),
+                  const SizedBox(height: AppDimensions.spaceXs),
                   placesAsync.when(
                     loading: () =>
                         const SizedBox(height: 230, child: LoadingWidget()),
@@ -233,11 +235,15 @@ class HomeScreen extends ConsumerWidget {
                         );
                       }
                       return SizedBox(
-                        height: 230,
+                        height: 232,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDimensions.spaceMd,
+                          clipBehavior: Clip.none,
+                          padding: const EdgeInsets.fromLTRB(
+                            AppDimensions.spaceMd,
+                            2,
+                            AppDimensions.spaceMd,
+                            6,
                           ),
                           itemCount: places.length,
                           separatorBuilder: (_, _) =>
@@ -265,7 +271,7 @@ class HomeScreen extends ConsumerWidget {
                     actionLabel: 'See all',
                     onAction: () => context.go(RouteNames.community),
                   ),
-                  const SizedBox(height: AppDimensions.spaceSm),
+                  const SizedBox(height: AppDimensions.spaceXs),
                   postsAsync.when(
                     loading: () =>
                         const SizedBox(height: 100, child: LoadingWidget()),
@@ -290,8 +296,8 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: AppDimensions.spaceSm),
-                  const SectionHeader(title: 'Recommended Riders'),
-                  const SizedBox(height: AppDimensions.spaceSm),
+                  const SectionHeader(title: 'Riders to follow'),
+                  const SizedBox(height: AppDimensions.spaceXs),
                   ridersAsync.when(
                     loading: () =>
                         const SizedBox(height: 180, child: LoadingWidget()),
@@ -299,11 +305,15 @@ class HomeScreen extends ConsumerWidget {
                     data: (riders) {
                       if (riders.isEmpty) return const SizedBox.shrink();
                       return SizedBox(
-                        height: 180,
+                        height: 194,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDimensions.spaceMd,
+                          clipBehavior: Clip.none,
+                          padding: const EdgeInsets.fromLTRB(
+                            AppDimensions.spaceMd,
+                            2,
+                            AppDimensions.spaceMd,
+                            6,
                           ),
                           itemCount: riders.length,
                           separatorBuilder: (_, _) =>

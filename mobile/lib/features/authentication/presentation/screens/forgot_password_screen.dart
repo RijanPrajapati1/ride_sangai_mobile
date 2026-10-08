@@ -5,10 +5,10 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../../shared/widgets/app_app_bar.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../providers/auth_providers.dart';
+import '../widgets/auth_scaffold.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -38,14 +38,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
 
-    return Scaffold(
-      appBar: const AppAppBar(title: 'Reset Password'),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.spaceLg),
-          child: _sent ? _buildSuccess(context) : _buildForm(context, authState.isLoading),
-        ),
-      ),
+    return AuthScaffold(
+      title: _sent ? 'Check your inbox' : 'Forgot your password?',
+      subtitle: _sent
+          ? 'A reset link is on its way.'
+          : "Enter your account's email and we'll send you a reset link.",
+      showBack: true,
+      child: _sent ? _buildSuccess(context) : _buildForm(context, authState.isLoading),
     );
   }
 
@@ -55,13 +54,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Forgot your password?', style: Theme.of(context).textTheme.displayLarge),
-          const SizedBox(height: 6),
-          Text(
-            'Enter the email associated with your account and we\'ll send a reset link.',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: AppDimensions.spaceXl),
           AppTextField(
             label: 'Email',
             hint: 'you@example.com',
@@ -70,7 +62,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             validator: Validators.email,
             prefixIcon: const Icon(Icons.mail_outline),
           ),
-          const SizedBox(height: AppDimensions.spaceXl),
+          const SizedBox(height: AppDimensions.spaceLg),
           AppButton(label: 'Send Reset Link', onPressed: _submit, isLoading: isLoading),
         ],
       ),
@@ -79,8 +71,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   Widget _buildSuccess(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const SizedBox(height: AppDimensions.spaceMd),
         Container(
           width: 84,
           height: 84,
@@ -91,10 +83,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         Text('Check your inbox', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
         const SizedBox(height: AppDimensions.spaceXs),
         Text(
-          'We sent a password reset link to ${_emailController.text.trim()}.',
+          'We sent a password reset link to ${_emailController.text.trim()}. '
+          "It can take a minute; check your spam folder if it doesn't arrive.",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
+        const SizedBox(height: AppDimensions.spaceLg),
+        AppButton(label: 'Back to Log In', onPressed: () => Navigator.of(context).maybePop()),
       ],
     );
   }

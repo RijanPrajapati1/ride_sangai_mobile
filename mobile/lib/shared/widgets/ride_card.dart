@@ -70,6 +70,8 @@ class RideCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     _MetaLine(icon: Icons.place_outlined, label: ride.meetingPoint, color: onImage),
+                    const SizedBox(height: 6),
+                    _RideStats(ride: ride, color: onImage),
                   ],
                 ),
               ),
@@ -86,7 +88,6 @@ class RideCard extends StatelessWidget {
           child: Row(
             children: [
               Expanded(child: _Organizer(ride: ride)),
-              _RideStats(ride: ride),
               const SizedBox(width: AppDimensions.spaceSm),
               RideSpotsPill(ride: ride),
             ],
@@ -323,12 +324,13 @@ class _Organizer extends StatelessWidget {
 /// "34 km · 3h 30m".
 class _RideStats extends StatelessWidget {
   final Ride ride;
+  final Color? color;
 
-  const _RideStats({required this.ride});
+  const _RideStats({required this.ride, this.color});
 
   @override
   Widget build(BuildContext context) {
-    final muted = context.appColors.textSecondary;
+    final muted = color ?? context.appColors.textSecondary;
     final style = AppTextStyles.labelSm.copyWith(color: muted);
     return Row(
       mainAxisSize: MainAxisSize.min,

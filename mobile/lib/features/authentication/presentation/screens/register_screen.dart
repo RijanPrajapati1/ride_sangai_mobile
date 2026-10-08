@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../../shared/widgets/app_app_bar.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../providers/auth_providers.dart';
+import '../widgets/auth_scaffold.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -51,74 +51,64 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
 
-    return Scaffold(
-      appBar: const AppAppBar(title: 'Create Account'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDimensions.spaceLg),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return AuthScaffold(
+      title: 'Join Yatrix',
+      subtitle: 'Create your profile and start discovering rides, treks and hikes near you.',
+      showBack: true,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextField(
+              label: 'Full name',
+              hint: 'Alex Shrestha',
+              controller: _nameController,
+              validator: (v) => Validators.required(v, field: 'Name'),
+              prefixIcon: const Icon(Icons.person_outline),
+            ),
+            const SizedBox(height: AppDimensions.spaceMd),
+            AppTextField(
+              label: 'Email',
+              hint: 'you@example.com',
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              validator: Validators.email,
+              prefixIcon: const Icon(Icons.mail_outline),
+            ),
+            const SizedBox(height: AppDimensions.spaceMd),
+            AppTextField(
+              label: 'Password',
+              hint: 'At least 8 characters',
+              controller: _passwordController,
+              obscureText: _obscure,
+              validator: Validators.newPassword,
+              prefixIcon: const Icon(Icons.lock_outline),
+              suffixIcon: IconButton(
+                icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                onPressed: () => setState(() => _obscure = !_obscure),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.spaceMd),
+            AppTextField(
+              label: 'Confirm password',
+              hint: 'Re-enter your password',
+              controller: _confirmController,
+              obscureText: _obscure,
+              validator: (v) => v != _passwordController.text ? 'Passwords do not match' : null,
+              prefixIcon: const Icon(Icons.lock_outline),
+            ),
+            const SizedBox(height: AppDimensions.spaceLg),
+            AppButton(label: 'Create Account', onPressed: _submit, isLoading: authState.isLoading),
+            const SizedBox(height: AppDimensions.spaceSm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Join Yatrix', style: Theme.of(context).textTheme.displayLarge),
-                const SizedBox(height: 6),
-                Text(
-                  'Create a profile and start discovering rides near you.',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: AppDimensions.spaceXl),
-                AppTextField(
-                  label: 'Full name',
-                  hint: 'Alex Shrestha',
-                  controller: _nameController,
-                  validator: (v) => Validators.required(v, field: 'Name'),
-                  prefixIcon: const Icon(Icons.person_outline),
-                ),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppTextField(
-                  label: 'Email',
-                  hint: 'you@example.com',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: Validators.email,
-                  prefixIcon: const Icon(Icons.mail_outline),
-                ),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppTextField(
-                  label: 'Password',
-                  hint: 'At least 8 characters',
-                  controller: _passwordController,
-                  obscureText: _obscure,
-                  validator: Validators.newPassword,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                    onPressed: () => setState(() => _obscure = !_obscure),
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppTextField(
-                  label: 'Confirm password',
-                  hint: 'Re-enter your password',
-                  controller: _confirmController,
-                  obscureText: _obscure,
-                  validator: (v) => v != _passwordController.text ? 'Passwords do not match' : null,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                ),
-                const SizedBox(height: AppDimensions.spaceXl),
-                AppButton(label: 'Create Account', onPressed: _submit, isLoading: authState.isLoading),
-                const SizedBox(height: AppDimensions.spaceMd),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    TextButton(onPressed: () => context.pop(), child: const Text('Log In')),
-                  ],
-                ),
+                const Text('Already have an account?'),
+                TextButton(onPressed: () => context.pop(), child: const Text('Log In')),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

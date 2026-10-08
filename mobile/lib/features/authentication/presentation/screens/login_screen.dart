@@ -6,9 +6,9 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_dimensions.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/app_button.dart';
-import '../../../../shared/widgets/app_logo.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../providers/auth_providers.dart';
+import '../widgets/auth_scaffold.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -47,68 +47,57 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spaceLg, vertical: AppDimensions.spaceXl),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return AuthScaffold(
+      title: 'Welcome back',
+      subtitle: 'Log in to find your next ride and catch up with your crew.',
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextField(
+              label: 'Email',
+              hint: 'you@example.com',
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              validator: Validators.email,
+              prefixIcon: const Icon(Icons.mail_outline),
+            ),
+            const SizedBox(height: AppDimensions.spaceMd),
+            AppTextField(
+              label: 'Password',
+              hint: 'Enter your password',
+              controller: _passwordController,
+              obscureText: _obscure,
+              validator: Validators.password,
+              prefixIcon: const Icon(Icons.lock_outline),
+              suffixIcon: IconButton(
+                icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                tooltip: _obscure ? 'Show password' : 'Hide password',
+                onPressed: () => setState(() => _obscure = !_obscure),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => context.push(RouteNames.forgotPassword),
+                child: const Text('Forgot password?'),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.spaceSm),
+            AppButton(label: 'Log In', onPressed: _submit, isLoading: authState.isLoading),
+            const SizedBox(height: AppDimensions.spaceMd),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const AppLogo(size: 64),
-                const SizedBox(height: AppDimensions.spaceLg),
-                Text('Welcome back', style: Theme.of(context).textTheme.displayLarge),
-                const SizedBox(height: 6),
-                Text(
-                  'Log in to find your next ride and reconnect with your crew.',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: AppDimensions.spaceXl),
-                AppTextField(
-                  label: 'Email',
-                  hint: 'you@example.com',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: Validators.email,
-                  prefixIcon: const Icon(Icons.mail_outline),
-                ),
-                const SizedBox(height: AppDimensions.spaceMd),
-                AppTextField(
-                  label: 'Password',
-                  hint: 'Enter your password',
-                  controller: _passwordController,
-                  obscureText: _obscure,
-                  validator: Validators.password,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                    onPressed: () => setState(() => _obscure = !_obscure),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => context.push(RouteNames.forgotPassword),
-                    child: const Text('Forgot password?'),
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.spaceSm),
-                AppButton(label: 'Log In', onPressed: _submit, isLoading: authState.isLoading),
-                const SizedBox(height: AppDimensions.spaceLg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () => context.push(RouteNames.register),
-                      child: const Text('Register'),
-                    ),
-                  ],
+                const Text("Don't have an account?"),
+                TextButton(
+                  onPressed: () => context.push(RouteNames.register),
+                  child: const Text('Create one'),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

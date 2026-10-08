@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_colors_ext.dart';
 import '../../../../app/theme/app_dimensions.dart';
+import '../../../../core/enums/dashboard_category.dart';
 import '../../../../core/enums/ride_enums.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/entities/ride.dart';
@@ -29,22 +30,35 @@ class RideJoinActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.appColors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(top: BorderSide(color: context.appColors.border)),
+        color: tokens.surface,
+        border: Border(top: BorderSide(color: tokens.border.withValues(alpha: 0.6))),
+        boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 16, offset: Offset(0, -4))],
       ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppDimensions.spaceMd),
           child: Row(
             children: [
-              IconButton.filledTonal(
-                onPressed: onMessageOrganizer,
-                icon: const Icon(Icons.chat_bubble_outline),
-                tooltip: 'Message organizer',
-              ),
-              const SizedBox(width: AppDimensions.spaceSm),
+              if (!ride.isOrganizer) ...[
+                SizedBox(
+                  width: AppDimensions.buttonHeight,
+                  height: AppDimensions.buttonHeight,
+                  child: IconButton.filledTonal(
+                    onPressed: onMessageOrganizer,
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.primary.withValues(alpha: 0.12),
+                      foregroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMd)),
+                    ),
+                    icon: const Icon(Icons.chat_bubble_outline_rounded),
+                    tooltip: 'Message organizer',
+                  ),
+                ),
+                const SizedBox(width: AppDimensions.spaceSm),
+              ],
               Expanded(child: _buildPrimaryAction(context)),
             ],
           ),
@@ -81,7 +95,7 @@ class RideJoinActionBar extends StatelessWidget {
         }
         return AppButton(
           label: ride.joinStatus == RideJoinStatus.declined ? 'Ask Again' : 'Request to Join',
-          icon: Icons.pedal_bike,
+          icon: ride.rideType.category.icon,
           isLoading: isLoading,
           onPressed: onRequestToJoin,
         );
