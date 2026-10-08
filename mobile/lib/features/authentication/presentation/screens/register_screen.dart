@@ -101,8 +101,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             const SizedBox(height: AppDimensions.spaceLg),
             AppButton(label: 'Create Account', onPressed: _submit, isLoading: authState.isLoading),
             const SizedBox(height: AppDimensions.spaceSm),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            // Wraps rather than overflowing with large text sizes.
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 const Text('Already have an account?'),
                 TextButton(onPressed: () => context.pop(), child: const Text('Log In')),

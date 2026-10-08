@@ -41,6 +41,9 @@ class HomeScreen extends ConsumerWidget {
     final postsAsync = ref.watch(communityPostsProvider);
     final ridersAsync = ref.watch(recommendedRidersProvider);
     final placesAsync = ref.watch(homeExplorePlacesProvider);
+    // Horizontal carousels need a fixed height; grow it with the rider's
+    // text size so card text never gets cut off.
+    final textGrowth = MediaQuery.textScalerOf(context).scale(10) / 10 - 1;
 
     return AppScaffold(
       safeArea: false,
@@ -172,7 +175,7 @@ class HomeScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: AppDimensions.spaceXs),
                             SizedBox(
-                              height: 262,
+                              height: 262 + 130 * textGrowth,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
                                 clipBehavior: Clip.none,
@@ -235,7 +238,7 @@ class HomeScreen extends ConsumerWidget {
                         );
                       }
                       return SizedBox(
-                        height: 232,
+                        height: 232 + 90 * textGrowth,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           clipBehavior: Clip.none,
@@ -305,7 +308,7 @@ class HomeScreen extends ConsumerWidget {
                     data: (riders) {
                       if (riders.isEmpty) return const SizedBox.shrink();
                       return SizedBox(
-                        height: 194,
+                        height: 194 + 70 * textGrowth,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           clipBehavior: Clip.none,

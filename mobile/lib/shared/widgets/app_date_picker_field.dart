@@ -45,7 +45,7 @@ class AppDatePickerField extends StatelessWidget {
                 // instead of overflowing on narrow phones.
                 Flexible(
                   child: Text(
-                    value == null ? 'Select a date' : value!.toWeekdayMonthDay,
+                    value == null ? 'Pick a date' : value!.toWeekdayMonthDay,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: value == null ? Theme.of(context).inputDecorationTheme.hintStyle : null,

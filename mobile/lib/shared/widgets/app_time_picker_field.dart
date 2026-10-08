@@ -40,7 +40,7 @@ class AppTimePickerField extends StatelessWidget {
                 // instead of overflowing on narrow phones.
                 Flexible(
                   child: Text(
-                    value == null ? 'Select a time' : value!.format(context),
+                    value == null ? 'Pick a time' : value!.format(context),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: value == null ? Theme.of(context).inputDecorationTheme.hintStyle : null,

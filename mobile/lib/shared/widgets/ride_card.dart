@@ -133,7 +133,14 @@ class RideCard extends StatelessWidget {
               if (compact)
                 Row(
                   children: [
-                    Expanded(child: _RideStats(ride: ride)),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: _RideStats(ride: ride),
+                      ),
+                    ),
+                    const SizedBox(width: AppDimensions.spaceXs),
                     RideSpotsPill(ride: ride),
                   ],
                 )

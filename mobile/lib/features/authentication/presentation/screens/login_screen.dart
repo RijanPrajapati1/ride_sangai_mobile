@@ -87,8 +87,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             const SizedBox(height: AppDimensions.spaceSm),
             AppButton(label: 'Log In', onPressed: _submit, isLoading: authState.isLoading),
             const SizedBox(height: AppDimensions.spaceMd),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            // Wraps rather than overflowing with large text sizes.
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 const Text("Don't have an account?"),
                 TextButton(
