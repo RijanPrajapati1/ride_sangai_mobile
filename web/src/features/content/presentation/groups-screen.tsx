@@ -1,17 +1,26 @@
 'use client';
 
-import { Trash2, UsersRound } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { useState } from 'react';
+import { Pencil, Trash2, UsersRound } from 'lucide-react';
+import { DropdownMenuItem, DropdownMenuSeparator } from '@/shared/ui/dropdown-menu';
 import { TD, TH, THead, TR, Table } from '@/shared/components/data-table';
+import { RowActions } from '@/shared/components/row-actions';
 import { formatDate, formatNumber, timeAgo } from '@/shared/lib/format';
 import { useGroups } from '../application/use-content';
 import type { Group } from '../domain/group';
+import { EditContentDialog, type FieldSpec } from './edit-content-dialog';
 import { ListCard } from './list-card';
 import { Thumb } from './thumb';
 import { useRemoveFlow } from './use-remove-flow';
 
+const GROUP_FIELDS: FieldSpec[] = [
+  { key: 'name', label: 'Name', kind: 'text', max: 80, required: true },
+  { key: 'description', label: 'Description', kind: 'textarea', max: 1000, required: true },
+];
+
 export function GroupsScreen() {
   const list = useGroups();
+  const [editing, setEditing] = useState<Group | null>(null);
   const remove = useRemoveFlow<Group>('group', (g) => ({
     title: `Remove “${g.name}”?`,
     description: `The group, its ${formatNumber(g.memberCount)} memberships and its whole chat history will be deleted. This can’t be undone.`,
@@ -54,9 +63,15 @@ export function GroupsScreen() {
                 <TD className="hidden whitespace-nowrap text-muted md:table-cell">{g.lastMessageAt ? timeAgo(g.lastMessageAt) : 'No messages'}</TD>
                 <TD className="hidden whitespace-nowrap text-muted lg:table-cell">{formatDate(g.createdAt)}</TD>
                 <TD className="text-right">
-                  <Button variant="ghost" size="icon-sm" onClick={() => remove.ask(g)} aria-label={`Remove ${g.name}`} className="hover:text-danger-ink">
-                    <Trash2 />
-                  </Button>
+                  <RowActions label={`Actions for ${g.name}`}>
+                    <DropdownMenuItem onSelect={() => setEditing(g)}>
+                      <Pencil /> Edit group
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem destructive onSelect={() => remove.ask(g)}>
+                      <Trash2 /> Remove group
+                    </DropdownMenuItem>
+                  </RowActions>
                 </TD>
               </TR>
             ))}
@@ -64,6 +79,13 @@ export function GroupsScreen() {
         </Table>
       </ListCard>
       {remove.dialog}
+      <EditContentDialog
+        kind="group"
+        item={editing}
+        title={`Edit “${editing?.name ?? ''}”`}
+        fields={GROUP_FIELDS}
+        onClose={() => setEditing(null)}
+      />
     </>
   );
 }

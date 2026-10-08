@@ -91,7 +91,9 @@ export class PostService {
   async update(actor: Actor, postId: string, input: { text?: string; imageUrl?: string | null }) {
     const post = await this.repo.findOwner(postId);
     if (!post) throw POST_NOT_FOUND();
-    if (post.authorId !== actor.id) throw forbidden('Only the author can edit this post.', 'NOT_POST_AUTHOR');
+    // Superadmins may edit too (moderation from the dashboard, audited there).
+    if (post.authorId !== actor.id && actor.role !== 'superadmin')
+      throw forbidden('Only the author can edit this post.', 'NOT_POST_AUTHOR');
     const updated = await this.repo.update(
       postId,
       {

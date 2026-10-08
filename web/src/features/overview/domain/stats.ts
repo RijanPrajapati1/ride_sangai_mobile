@@ -10,4 +10,6 @@ export interface PlatformStats {
   groups: number;
   places: number;
   newRidersLast7Days: number;
+  /** Accounts a superadmin has disabled. */
+  disabledUsers: number;
 }

@@ -22,11 +22,19 @@ import {
   FeedbackStatusSchema,
   UpdateFeedbackBody,
 } from './feedback.schema.js';
-import { CommunityPost } from './post.schema.js';
-import { Group } from './group.schema.js';
-import { Place } from './place.schema.js';
-import { Ride, RideListQuery, RideRequestPage } from './ride.schema.js';
-import { UserProfile } from './user.schema.js';
+import { Email, NewPassword } from './auth.schema.js';
+import { CommunityPost, UpdatePostBody } from './post.schema.js';
+import { Group, UpdateGroupBody } from './group.schema.js';
+import { Place, UpdatePlaceBody } from './place.schema.js';
+import {
+  DeclineBody,
+  Ride,
+  RideListQuery,
+  RideRequest,
+  RideRequestPage,
+  UpdateRideBody,
+} from './ride.schema.js';
+import { UpdateProfileBody, UserProfile } from './user.schema.js';
 
 export const AdminStats = Type.Object({
   riders: Type.Integer(),
@@ -39,6 +47,7 @@ export const AdminStats = Type.Object({
   groups: Type.Integer(),
   places: Type.Integer(),
   newRidersLast7Days: Type.Integer(),
+  disabledUsers: Type.Integer({ description: 'Accounts a superadmin has disabled.' }),
 });
 
 const Breakdown = Type.Array(Type.Object({ key: Type.String(), count: Type.Integer() }));
@@ -103,7 +112,74 @@ export const AdminUser = Type.Object({
   role: UserRoleSchema,
   createdAt: Timestamp,
   lastLoginAt: Nullable(Timestamp),
+  // Set while the account is disabled.
+  disabledAt: Nullable(Timestamp),
+  disabledReason: Nullable(Type.String()),
 });
+
+export const AdminUserDetail = Type.Object({
+  ...AdminUser.properties,
+  activity: Type.Object({
+    ridesOrganized: Type.Integer(),
+    ridesJoined: Type.Integer(),
+    pendingRequests: Type.Integer(),
+    posts: Type.Integer(),
+    comments: Type.Integer(),
+    places: Type.Integer(),
+    reviews: Type.Integer(),
+    groupsOwned: Type.Integer(),
+    groupsJoined: Type.Integer(),
+    activeSessions: Type.Integer(),
+  }),
+  sessions: Type.Array(
+    Type.Object({
+      id: Uuid,
+      userAgent: Nullable(Type.String()),
+      ip: Nullable(Type.String()),
+      createdAt: Timestamp,
+      lastUsedAt: Timestamp,
+      expiresAt: Timestamp,
+    }),
+    { description: 'Devices currently signed in.' },
+  ),
+});
+
+export const AdminUpdateUserBody = Type.Object(
+  { ...UpdateProfileBody.properties, email: Type.Optional(Email) },
+  { additionalProperties: false, minProperties: 1 },
+);
+
+const MiniUser = Type.Object({
+  id: Uuid,
+  name: Type.String(),
+  email: Type.String(),
+  avatarUrl: Type.String(),
+});
+
+export const AdminComment = Type.Object({
+  id: Uuid,
+  text: Type.String(),
+  likeCount: Type.Integer(),
+  createdAt: Timestamp,
+  author: MiniUser,
+  post: Type.Object({ id: Uuid, text: Type.String({ description: 'First 160 characters.' }) }),
+});
+
+export const AdminReview = Type.Object({
+  id: Uuid,
+  rating: Type.Integer(),
+  worthIt: Type.Boolean(),
+  text: Type.String(),
+  photos: Type.Array(Type.String()),
+  createdAt: Timestamp,
+  author: MiniUser,
+  place: Type.Object({ id: Uuid, name: Type.String() }),
+});
+
+export const AnnouncementBody = Type.Object(
+  { title: Text(80), message: Text(500) },
+  { additionalProperties: false },
+);
 
 export const AuditEntry = Type.Object({
   id: Uuid,
@@ -151,9 +227,52 @@ export const adminSchemas = {
     querystring: Type.Object({
       q: Type.Optional(Type.String({ maxLength: 80, description: 'Name or email.' })),
       role: Type.Optional(UserRoleSchema),
+      status: Type.Optional(Type.Enum(['active', 'disabled'], { description: 'Omit for everyone.' })),
       ...paginationQuery,
     }),
     response: { 200: Paginated(AdminUser), ...errorResponses(400, 401, 403) },
+  },
+  user: {
+    tags,
+    summary: 'One user: profile, status, activity and signed-in devices',
+    params: IdParams,
+    response: { 200: AdminUserDetail, ...errorResponses(401, 403, 404) },
+  },
+  updateUser: {
+    tags,
+    summary: 'Edit any profile, including the sign-in email',
+    params: IdParams,
+    body: AdminUpdateUserBody,
+    response: { 200: AdminUserDetail, ...errorResponses(400, 401, 403, 404, 409) },
+  },
+  disableUser: {
+    tags,
+    summary: 'Disable an account (signs it out everywhere; it cannot sign in until enabled)',
+    params: IdParams,
+    body: Type.Object(
+      { reason: Type.Optional(Nullable(Type.String({ maxLength: 300, description: 'Internal note.' }))) },
+      { additionalProperties: false },
+    ),
+    response: { 200: AdminUserDetail, ...errorResponses(400, 401, 403, 404, 409) },
+  },
+  enableUser: {
+    tags,
+    summary: 'Re-enable a disabled account',
+    params: IdParams,
+    response: { 200: AdminUserDetail, ...errorResponses(401, 403, 404, 409) },
+  },
+  signOutUser: {
+    tags,
+    summary: 'Sign a user out on every device',
+    params: IdParams,
+    response: { 200: AdminUserDetail, ...errorResponses(401, 403, 404, 409) },
+  },
+  setPassword: {
+    tags,
+    summary: 'Set a new password for a user (signs them out everywhere)',
+    params: IdParams,
+    body: Type.Object({ password: NewPassword }, { additionalProperties: false }),
+    response: { 204: NoContent, ...errorResponses(400, 401, 403, 404, 409) },
   },
   setRole: {
     tags,
@@ -177,6 +296,26 @@ export const adminSchemas = {
     }),
     response: { 200: Paginated(Ride), ...errorResponses(400, 401, 403) },
   },
+  editRide: {
+    tags,
+    summary: 'Edit any ride (participants are notified of changes)',
+    params: IdParams,
+    body: UpdateRideBody,
+    response: { 200: Ride, ...errorResponses(400, 401, 403, 404, 409, 422) },
+  },
+  approveRequest: {
+    tags,
+    summary: 'Approve a join request on any ride',
+    params: IdParams,
+    response: { 200: RideRequest, ...errorResponses(401, 403, 404, 409) },
+  },
+  declineRequest: {
+    tags,
+    summary: 'Decline a join request on any ride',
+    params: IdParams,
+    body: DeclineBody,
+    response: { 200: RideRequest, ...errorResponses(400, 401, 403, 404, 409) },
+  },
   removeRide: {
     tags,
     summary: 'Remove a ride (participants are notified)',
@@ -196,6 +335,29 @@ export const adminSchemas = {
     querystring: PageQuery,
     response: { 200: Paginated(CommunityPost), ...errorResponses(400, 401, 403) },
   },
+  editPost: {
+    tags,
+    summary: 'Edit any post',
+    params: IdParams,
+    body: UpdatePostBody,
+    response: { 200: CommunityPost, ...errorResponses(400, 401, 403, 404) },
+  },
+  comments: {
+    tags,
+    summary: 'All comments, newest first',
+    querystring: Type.Object({
+      q: Type.Optional(Type.String({ maxLength: 80, description: 'Text contains.' })),
+      postId: Type.Optional(Uuid),
+      ...paginationQuery,
+    }),
+    response: { 200: Paginated(AdminComment), ...errorResponses(400, 401, 403) },
+  },
+  removeComment: {
+    tags,
+    summary: 'Remove any comment',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
   removePost: {
     tags,
     summary: 'Remove a post and its comments',
@@ -208,6 +370,13 @@ export const adminSchemas = {
     querystring: PageQuery,
     response: { 200: Paginated(Group), ...errorResponses(400, 401, 403) },
   },
+  editGroup: {
+    tags,
+    summary: 'Edit any group',
+    params: IdParams,
+    body: UpdateGroupBody,
+    response: { 200: Group, ...errorResponses(400, 401, 403, 404) },
+  },
   removeGroup: {
     tags,
     summary: 'Remove a group and its chat',
@@ -219,6 +388,29 @@ export const adminSchemas = {
     summary: 'All shared places, newest first',
     querystring: PageQuery,
     response: { 200: Paginated(Place), ...errorResponses(400, 401, 403) },
+  },
+  editPlace: {
+    tags,
+    summary: 'Edit any shared place',
+    params: IdParams,
+    body: UpdatePlaceBody,
+    response: { 200: Place, ...errorResponses(400, 401, 403, 404) },
+  },
+  reviews: {
+    tags,
+    summary: 'All place reviews, newest first',
+    querystring: Type.Object({
+      q: Type.Optional(Type.String({ maxLength: 80, description: 'Text contains.' })),
+      placeId: Type.Optional(Uuid),
+      ...paginationQuery,
+    }),
+    response: { 200: Paginated(AdminReview), ...errorResponses(400, 401, 403) },
+  },
+  removeReview: {
+    tags,
+    summary: 'Remove any place review (the place rating updates)',
+    params: IdParams,
+    response: { 204: NoContent, ...errorResponses(401, 403, 404) },
   },
   removePlace: {
     tags,
@@ -249,6 +441,19 @@ export const adminSchemas = {
     summary: 'Delete a home banner',
     params: IdParams,
     response: { 204: NoContent, ...errorResponses(401, 403, 404) },
+  },
+  announce: {
+    tags,
+    summary: 'Send an announcement to every active rider',
+    description: 'Each rider gets an in-app notification (and a push, when push is configured).',
+    body: AnnouncementBody,
+    response: { 201: Type.Object({ recipients: Type.Integer() }), ...errorResponses(400, 401, 403) },
+  },
+  announcements: {
+    tags,
+    summary: 'Announcements sent so far, newest first',
+    querystring: PageQuery,
+    response: { 200: Paginated(AuditEntry), ...errorResponses(400, 401, 403) },
   },
   auditLog: {
     tags,

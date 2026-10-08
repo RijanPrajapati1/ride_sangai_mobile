@@ -2,14 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bike, Hourglass, MapPin, Newspaper, UsersRound } from 'lucide-react';
+import { Bike, Hourglass, MapPin, MessageCircle, MessageSquareText, Newspaper, UsersRound } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 
 const TABS = [
   { href: '/content/posts', label: 'Posts', icon: Newspaper },
+  { href: '/content/comments', label: 'Comments', icon: MessageCircle },
   { href: '/content/rides', label: 'Rides', icon: Bike },
   { href: '/content/requests', label: 'Join requests', icon: Hourglass },
   { href: '/content/places', label: 'Places', icon: MapPin },
+  { href: '/content/reviews', label: 'Reviews', icon: MessageSquareText },
   { href: '/content/groups', label: 'Groups', icon: UsersRound },
 ];
 
@@ -44,8 +46,10 @@ export function ContentTabs() {
 export function ContentHeader() {
   return (
     <div className="mb-4">
-      <h1 className="text-2xl font-semibold tracking-tight">Content</h1>
-      <p className="mt-1 text-sm text-muted">Everything riders have shared. Remove anything that breaks the community guidelines.</p>
+      <h1 className="text-[26px] leading-tight font-extrabold tracking-tight">Content</h1>
+      <p className="mt-1 text-sm text-muted">
+        Everything riders have shared. Edit or remove anything that breaks the community guidelines.
+      </p>
     </div>
   );
 }

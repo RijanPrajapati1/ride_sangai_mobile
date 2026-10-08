@@ -87,7 +87,17 @@ export function createServices(deps: ServiceDependencies) {
     new LocalDiskStorage(config.uploads.dir, config.publicUrl),
   );
   const feedback = new FeedbackService(uow, repositories.feedback);
-  const admin = new AdminService(uow, repositories.admin, user, repositories.banner);
+  const admin = new AdminService(uow, repositories.admin, user, repositories.banner, {
+    auth: repositories.auth,
+    passwords,
+    tokens,
+    realtime,
+    notifications: notification,
+    rides: ride,
+    posts: post,
+    places: place,
+    groups: group,
+  });
   const home = new HomeService(
     ride,
     post,

@@ -103,6 +103,7 @@ enum NotificationType {
   like
   newRideRequest
   placeReview
+  announcement
 
   @@map("notification_type")
 }
@@ -200,6 +201,9 @@ model User {
   followersCount    Int             @default(0) @map("followers_count")
   followingCount    Int             @default(0) @map("following_count")
   lastLoginAt       DateTime?       @map("last_login_at") @db.Timestamptz(3)
+  /// Set by a superadmin: the account cannot sign in until re-enabled.
+  disabledAt        DateTime?       @map("disabled_at") @db.Timestamptz(3)
+  disabledReason    String?         @map("disabled_reason") @db.VarChar(300)
   createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -233,6 +237,7 @@ model User {
   feedback            Feedback[]
 
   @@index([role, name, id])
+  @@index([disabledAt])
   @@index([followersCount(sort: Desc), id])
   @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "users_name_trgm_idx")
   @@map("users")

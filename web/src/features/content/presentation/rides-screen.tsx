@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Bike, Trash2 } from 'lucide-react';
+import { Bike, Pencil, Trash2 } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { DropdownMenuItem, DropdownMenuSeparator } from '@/shared/ui/dropdown-menu';
 import { TD, TH, THead, TR, Table } from '@/shared/components/data-table';
+import { RowActions } from '@/shared/components/row-actions';
 import { SearchInput } from '@/shared/components/search-input';
 import { Segmented } from '@/shared/components/segmented';
 import { UserCell } from '@/shared/components/user-cell';
@@ -13,10 +14,28 @@ import { useDebouncedValue } from '@/shared/lib/use-debounced-value';
 import { cn } from '@/shared/lib/cn';
 import { useRides } from '../application/use-content';
 import type { Ride, RideDifficulty, RideWhen } from '../domain/ride';
+import { EditContentDialog, type FieldSpec } from './edit-content-dialog';
 import { ListCard } from './list-card';
 import { useRemoveFlow } from './use-remove-flow';
 
 const DIFFICULTY_TONE: Record<RideDifficulty, BadgeTone> = { easy: 'success', moderate: 'warning', hard: 'danger' };
+
+const RIDE_FIELDS: FieldSpec[] = [
+  { key: 'title', label: 'Title', kind: 'text', max: 120, required: true },
+  { key: 'description', label: 'Description', kind: 'textarea', max: 5000, required: true },
+  { key: 'meetingPoint', label: 'Meeting point', kind: 'text', max: 200, required: true, half: true },
+  { key: 'date', label: 'Starts', kind: 'datetime', half: true, hint: 'In your time zone.' },
+  {
+    key: 'difficulty',
+    label: 'Difficulty',
+    kind: 'select',
+    half: true,
+    options: (['easy', 'moderate', 'hard'] as const).map((d) => ({ value: d, label: humanize(d) })),
+  },
+  { key: 'maxParticipants', label: 'Max riders', kind: 'number', min: 2, max: 1000, integer: true, half: true, hint: 'Includes the organizer.' },
+  { key: 'distanceKm', label: 'Distance (km)', kind: 'number', min: 0.1, max: 10000, half: true },
+  { key: 'durationMinutes', label: 'Duration (minutes)', kind: 'number', min: 1, max: 43200, integer: true, half: true },
+];
 
 export function RidesScreen() {
   const [when, setWhen] = useState<RideWhen>('all');
@@ -28,6 +47,7 @@ export function RidesScreen() {
     description: `The ride is cancelled and its ${r.participantCount - 1 > 0 ? `${r.participantCount - 1} participant(s) are` : 'participants are'} notified. This can't be undone.`,
   }));
   const [now] = useState(() => Date.now());
+  const [editing, setEditing] = useState<Ride | null>(null);
 
   return (
     <>
@@ -100,9 +120,15 @@ export function RidesScreen() {
                     )}
                   </TD>
                   <TD className="text-right">
-                    <Button variant="ghost" size="icon-sm" onClick={() => remove.ask(r)} aria-label={`Remove ${r.title}`} className="hover:text-danger-ink">
-                      <Trash2 />
-                    </Button>
+                    <RowActions label={`Actions for ${r.title}`}>
+                      <DropdownMenuItem onSelect={() => setEditing(r)}>
+                        <Pencil /> Edit ride
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem destructive onSelect={() => remove.ask(r)}>
+                        <Trash2 /> Remove ride
+                      </DropdownMenuItem>
+                    </RowActions>
                   </TD>
                 </TR>
               );
@@ -111,6 +137,14 @@ export function RidesScreen() {
         </Table>
       </ListCard>
       {remove.dialog}
+      <EditContentDialog
+        kind="ride"
+        item={editing}
+        title={`Edit “${editing?.title ?? ''}”`}
+        description="Riders who joined or asked to join are notified of what changed."
+        fields={RIDE_FIELDS}
+        onClose={() => setEditing(null)}
+      />
     </>
   );
 }

@@ -8,6 +8,7 @@ export interface AuthUserRecord {
   avatarUrl: string;
   role: UserRole;
   passwordHash: string;
+  disabledAt: Date | null;
 }
 
 const authUserSelect = {
@@ -17,6 +18,7 @@ const authUserSelect = {
   avatarUrl: true,
   role: true,
   passwordHash: true,
+  disabledAt: true,
 } as const;
 
 /** Data access for accounts, sessions and auth tokens. */
@@ -101,7 +103,14 @@ export class AuthRepository {
   /** Validates an access token's session; returns the caller or null if revoked/expired. */
   findActiveSessionUser(sessionId: string, userId: string) {
     return this.prisma.session.findFirst({
-      where: { id: sessionId, userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      where: {
+        id: sessionId,
+        userId,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+        // Disabling revokes sessions too; this also covers a request racing it.
+        user: { disabledAt: null },
+      },
       select: { user: { select: { id: true, role: true, name: true } } },
     });
   }

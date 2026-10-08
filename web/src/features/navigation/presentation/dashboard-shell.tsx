@@ -9,6 +9,7 @@ import {
   GalleryHorizontalEnd,
   LayoutDashboard,
   Layers,
+  Megaphone,
   MessageSquareText,
   Trophy,
   UsersRound,
@@ -33,6 +34,7 @@ const SECTIONS: NavSection[] = [
   {
     title: 'Platform',
     items: [
+      { href: '/announcements', label: 'Announcements', icon: Megaphone },
       { href: '/banners', label: 'Banners', icon: GalleryHorizontalEnd },
       { href: '/audit-log', label: 'Audit log', icon: FileClock },
     ],

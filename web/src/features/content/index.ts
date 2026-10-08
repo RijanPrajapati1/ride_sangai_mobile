@@ -4,3 +4,4 @@ export { RidesScreen } from './presentation/rides-screen';
 export { RequestsScreen } from './presentation/requests-screen';
 export { PlacesScreen } from './presentation/places-screen';
 export { GroupsScreen } from './presentation/groups-screen';
+export { CommentsScreen, ReviewsScreen } from './presentation/moderation-screens';

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { ACCESS_COOKIE } from '@/core/session/cookies';
+import { ACCESS_COOKIE, ACCESS_COOKIE_PATH, REFRESH_COOKIE, REFRESH_COOKIE_PATH } from '@/core/session/cookies';
 
 /**
  * Runs before every page render:
@@ -40,7 +40,11 @@ export function proxy(req: NextRequest) {
     if (pathname !== '/') url.searchParams.set('next', `${pathname}${search}`);
     return NextResponse.redirect(url);
   }
-  if (hasSession && pathname === '/login') {
+  // The app sent us here because the session is dead (expired / forbidden /
+  // signed out), so a leftover cookie must not bounce us back to '/': that
+  // loops forever. Show the form and drop the stale cookies instead.
+  const sessionEnded = pathname === '/login' && req.nextUrl.searchParams.has('reason');
+  if (hasSession && pathname === '/login' && !sessionEnded) {
     const url = req.nextUrl.clone();
     url.pathname = '/';
     url.search = '';
@@ -55,6 +59,10 @@ export function proxy(req: NextRequest) {
 
   const res = NextResponse.next({ request: { headers: requestHeaders } });
   res.headers.set('Content-Security-Policy', csp);
+  if (hasSession && sessionEnded) {
+    res.cookies.set(ACCESS_COOKIE, '', { path: ACCESS_COOKIE_PATH, maxAge: 0 });
+    res.cookies.set(REFRESH_COOKIE, '', { path: REFRESH_COOKIE_PATH, maxAge: 0 });
+  }
   return res;
 }
 

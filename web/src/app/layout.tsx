@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { QueryProvider } from '@/core/query/query-provider';
 import { ThemeProvider } from '@/shared/layout/theme';
@@ -7,7 +7,8 @@ import { THEME_COOKIE, type Theme } from '@/shared/layout/theme-cookie';
 import { Toaster } from '@/shared/layout/toaster';
 import './globals.css';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+// Same typeface as the Yatrix app, so the dashboard feels like part of it.
+const jakarta = Plus_Jakarta_Sans({ variable: '--font-jakarta', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F6F8F9' },
+    { media: '(prefers-color-scheme: light)', color: '#F5F7F8' },
     { media: '(prefers-color-scheme: dark)', color: '#0E1518' },
   ],
 };
@@ -28,7 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${theme === 'dark' ? 'dark' : ''} h-full antialiased`}
+      className={`${jakarta.variable} ${geistMono.variable} ${theme === 'dark' ? 'dark' : ''} h-full antialiased`}
       style={{ colorScheme: theme }}
       suppressHydrationWarning
     >

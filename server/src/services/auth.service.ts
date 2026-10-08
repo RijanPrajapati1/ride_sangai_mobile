@@ -6,7 +6,7 @@ import type { RealtimeHub } from '../realtime/hub.js';
 import type { AuthRepository, AuthUserRecord } from '../repositories/auth.repository.js';
 import { generateToken, hashToken } from '../utils/crypto.js';
 import { isUniqueViolation } from '../utils/db-errors.js';
-import { badRequest, conflict, notFound, unauthorized } from '../utils/errors.js';
+import { badRequest, conflict, forbidden, notFound, unauthorized } from '../utils/errors.js';
 import type { Mailer } from '../utils/mailer.js';
 import type { PasswordHasher } from '../utils/password.js';
 import type { TokenService } from './token.service.js';
@@ -54,6 +54,12 @@ export function toAuthUser(
   };
 }
 
+export const accountDisabled = () =>
+  forbidden(
+    'This account has been disabled. Contact the Yatrix team if you think this is a mistake.',
+    'ACCOUNT_DISABLED',
+  );
+
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
@@ -95,6 +101,8 @@ export class AuthService {
       ? await this.passwords.verify(user.passwordHash, input.password)
       : await this.passwords.verifyDummy(input.password);
     if (!user || !valid) throw unauthorized('Invalid email or password.', 'INVALID_CREDENTIALS');
+    // Checked only after the password, so this does not reveal which accounts exist.
+    if (user.disabledAt) throw accountDisabled();
 
     if (this.passwords.needsRehash(user.passwordHash)) {
       await this.repo.updatePasswordHash(user.id, await this.passwords.hash(input.password));
@@ -123,7 +131,7 @@ export class AuthService {
       if (token.expires_at <= new Date()) return { ok: false, error: 'expired' };
 
       const user = await this.repo.findUserById(token.user_id, db);
-      if (!user) return { ok: false, error: 'revoked' };
+      if (!user || user.disabledAt) return { ok: false, error: 'revoked' };
 
       await this.repo.markRefreshTokenUsed(db, token.id);
       const next = await this.createRefreshToken(db, token.session_id);
@@ -180,7 +188,8 @@ export class AuthService {
   /** Always "succeeds" for the caller, so the endpoint cannot reveal which emails have accounts. */
   async requestPasswordReset(rawEmail: string): Promise<void> {
     const user = await this.repo.findUserByEmail(normalizeEmail(rawEmail));
-    if (!user) return;
+    // A new password would not let a disabled account back in.
+    if (!user || user.disabledAt) return;
     const token = generateToken();
     const ttl = this.config.passwordResetTtlMinutes;
     await this.uow.run(({ db }) =>

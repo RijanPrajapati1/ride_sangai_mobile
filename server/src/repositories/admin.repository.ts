@@ -1,5 +1,5 @@
 import type { TopUserMetric } from '../constants/enums.js';
-import { Prisma, type PrismaClient } from '../db/prisma.js';
+import { Prisma, type Db, type PrismaClient } from '../db/prisma.js';
 
 /** Each leaderboard metric maps to a fixed SQL column (never user input). */
 const METRIC_COLUMN: Record<TopUserMetric, Prisma.Sql> = {
@@ -55,6 +55,7 @@ export class AdminRepository {
       groups,
       places,
       newRidersLast7Days,
+      disabledUsers,
     ] = await this.prisma.$transaction([
       this.prisma.user.count({ where: { role: 'user' } }),
       this.prisma.user.count({ where: { role: 'superadmin' } }),
@@ -66,6 +67,7 @@ export class AdminRepository {
       this.prisma.group.count(),
       this.prisma.place.count(),
       this.prisma.user.count({ where: { role: 'user', createdAt: { gte: weekAgo } } }),
+      this.prisma.user.count({ where: { disabledAt: { not: null } } }),
     ]);
     return {
       riders,
@@ -78,14 +80,18 @@ export class AdminRepository {
       groups,
       places,
       newRidersLast7Days,
+      disabledUsers,
     };
   }
 
-  auditPage(after: [Date, string] | null, limit: number) {
+  auditPage(after: [Date, string] | null, limit: number, action?: string) {
     return this.prisma.adminAuditLog.findMany({
-      where: after
-        ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
-        : {},
+      where: {
+        ...(action ? { action } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
+      },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: limit + 1,
       include: { actor: { select: { name: true } } },
@@ -199,5 +205,74 @@ export class AdminRepository {
       ) ranked
       ORDER BY ${METRIC_COLUMN[metric]} DESC, name ASC, id ASC
       LIMIT ${limit}`;
+  }
+
+  /** Every comment on every post, newest first, for moderation. */
+  commentsPage(after: [Date, string] | null, limit: number, filter: { q?: string; postId?: string } = {}) {
+    return this.prisma.comment.findMany({
+      where: {
+        ...(filter.q ? { text: { contains: filter.q, mode: 'insensitive' } } : {}),
+        ...(filter.postId ? { postId: filter.postId } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit + 1,
+      select: {
+        id: true,
+        text: true,
+        likeCount: true,
+        createdAt: true,
+        author: { select: { id: true, name: true, email: true, avatarUrl: true } },
+        post: { select: { id: true, text: true } },
+      },
+    });
+  }
+
+  /** Every place review, newest first, for moderation. */
+  reviewsPage(after: [Date, string] | null, limit: number, filter: { q?: string; placeId?: string } = {}) {
+    return this.prisma.placeReview.findMany({
+      where: {
+        ...(filter.q ? { text: { contains: filter.q, mode: 'insensitive' } } : {}),
+        ...(filter.placeId ? { placeId: filter.placeId } : {}),
+        ...(after
+          ? { OR: [{ createdAt: { lt: after[0] } }, { createdAt: after[0], id: { lt: after[1] } }] }
+          : {}),
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit + 1,
+      select: {
+        id: true,
+        rating: true,
+        worthIt: true,
+        text: true,
+        photos: true,
+        createdAt: true,
+        author: { select: { id: true, name: true, email: true, avatarUrl: true } },
+        place: { select: { id: true, name: true } },
+      },
+    });
+  }
+
+  /** Deletes a review by id; the place's rating counters are fixed by triggers. */
+  async deleteReview(id: string, db: Db = this.prisma) {
+    const review = await db.placeReview.findUnique({
+      where: { id },
+      select: { id: true, rating: true, text: true, place: { select: { id: true, name: true } } },
+    });
+    if (!review) return null;
+    await db.placeReview.deleteMany({ where: { id } });
+    return review;
+  }
+
+  /** Who receives an announcement: every rider whose account is active. */
+  async announcementRecipients(): Promise<string[]> {
+    const rows = await this.prisma.user.findMany({
+      where: { role: 'user', disabledAt: null },
+      select: { id: true },
+      orderBy: { id: 'asc' },
+    });
+    return rows.map((row) => row.id);
   }
 }

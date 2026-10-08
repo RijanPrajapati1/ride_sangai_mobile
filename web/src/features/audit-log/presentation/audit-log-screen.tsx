@@ -1,6 +1,26 @@
 'use client';
 
-import { FileClock, MapPin, MessageSquareText, Newspaper, ShieldCheck, Trash2, UserRoundX, UsersRound, Bike, PencilLine } from 'lucide-react';
+import {
+  Ban,
+  Bike,
+  CircleCheck,
+  FileClock,
+  KeyRound,
+  LogOut,
+  MapPin,
+  Megaphone,
+  MessageCircle,
+  MessageSquareText,
+  Newspaper,
+  PencilLine,
+  ShieldCheck,
+  Star,
+  Trash2,
+  UserRoundPen,
+  UserRoundX,
+  UsersRound,
+  XCircle,
+} from 'lucide-react';
 import { Card } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { PageHeader } from '@/shared/layout/page-header';
@@ -50,7 +70,46 @@ const ACTIONS: Record<string, { icon: React.ComponentType<{ className?: string }
     },
   },
   'feedback.remove': { icon: MessageSquareText, tone: 'bg-danger-soft text-danger-ink', describe: () => 'deleted a feedback message' },
+  'user.update': {
+    icon: UserRoundPen,
+    tone: 'bg-info-soft text-info-ink',
+    describe: (d) => `edited ${name(d, 'a rider')}’s profile${typeof d.fields === 'string' ? ` (${d.fields})` : ''}`,
+  },
+  'user.disable': {
+    icon: Ban,
+    tone: 'bg-danger-soft text-danger-ink',
+    describe: (d) => `disabled ${name(d, 'an account')}${typeof d.reason === 'string' ? ` — ${d.reason}` : ''}`,
+  },
+  'user.enable': { icon: CircleCheck, tone: 'bg-success-soft text-success-ink', describe: (d) => `re-enabled ${name(d, 'an account')}` },
+  'user.signOut': { icon: LogOut, tone: 'bg-info-soft text-info-ink', describe: (d) => `signed ${name(d, 'a rider')} out everywhere` },
+  'user.setPassword': { icon: KeyRound, tone: 'bg-warning-soft text-warning-ink', describe: (d) => `set a new password for ${name(d, 'a rider')}` },
+  'ride.update': { icon: Bike, tone: 'bg-info-soft text-info-ink', describe: (d) => `edited the ride ${quoted(d.title)}` },
+  'post.update': { icon: Newspaper, tone: 'bg-info-soft text-info-ink', describe: () => 'edited a post' },
+  'place.update': { icon: MapPin, tone: 'bg-info-soft text-info-ink', describe: (d) => `edited the place ${quoted(d.name)}` },
+  'group.update': { icon: UsersRound, tone: 'bg-info-soft text-info-ink', describe: (d) => `edited the group ${quoted(d.name)}` },
+  'comment.delete': { icon: MessageCircle, tone: 'bg-danger-soft text-danger-ink', describe: () => 'removed a comment' },
+  'review.delete': {
+    icon: Star,
+    tone: 'bg-danger-soft text-danger-ink',
+    describe: (d) => `removed a ${typeof d.rating === 'number' ? `${d.rating}-star ` : ''}review of ${quoted(d.place)}`,
+  },
+  'rideRequest.approved': { icon: CircleCheck, tone: 'bg-success-soft text-success-ink', describe: () => 'approved a join request' },
+  'rideRequest.declined': { icon: XCircle, tone: 'bg-warning-soft text-warning-ink', describe: () => 'declined a join request' },
+  'announcement.send': {
+    icon: Megaphone,
+    tone: 'bg-accent-soft text-accent-ink',
+    describe: (d) =>
+      `sent the announcement ${quoted(d.title)}${typeof d.recipients === 'number' ? ` to ${d.recipients} riders` : ''}`,
+  },
 };
+
+function name(d: Details, fallback: string) {
+  return typeof d.name === 'string' ? d.name : fallback;
+}
+
+function quoted(value: unknown) {
+  return typeof value === 'string' ? `“${value}”` : '';
+}
 
 function describe(e: AuditEntry) {
   const details = (e.details && typeof e.details === 'object' ? e.details : {}) as Details;
@@ -59,7 +118,10 @@ function describe(e: AuditEntry) {
     icon: known?.icon ?? Trash2,
     tone: known?.tone ?? 'bg-surface-3 text-muted',
     text: known ? known.describe(details).trim() : `${humanize(e.action.replace('.', ' '))} (${e.targetType})`,
-    excerpt: e.action === 'post.delete' && typeof details.text === 'string' ? details.text : null,
+    excerpt:
+      (e.action === 'post.delete' || e.action === 'post.update' || e.action === 'review.delete') && typeof details.text === 'string'
+        ? details.text
+        : null,
   };
 }
 

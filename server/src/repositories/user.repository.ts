@@ -18,6 +18,8 @@ export interface ProfileRecord {
   role: UserRole;
   createdAt: Date;
   lastLoginAt: Date | null;
+  disabledAt: Date | null;
+  disabledReason: string | null;
   publicProfile: boolean;
   showRidingStats: boolean;
   totalRides: number;
@@ -41,6 +43,8 @@ function profileSelect(viewerId: string | null) {
     role: true,
     createdAt: true,
     lastLoginAt: true,
+    disabledAt: true,
+    disabledReason: true,
     preferences: { select: { publicProfile: true, showRidingStats: true } },
     // `take: 1` with the viewer filter answers "does the viewer follow them?".
     followers: viewerId ? { where: { followerId: viewerId }, select: { followerId: true }, take: 1 } : false,
@@ -115,8 +119,47 @@ export class UserRepository {
   findCredentials(userId: string, db: Db = this.prisma) {
     return db.user.findUnique({
       where: { id: userId },
-      select: { name: true, passwordHash: true, role: true },
+      select: { name: true, email: true, passwordHash: true, role: true, disabledAt: true },
     });
+  }
+
+  /** How much a user has created and joined, for the admin's user page. */
+  async activityCounts(userId: string, db: Db = this.prisma) {
+    const [
+      ridesOrganized,
+      ridesJoined,
+      pendingRequests,
+      posts,
+      comments,
+      places,
+      reviews,
+      groupsOwned,
+      groupsJoined,
+      activeSessions,
+    ] = await db.$transaction([
+      db.ride.count({ where: { organizerId: userId } }),
+      db.rideRequest.count({ where: { userId, status: 'approved' } }),
+      db.rideRequest.count({ where: { userId, status: 'pending' } }),
+      db.post.count({ where: { authorId: userId } }),
+      db.comment.count({ where: { authorId: userId } }),
+      db.place.count({ where: { authorId: userId } }),
+      db.placeReview.count({ where: { authorId: userId } }),
+      db.group.count({ where: { ownerId: userId } }),
+      db.groupMember.count({ where: { userId } }),
+      db.session.count({ where: { userId, revokedAt: null, expiresAt: { gt: new Date() } } }),
+    ]);
+    return {
+      ridesOrganized,
+      ridesJoined,
+      pendingRequests,
+      posts,
+      comments,
+      places,
+      reviews,
+      groupsOwned,
+      groupsJoined,
+      activeSessions,
+    };
   }
 
   async update(userId: string, data: Prisma.UserUpdateInput, db: Db = this.prisma): Promise<void> {
@@ -169,6 +212,7 @@ export class UserRepository {
     const base: Prisma.UserWhereInput = {
       id: { not: viewerId },
       role: 'user',
+      disabledAt: null,
       OR: [{ preferences: { is: null } }, { preferences: { is: { publicProfile: true } } }],
       followers: { none: { followerId: viewerId } },
     };
@@ -197,6 +241,8 @@ export class UserRepository {
     viewerId: string | null;
     q?: string;
     role?: UserRole;
+    /** Admin filter; without it (and without includePrivate) disabled accounts are hidden. */
+    status?: 'active' | 'disabled';
     includePrivate?: boolean;
     after: [string, string] | null;
     limit: number;
@@ -204,7 +250,10 @@ export class UserRepository {
     const q = options.q?.trim();
     const and: Prisma.UserWhereInput[] = [];
     if (options.role) and.push({ role: options.role });
+    if (options.status === 'active') and.push({ disabledAt: null });
+    if (options.status === 'disabled') and.push({ disabledAt: { not: null } });
     if (!options.includePrivate) {
+      and.push({ disabledAt: null });
       and.push({
         OR: [
           { preferences: { is: null } },

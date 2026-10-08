@@ -55,7 +55,18 @@ export function OverviewScreen() {
           icon={UsersRound}
           value={s?.riders}
           loading={loadingStats}
-          hint={s && (s.newRidersLast7Days > 0 ? <span className="text-success-ink">+{formatNumber(s.newRidersLast7Days)} this week</span> : 'No new riders this week')}
+          hint={
+            s && (
+              <>
+                {s.newRidersLast7Days > 0 ? (
+                  <span className="text-success-ink">+{formatNumber(s.newRidersLast7Days)} this week</span>
+                ) : (
+                  'No new riders this week'
+                )}
+                {s.disabledUsers > 0 && <span className="text-danger-ink"> · {formatNumber(s.disabledUsers)} disabled</span>}
+              </>
+            )
+          }
         />
         <KpiCard label="Rides" icon={Bike} value={s?.rides} loading={loadingStats} tone="info" hint={s && `${formatNumber(s.superadmins)} superadmin${s.superadmins === 1 ? '' : 's'} on the team`} />
         <KpiCard label="Upcoming rides" icon={CalendarClock} value={s?.upcomingRides} loading={loadingStats} tone="info" hint="Scheduled to start later" />

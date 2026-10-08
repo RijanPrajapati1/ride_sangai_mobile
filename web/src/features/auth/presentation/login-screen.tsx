@@ -5,6 +5,7 @@ import { AlertCircle, Eye, EyeOff, Info, Lock, Mail } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Field, Input } from '@/shared/ui/input';
 import { Brand, BrandMark } from '@/shared/layout/brand';
+import { Mountains } from '@/shared/layout/mountains';
 import { ThemeToggle } from '@/shared/layout/theme';
 import { errorMessage } from '@/core/http/errors';
 import { loginSchema } from '../application/login.schema';
@@ -55,35 +56,26 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
-      {/* Brand panel */}
-      <div className="relative hidden overflow-hidden bg-[#0E1518] lg:block">
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(60% 50% at 20% 20%, rgba(31,182,168,0.35), transparent 70%), radial-gradient(50% 45% at 85% 85%, rgba(255,107,53,0.28), transparent 70%)',
-          }}
-        />
-        <svg aria-hidden className="absolute inset-x-0 bottom-0 w-full text-[#172024]" viewBox="0 0 800 260" preserveAspectRatio="none">
-          <path d="M0 200 L140 110 L230 170 L360 60 L470 150 L560 95 L680 170 L800 120 L800 260 L0 260 Z" fill="currentColor" />
-          <path d="M0 230 L120 170 L260 215 L390 140 L520 210 L640 165 L800 205 L800 260 L0 260 Z" fill="#1d292e" />
-        </svg>
+      {/* Brand panel: the app's teal sign-in hero */}
+      <div
+        className="relative hidden overflow-hidden lg:block"
+        style={{ background: 'linear-gradient(135deg, #1fb6a8 0%, #0e9083 45%, #0b6f66 100%)' }}
+      >
+        <div aria-hidden className="absolute top-[22%] right-[16%] size-28 rounded-full bg-white/25" />
+        <Mountains className="h-[55%]" />
         <div className="relative flex h-full flex-col justify-between p-12 text-white">
           <div className="flex items-center gap-3">
-            <BrandMark className="size-10" />
+            <BrandMark className="size-11 rounded-2xl ring-2 ring-white/60" />
             <div>
-              <div className="text-lg font-semibold">Yatrix</div>
-              <div className="text-xs tracking-wider text-white/60 uppercase">Superadmin</div>
+              <div className="text-lg font-extrabold">Yatrix</div>
+              <div className="text-xs font-semibold tracking-wider text-white/75 uppercase">Superadmin</div>
             </div>
           </div>
-          <div className="max-w-md pb-24">
-            <h1 className="text-4xl leading-tight font-semibold tracking-tight">
-              Keep the community <span className="text-[#5fd6ca]">riding together</span>.
-            </h1>
-            <p className="mt-4 text-[15px] leading-relaxed text-white/70">
-              Watch platform health, look after riders, moderate rides, posts and places, and answer feedback — all
-              in one place.
+          <div className="max-w-md pb-28">
+            <h1 className="text-[40px] leading-[1.1] font-extrabold tracking-tight">Keep the community riding together.</h1>
+            <p className="mt-4 text-[15px] leading-relaxed text-white/85">
+              Look after riders, edit or remove anything that breaks the guidelines, send announcements and answer
+              feedback, all in one place.
             </p>
           </div>
         </div>
@@ -99,7 +91,7 @@ export function LoginScreen({ next, reason }: { next?: string; reason?: string }
         </div>
         <div className="flex flex-1 items-center justify-center px-4 pb-16 sm:px-6">
           <div className="w-full max-w-sm">
-            <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
+            <h2 className="text-[28px] font-extrabold tracking-tight">Welcome back</h2>
             <p className="mt-1.5 text-sm text-muted">Use your Yatrix superadmin account.</p>
 
             {notice && !login.isError && (

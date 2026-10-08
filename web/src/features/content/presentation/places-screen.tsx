@@ -1,19 +1,41 @@
 'use client';
 
-import { MapPin, Star, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, MessageSquareText, Pencil, Star, Trash2 } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { DropdownMenuItem, DropdownMenuSeparator } from '@/shared/ui/dropdown-menu';
 import { TD, TH, THead, TR, Table } from '@/shared/components/data-table';
+import { RowActions } from '@/shared/components/row-actions';
 import { UserCell } from '@/shared/components/user-cell';
 import { formatDate, formatNumber, humanize } from '@/shared/lib/format';
 import { usePlaces } from '../application/use-content';
-import type { Place } from '../domain/place';
+import { PLACE_CATEGORIES, type Place } from '../domain/place';
+import { EditContentDialog, type FieldSpec } from './edit-content-dialog';
 import { ListCard } from './list-card';
+import { ReviewsDialog } from './moderation-screens';
 import { Thumb } from './thumb';
 import { useRemoveFlow } from './use-remove-flow';
 
+const PLACE_FIELDS: FieldSpec[] = [
+  { key: 'name', label: 'Name', kind: 'text', max: 120, required: true, half: true },
+  {
+    key: 'category',
+    label: 'Category',
+    kind: 'select',
+    half: true,
+    options: PLACE_CATEGORIES.map((c) => ({ value: c, label: humanize(c) })),
+  },
+  { key: 'description', label: 'Description', kind: 'textarea', max: 3000, required: true },
+  { key: 'locationName', label: 'Area', kind: 'text', max: 200, required: true, hint: 'Shown under the name, e.g. Kirtipur.' },
+  { key: 'bestTime', label: 'Best time to visit', kind: 'text', max: 200, nullable: true, half: true },
+  { key: 'entryFee', label: 'Entry fee', kind: 'text', max: 120, nullable: true, half: true },
+  { key: 'tips', label: 'Local tips', kind: 'textarea', max: 2000, nullable: true },
+];
+
 export function PlacesScreen() {
   const list = usePlaces();
+  const [editing, setEditing] = useState<Place | null>(null);
+  const [reviewsOf, setReviewsOf] = useState<Place | null>(null);
   const remove = useRemoveFlow<Place>('place', (p) => ({
     title: `Remove “${p.name}”?`,
     description: 'The place, its photos and all its reviews will be deleted. This can’t be undone.',
@@ -73,9 +95,18 @@ export function PlacesScreen() {
                   <UserCell name={p.authorName} avatarUrl={p.authorAvatarUrl} size={26} secondary={formatDate(p.createdAt)} />
                 </TD>
                 <TD className="text-right">
-                  <Button variant="ghost" size="icon-sm" onClick={() => remove.ask(p)} aria-label={`Remove ${p.name}`} className="hover:text-danger-ink">
-                    <Trash2 />
-                  </Button>
+                  <RowActions label={`Actions for ${p.name}`}>
+                    <DropdownMenuItem onSelect={() => setEditing(p)}>
+                      <Pencil /> Edit place
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setReviewsOf(p)}>
+                      <MessageSquareText /> Reviews ({formatNumber(p.reviewCount)})
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem destructive onSelect={() => remove.ask(p)}>
+                      <Trash2 /> Remove place
+                    </DropdownMenuItem>
+                  </RowActions>
                 </TD>
               </TR>
             ))}
@@ -83,6 +114,14 @@ export function PlacesScreen() {
         </Table>
       </ListCard>
       {remove.dialog}
+      <EditContentDialog
+        kind="place"
+        item={editing}
+        title={`Edit “${editing?.name ?? ''}”`}
+        fields={PLACE_FIELDS}
+        onClose={() => setEditing(null)}
+      />
+      <ReviewsDialog place={reviewsOf} onClose={() => setReviewsOf(null)} />
     </>
   );
 }

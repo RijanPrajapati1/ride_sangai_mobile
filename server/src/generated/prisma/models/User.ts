@@ -50,6 +50,8 @@ export type UserMinAggregateOutputType = {
   followersCount: number | null
   followingCount: number | null
   lastLoginAt: Date | null
+  disabledAt: Date | null
+  disabledReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +70,8 @@ export type UserMaxAggregateOutputType = {
   followersCount: number | null
   followingCount: number | null
   lastLoginAt: Date | null
+  disabledAt: Date | null
+  disabledReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +91,8 @@ export type UserCountAggregateOutputType = {
   followersCount: number
   followingCount: number
   lastLoginAt: number
+  disabledAt: number
+  disabledReason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -117,6 +123,8 @@ export type UserMinAggregateInputType = {
   followersCount?: true
   followingCount?: true
   lastLoginAt?: true
+  disabledAt?: true
+  disabledReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -135,6 +143,8 @@ export type UserMaxAggregateInputType = {
   followersCount?: true
   followingCount?: true
   lastLoginAt?: true
+  disabledAt?: true
+  disabledReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +164,8 @@ export type UserCountAggregateInputType = {
   followersCount?: true
   followingCount?: true
   lastLoginAt?: true
+  disabledAt?: true
+  disabledReason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +272,8 @@ export type UserGroupByOutputType = {
   followersCount: number
   followingCount: number
   lastLoginAt: Date | null
+  disabledAt: Date | null
+  disabledReason: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -302,6 +316,8 @@ export type UserWhereInput = {
   followersCount?: Prisma.IntFilter<"User"> | number
   followingCount?: Prisma.IntFilter<"User"> | number
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  disabledReason?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   preferences?: Prisma.XOR<Prisma.UserPreferencesNullableScalarRelationFilter, Prisma.UserPreferencesWhereInput> | null
@@ -349,6 +365,8 @@ export type UserOrderByWithRelationInput = {
   followersCount?: Prisma.SortOrder
   followingCount?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   preferences?: Prisma.UserPreferencesOrderByWithRelationInput
@@ -399,6 +417,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   followersCount?: Prisma.IntFilter<"User"> | number
   followingCount?: Prisma.IntFilter<"User"> | number
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  disabledReason?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   preferences?: Prisma.XOR<Prisma.UserPreferencesNullableScalarRelationFilter, Prisma.UserPreferencesWhereInput> | null
@@ -446,6 +466,8 @@ export type UserOrderByWithAggregationInput = {
   followersCount?: Prisma.SortOrder
   followingCount?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabledReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -473,6 +495,8 @@ export type UserScalarWhereWithAggregatesInput = {
   followersCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   followingCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  disabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  disabledReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -492,6 +516,8 @@ export type UserCreateInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -539,6 +565,8 @@ export type UserUncheckedCreateInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -586,6 +614,8 @@ export type UserUpdateInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -633,6 +663,8 @@ export type UserUncheckedUpdateInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -680,6 +712,8 @@ export type UserCreateManyInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -699,6 +733,8 @@ export type UserUpdateManyMutationInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -718,6 +754,8 @@ export type UserUncheckedUpdateManyInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -745,6 +783,8 @@ export type UserCountOrderByAggregateInput = {
   followersCount?: Prisma.SortOrder
   followingCount?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  disabledReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -768,6 +808,8 @@ export type UserMaxOrderByAggregateInput = {
   followersCount?: Prisma.SortOrder
   followingCount?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  disabledReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -786,6 +828,8 @@ export type UserMinOrderByAggregateInput = {
   followersCount?: Prisma.SortOrder
   followingCount?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
+  disabledReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -840,6 +884,10 @@ export type IntFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -1261,6 +1309,8 @@ export type UserCreateWithoutPreferencesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1307,6 +1357,8 @@ export type UserUncheckedCreateWithoutPreferencesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1369,6 +1421,8 @@ export type UserUpdateWithoutPreferencesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1415,6 +1469,8 @@ export type UserUncheckedUpdateWithoutPreferencesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1461,6 +1517,8 @@ export type UserCreateWithoutSessionsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -1507,6 +1565,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -1569,6 +1629,8 @@ export type UserUpdateWithoutSessionsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -1615,6 +1677,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -1661,6 +1725,8 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -1707,6 +1773,8 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -1769,6 +1837,8 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -1815,6 +1885,8 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -1861,6 +1933,8 @@ export type UserCreateWithoutFollowingInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -1907,6 +1981,8 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -1958,6 +2034,8 @@ export type UserCreateWithoutFollowersInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -2004,6 +2082,8 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2066,6 +2146,8 @@ export type UserUpdateWithoutFollowingInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -2112,6 +2194,8 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2169,6 +2253,8 @@ export type UserUpdateWithoutFollowersInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -2215,6 +2301,8 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2261,6 +2349,8 @@ export type UserCreateWithoutDeviceTokensInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -2307,6 +2397,8 @@ export type UserUncheckedCreateWithoutDeviceTokensInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2369,6 +2461,8 @@ export type UserUpdateWithoutDeviceTokensInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -2415,6 +2509,8 @@ export type UserUncheckedUpdateWithoutDeviceTokensInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2461,6 +2557,8 @@ export type UserCreateWithoutOrganizedRidesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -2507,6 +2605,8 @@ export type UserUncheckedCreateWithoutOrganizedRidesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2569,6 +2669,8 @@ export type UserUpdateWithoutOrganizedRidesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -2615,6 +2717,8 @@ export type UserUncheckedUpdateWithoutOrganizedRidesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2661,6 +2765,8 @@ export type UserCreateWithoutRideRequestsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -2707,6 +2813,8 @@ export type UserUncheckedCreateWithoutRideRequestsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2758,6 +2866,8 @@ export type UserCreateWithoutDecidedRideRequestsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -2804,6 +2914,8 @@ export type UserUncheckedCreateWithoutDecidedRideRequestsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2866,6 +2978,8 @@ export type UserUpdateWithoutRideRequestsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -2912,6 +3026,8 @@ export type UserUncheckedUpdateWithoutRideRequestsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2969,6 +3085,8 @@ export type UserUpdateWithoutDecidedRideRequestsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -3015,6 +3133,8 @@ export type UserUncheckedUpdateWithoutDecidedRideRequestsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3061,6 +3181,8 @@ export type UserCreateWithoutPostsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -3107,6 +3229,8 @@ export type UserUncheckedCreateWithoutPostsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3169,6 +3293,8 @@ export type UserUpdateWithoutPostsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -3215,6 +3341,8 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3261,6 +3389,8 @@ export type UserCreateWithoutPostLikesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -3307,6 +3437,8 @@ export type UserUncheckedCreateWithoutPostLikesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3369,6 +3501,8 @@ export type UserUpdateWithoutPostLikesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -3415,6 +3549,8 @@ export type UserUncheckedUpdateWithoutPostLikesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3461,6 +3597,8 @@ export type UserCreateWithoutCommentsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -3507,6 +3645,8 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3569,6 +3709,8 @@ export type UserUpdateWithoutCommentsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -3615,6 +3757,8 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3661,6 +3805,8 @@ export type UserCreateWithoutCommentLikesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -3707,6 +3853,8 @@ export type UserUncheckedCreateWithoutCommentLikesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3769,6 +3917,8 @@ export type UserUpdateWithoutCommentLikesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -3815,6 +3965,8 @@ export type UserUncheckedUpdateWithoutCommentLikesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3861,6 +4013,8 @@ export type UserCreateWithoutConversationsAsAInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -3907,6 +4061,8 @@ export type UserUncheckedCreateWithoutConversationsAsAInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3958,6 +4114,8 @@ export type UserCreateWithoutConversationsAsBInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -4004,6 +4162,8 @@ export type UserUncheckedCreateWithoutConversationsAsBInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4066,6 +4226,8 @@ export type UserUpdateWithoutConversationsAsAInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -4112,6 +4274,8 @@ export type UserUncheckedUpdateWithoutConversationsAsAInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4169,6 +4333,8 @@ export type UserUpdateWithoutConversationsAsBInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -4215,6 +4381,8 @@ export type UserUncheckedUpdateWithoutConversationsAsBInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4261,6 +4429,8 @@ export type UserCreateWithoutConversationMembersInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -4307,6 +4477,8 @@ export type UserUncheckedCreateWithoutConversationMembersInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4369,6 +4541,8 @@ export type UserUpdateWithoutConversationMembersInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -4415,6 +4589,8 @@ export type UserUncheckedUpdateWithoutConversationMembersInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4461,6 +4637,8 @@ export type UserCreateWithoutMessagesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -4507,6 +4685,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4569,6 +4749,8 @@ export type UserUpdateWithoutMessagesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -4615,6 +4797,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4661,6 +4845,8 @@ export type UserCreateWithoutOwnedGroupsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -4707,6 +4893,8 @@ export type UserUncheckedCreateWithoutOwnedGroupsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4769,6 +4957,8 @@ export type UserUpdateWithoutOwnedGroupsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -4815,6 +5005,8 @@ export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4861,6 +5053,8 @@ export type UserCreateWithoutGroupMembershipsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -4907,6 +5101,8 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4969,6 +5165,8 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -5015,6 +5213,8 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5061,6 +5261,8 @@ export type UserCreateWithoutGroupMessagesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -5107,6 +5309,8 @@ export type UserUncheckedCreateWithoutGroupMessagesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5169,6 +5373,8 @@ export type UserUpdateWithoutGroupMessagesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -5215,6 +5421,8 @@ export type UserUncheckedUpdateWithoutGroupMessagesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5261,6 +5469,8 @@ export type UserCreateWithoutNotificationsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -5307,6 +5517,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5358,6 +5570,8 @@ export type UserCreateWithoutActedNotificationsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -5404,6 +5618,8 @@ export type UserUncheckedCreateWithoutActedNotificationsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5466,6 +5682,8 @@ export type UserUpdateWithoutNotificationsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -5512,6 +5730,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5569,6 +5789,8 @@ export type UserUpdateWithoutActedNotificationsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -5615,6 +5837,8 @@ export type UserUncheckedUpdateWithoutActedNotificationsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5661,6 +5885,8 @@ export type UserCreateWithoutUploadsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -5707,6 +5933,8 @@ export type UserUncheckedCreateWithoutUploadsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5769,6 +5997,8 @@ export type UserUpdateWithoutUploadsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -5815,6 +6045,8 @@ export type UserUncheckedUpdateWithoutUploadsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5861,6 +6093,8 @@ export type UserCreateWithoutAuditEntriesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -5907,6 +6141,8 @@ export type UserUncheckedCreateWithoutAuditEntriesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5969,6 +6205,8 @@ export type UserUpdateWithoutAuditEntriesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -6015,6 +6253,8 @@ export type UserUncheckedUpdateWithoutAuditEntriesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6061,6 +6301,8 @@ export type UserCreateWithoutPlacesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -6107,6 +6349,8 @@ export type UserUncheckedCreateWithoutPlacesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6169,6 +6413,8 @@ export type UserUpdateWithoutPlacesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -6215,6 +6461,8 @@ export type UserUncheckedUpdateWithoutPlacesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6261,6 +6509,8 @@ export type UserCreateWithoutPlaceReviewsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -6307,6 +6557,8 @@ export type UserUncheckedCreateWithoutPlaceReviewsInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6369,6 +6621,8 @@ export type UserUpdateWithoutPlaceReviewsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -6415,6 +6669,8 @@ export type UserUncheckedUpdateWithoutPlaceReviewsInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6461,6 +6717,8 @@ export type UserCreateWithoutPlaceSavesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -6507,6 +6765,8 @@ export type UserUncheckedCreateWithoutPlaceSavesInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6569,6 +6829,8 @@ export type UserUpdateWithoutPlaceSavesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -6615,6 +6877,8 @@ export type UserUncheckedUpdateWithoutPlaceSavesInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6661,6 +6925,8 @@ export type UserCreateWithoutFeedbackInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesCreateNestedOneWithoutUserInput
@@ -6707,6 +6973,8 @@ export type UserUncheckedCreateWithoutFeedbackInput = {
   followersCount?: number
   followingCount?: number
   lastLoginAt?: Date | string | null
+  disabledAt?: Date | string | null
+  disabledReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   preferences?: Prisma.UserPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6769,6 +7037,8 @@ export type UserUpdateWithoutFeedbackInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUpdateOneWithoutUserNestedInput
@@ -6815,6 +7085,8 @@ export type UserUncheckedUpdateWithoutFeedbackInput = {
   followersCount?: Prisma.IntFieldUpdateOperationsInput | number
   followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preferences?: Prisma.UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -7126,6 +7398,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   followersCount?: boolean
   followingCount?: boolean
   lastLoginAt?: boolean
+  disabledAt?: boolean
+  disabledReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   preferences?: boolean | Prisma.User$preferencesArgs<ExtArgs>
@@ -7174,6 +7448,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   followersCount?: boolean
   followingCount?: boolean
   lastLoginAt?: boolean
+  disabledAt?: boolean
+  disabledReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -7193,6 +7469,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   followersCount?: boolean
   followingCount?: boolean
   lastLoginAt?: boolean
+  disabledAt?: boolean
+  disabledReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -7212,11 +7490,13 @@ export type UserSelectScalar = {
   followersCount?: boolean
   followingCount?: boolean
   lastLoginAt?: boolean
+  disabledAt?: boolean
+  disabledReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "avatarUrl" | "bio" | "location" | "experienceLevel" | "preferredRideType" | "interests" | "role" | "followersCount" | "followingCount" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "avatarUrl" | "bio" | "location" | "experienceLevel" | "preferredRideType" | "interests" | "role" | "followersCount" | "followingCount" | "lastLoginAt" | "disabledAt" | "disabledReason" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   preferences?: boolean | Prisma.User$preferencesArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -7304,6 +7584,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     followersCount: number
     followingCount: number
     lastLoginAt: Date | null
+    /**
+     * Set by a superadmin: the account cannot sign in until re-enabled.
+     */
+    disabledAt: Date | null
+    disabledReason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -7771,6 +8056,8 @@ export interface UserFieldRefs {
   readonly followersCount: Prisma.FieldRef<"User", 'Int'>
   readonly followingCount: Prisma.FieldRef<"User", 'Int'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly disabledAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly disabledReason: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

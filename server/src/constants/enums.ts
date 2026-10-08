@@ -77,6 +77,8 @@ export const NOTIFICATION_TYPES = [
   'newRideRequest',
   /** Sent to a place's author when someone reviews it (new; not in the app's enum yet). */
   'placeReview',
+  /** Sent to every rider from the superadmin dashboard. */
+  'announcement',
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 

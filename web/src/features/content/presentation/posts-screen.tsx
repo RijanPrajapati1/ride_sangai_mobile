@@ -1,17 +1,24 @@
 'use client';
 
-import { Heart, MessageCircle, Newspaper, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Heart, MessageCircle, Newspaper, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { UserCell } from '@/shared/components/user-cell';
 import { formatDateTime, formatNumber, timeAgo } from '@/shared/lib/format';
 import { usePosts } from '../application/use-content';
 import type { Post } from '../domain/post';
+import { EditContentDialog, type FieldSpec } from './edit-content-dialog';
 import { ListCard } from './list-card';
+import { CommentsDialog } from './moderation-screens';
 import { Thumb } from './thumb';
 import { useRemoveFlow } from './use-remove-flow';
 
+const POST_FIELDS: FieldSpec[] = [{ key: 'text', label: 'Post', kind: 'textarea', max: 2000, required: true }];
+
 export function PostsScreen() {
   const list = usePosts();
+  const [editing, setEditing] = useState<Post | null>(null);
+  const [commentsOf, setCommentsOf] = useState<Post | null>(null);
   const remove = useRemoveFlow<Post>('post', (p) => ({
     title: 'Remove this post?',
     description: (
@@ -42,15 +49,25 @@ export function PostsScreen() {
                   <span className="inline-flex items-center gap-1">
                     <Heart className="size-3.5" /> {formatNumber(p.likeCount)}
                   </span>
-                  <span className="inline-flex items-center gap-1">
-                    <MessageCircle className="size-3.5" /> {formatNumber(p.commentCount)}
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCommentsOf(p)}
+                    className="inline-flex items-center gap-1 rounded-md px-1 -mx-1 font-medium hover:bg-surface-2 hover:text-foreground"
+                    aria-label={`${p.commentCount} comments, open to moderate`}
+                  >
+                    <MessageCircle className="size-3.5" /> {formatNumber(p.commentCount)} comments
+                  </button>
                 </div>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-3">
-                <Button variant="danger-ghost" size="sm" onClick={() => remove.ask(p)} aria-label={`Remove post by ${p.userName}`}>
-                  <Trash2 /> <span className="hidden sm:inline">Remove</span>
-                </Button>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm" onClick={() => setEditing(p)} aria-label={`Edit post by ${p.userName}`}>
+                    <Pencil /> <span className="hidden sm:inline">Edit</span>
+                  </Button>
+                  <Button variant="danger-ghost" size="sm" onClick={() => remove.ask(p)} aria-label={`Remove post by ${p.userName}`}>
+                    <Trash2 /> <span className="hidden sm:inline">Remove</span>
+                  </Button>
+                </div>
                 {p.imageUrl && <Thumb src={p.imageUrl} className="size-20 sm:size-24" />}
               </div>
             </li>
@@ -58,6 +75,14 @@ export function PostsScreen() {
         </ul>
       </ListCard>
       {remove.dialog}
+      <EditContentDialog
+        kind="post"
+        item={editing}
+        title={`Edit ${editing?.userName ?? ''}’s post`}
+        fields={POST_FIELDS}
+        onClose={() => setEditing(null)}
+      />
+      <CommentsDialog post={commentsOf} onClose={() => setCommentsOf(null)} />
     </>
   );
 }

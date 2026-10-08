@@ -13,6 +13,9 @@ enum NotificationType {
   newRideRequest,
   placeReview,
 
+  /// Sent to every rider by the Yatrix team from the admin dashboard.
+  announcement,
+
   /// Fallback for types a newer server sends that this app doesn't know yet.
   other,
 }
@@ -29,6 +32,7 @@ extension NotificationTypeX on NotificationType {
         NotificationType.like => Icons.favorite,
         NotificationType.newRideRequest => Icons.how_to_reg,
         NotificationType.placeReview => Icons.rate_review,
+        NotificationType.announcement => Icons.campaign,
         NotificationType.other => Icons.notifications,
       };
 
@@ -43,6 +47,7 @@ extension NotificationTypeX on NotificationType {
         NotificationType.like => AppColors.error,
         NotificationType.newRideRequest => AppColors.primary,
         NotificationType.placeReview => AppColors.warning,
+        NotificationType.announcement => AppColors.secondary,
         NotificationType.other => AppColors.info,
       };
 }

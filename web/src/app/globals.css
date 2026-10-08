@@ -4,20 +4,21 @@
 
 :root {
   color-scheme: light;
-  --background: #f6f8f9;
+  --background: #f5f7f8;
   --surface: #ffffff;
-  --surface-2: #f1f4f5;
-  --surface-3: #e9eef0;
+  --surface-2: #eff3f4;
+  --surface-3: #e7edef;
   --foreground: #16232b;
-  --muted: #6c7b85;
-  --subtle: #8e9ba3;
+  --muted: #5f6e78;
+  --subtle: #8a979f;
   --border: #e4e9eb;
   --border-strong: #d3dadd;
+  /* Brand teal, matched to the app: bright for decoration, deep for text and buttons. */
   --primary: #1fb6a8;
-  --primary-strong: #15897e;
-  --primary-hover: #117469;
+  --primary-strong: #0e9083;
+  --primary-hover: #0b7a70;
   --primary-soft: #dff7f4;
-  --primary-ink: #0f6b62;
+  --primary-ink: #0b6f66;
   --accent: #ff6b35;
   --accent-soft: #fff0ea;
   --accent-ink: #b8461c;
@@ -32,8 +33,8 @@
   --success-ink: #106b10;
   --info-soft: #e7f0fb;
   --info-ink: #1f5fae;
-  --shadow: 0 1px 2px rgb(22 35 43 / 0.04), 0 1px 3px rgb(22 35 43 / 0.06);
-  --shadow-lg: 0 10px 30px -10px rgb(22 35 43 / 0.25);
+  --shadow: 0 1px 2px rgb(22 35 43 / 0.04), 0 4px 14px -6px rgb(22 35 43 / 0.1);
+  --shadow-lg: 0 16px 40px -12px rgb(22 35 43 / 0.28);
 
   /* Chart chrome + categorical series (validated palette, light surface). */
   --chart-grid: #e8ecee;
@@ -60,8 +61,8 @@
   --border: #2a363b;
   --border-strong: #354349;
   --primary: #1fb6a8;
-  --primary-strong: #17a497;
-  --primary-hover: #1fb6a8;
+  --primary-strong: #0e9083;
+  --primary-hover: #11a092;
   --primary-soft: rgb(31 182 168 / 0.14);
   --primary-ink: #5fd6ca;
   --accent: #ff6b35;
@@ -124,7 +125,7 @@
   --color-info-ink: var(--info-ink);
   --shadow-card: var(--shadow);
   --shadow-pop: var(--shadow-lg);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --animate-fade-in: fade-in 150ms ease-out;
@@ -162,7 +163,6 @@
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
-    font-feature-settings: 'cv11', 'ss01';
   }
   ::selection {
     background: var(--primary-soft);

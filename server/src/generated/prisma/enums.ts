@@ -87,7 +87,8 @@ export const NotificationType = {
   comment: 'comment',
   like: 'like',
   newRideRequest: 'newRideRequest',
-  placeReview: 'placeReview'
+  placeReview: 'placeReview',
+  announcement: 'announcement'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
